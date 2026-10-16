@@ -1,0 +1,795 @@
+     1→import { db } from '../src/lib/db'
+     2→import { hashPassword, createSessionToken } from '../src/lib/auth'
+     3→import { clearNormalizationCache } from '../src/lib/matching'
+     4→
+     5→// Demo data for Placement Hub
+     6→// All credentials are clearly fake/synthetic for demonstration purposes only.
+     7→
+     8→const DEMO_PASSWORD = 'demo1234'
+     9→
+    10→const SKILLS_CATALOG: Array<{ canonical: string; display: string; category: string; aliases: string[] }> = [
+    11→  { canonical: 'javascript', display: 'JavaScript', category: 'language', aliases: ['js', 'ecmascript'] },
+    12→  { canonical: 'typescript', display: 'TypeScript', category: 'language', aliases: ['ts'] },
+    13→  { canonical: 'python', display: 'Python', category: 'language', aliases: ['py', 'python3'] },
+    14→  { canonical: 'react', display: 'React', category: 'framework', aliases: ['reactjs', 'react.js', 'react js'] },
+    15→  { canonical: 'angular', display: 'Angular', category: 'framework', aliases: ['angularjs', 'angular.js'] },
+    16→  { canonical: 'vue', display: 'Vue', category: 'framework', aliases: ['vuejs', 'vue.js'] },
+    17→  { canonical: 'next.js', display: 'Next.js', category: 'framework', aliases: ['nextjs', 'next js'] },
+    18→  { canonical: 'node.js', display: 'Node.js', category: 'framework', aliases: ['nodejs', 'node', 'node js'] },
+    19→  { canonical: 'express', display: 'Express', category: 'framework', aliases: ['expressjs', 'express.js'] },
+    20→  { canonical: 'postgresql', display: 'PostgreSQL', category: 'database', aliases: ['postgres', 'postgres sql'] },
+    21→  { canonical: 'mongodb', display: 'MongoDB', category: 'database', aliases: ['mongo'] },
+    22→  { canonical: 'redis', display: 'Redis', category: 'database', aliases: ['redis cache'] },
+    23→  { canonical: 'mysql', display: 'MySQL', category: 'database', aliases: [] },
+    24→  { canonical: 'aws', display: 'AWS', category: 'cloud', aliases: ['amazon web services'] },
+    25→  { canonical: 'docker', display: 'Docker', category: 'tool', aliases: ['docker compose'] },
+    26→  { canonical: 'kubernetes', display: 'Kubernetes', category: 'tool', aliases: ['k8s'] },
+    27→  { canonical: 'c++', display: 'C++', category: 'language', aliases: ['c plus plus'] },
+    28→  { canonical: 'java', display: 'Java', category: 'language', aliases: [] },
+    29→  { canonical: 'go', display: 'Go', category: 'language', aliases: ['golang'] },
+    30→  { canonical: 'html', display: 'HTML', category: 'language', aliases: ['html5'] },
+    31→  { canonical: 'css', display: 'CSS', category: 'language', aliases: ['css3'] },
+    32→  { canonical: 'tailwind css', display: 'Tailwind CSS', category: 'framework', aliases: ['tailwind', 'tailwindcss'] },
+    33→  { canonical: 'graphql', display: 'GraphQL', category: 'api', aliases: ['graphql apis'] },
+    34→  { canonical: 'rest api', display: 'REST API', category: 'api', aliases: ['rest apis', 'restful api', 'restful'] },
+    35→  { canonical: 'machine learning', display: 'Machine Learning', category: 'ml', aliases: ['ml'] },
+    36→  { canonical: 'deep learning', display: 'Deep Learning', category: 'ml', aliases: ['dl'] },
+    37→  { canonical: 'natural language processing', display: 'Natural Language Processing', category: 'ml', aliases: ['nlp'] },
+    38→  { canonical: 'data structures', display: 'Data Structures', category: 'cs', aliases: ['dsa', 'data structures and algorithms'] },
+    39→  { canonical: 'algorithms', display: 'Algorithms', category: 'cs', aliases: [] },
+    40→  { canonical: 'git', display: 'Git', category: 'tool', aliases: [] },
+    41→  { canonical: 'ci/cd', display: 'CI/CD', category: 'tool', aliases: ['continuous integration'] },
+    42→  { canonical: 'system design', display: 'System Design', category: 'cs', aliases: [] },
+    43→  { canonical: 'communication', display: 'Communication', category: 'soft', aliases: [] },
+    44→  { canonical: 'leadership', display: 'Leadership', category: 'soft', aliases: [] },
+    45→]
+    46→
+    47→const COMPANIES = [
+    48→  { name: 'Northwind Tech', industry: 'Software', website: 'https://example.com/northwind', contactName: 'Anjali Rao', contactEmail: 'anjali.rao@northwind.example' },
+    49→  { name: 'Quantum Labs', industry: 'AI/ML', website: 'https://example.com/quantum', contactName: 'Dev Patel', contactEmail: 'dev.patel@quantum.example' },
+    50→  { name: 'Helix Cloud', industry: 'Cloud Infrastructure', website: 'https://example.com/helix', contactName: 'Maya Iyer', contactEmail: 'maya.iyer@helix.example' },
+    51→  { name: 'BrightPath Fintech', industry: 'FinTech', website: 'https://example.com/brightpath', contactName: 'Karan Sethi', contactEmail: 'karan.sethi@brightpath.example' },
+    52→  { name: 'Orbit Robotics', industry: 'Robotics', website: 'https://example.com/orbit', contactName: 'Leena Bose', contactEmail: 'leena.bose@orbit.example' },
+    53→  { name: 'Verdant Health', industry: 'HealthTech', website: 'https://example.com/verdant', contactName: 'Arjun Nair', contactEmail: 'arjun.nair@verdant.example' },
+    54→]
+    55→
+    56→const STUDENT_DATA = [
+    57→  {
+    58→    name: 'Aarav Sharma', email: 'aarav.sharma@demo.edu', branch: 'Computer Science', batch: '2022-2026',
+    59→    cgpa: 8.7, location: 'Bengaluru', githubUser: 'aaravsharma', bio: 'Full-stack developer passionate about web platforms and developer tools.',
+    60→    skills: [
+    61→      { name: 'javascript', level: 'advanced' },
+    62→      { name: 'typescript', level: 'advanced' },
+    63→      { name: 'react', level: 'advanced' },
+    64→      { name: 'node.js', level: 'intermediate' },
+    65→      { name: 'postgresql', level: 'intermediate' },
+    66→      { name: 'docker', level: 'beginner' },
+    67→      { name: 'aws', level: 'beginner' },
+    68→    ],
+    69→  },
+    70→  {
+    71→    name: 'Diya Iyer', email: 'diya.iyer@demo.edu', branch: 'Computer Science', batch: '2022-2026',
+    72→    cgpa: 9.1, location: 'Mumbai', githubUser: 'diyaiyer', bio: 'ML enthusiast. Built computer vision demos and NLP classifiers.',
+    73→    skills: [
+    74→      { name: 'python', level: 'advanced' },
+    75→      { name: 'machine learning', level: 'intermediate' },
+    76→      { name: 'deep learning', level: 'intermediate' },
+    77→      { name: 'natural language processing', level: 'intermediate' },
+    78→      { name: 'javascript', level: 'intermediate' },
+    79→      { name: 'react', level: 'beginner' },
+    80→    ],
+    81→  },
+    82→  {
+    83→    name: 'Kabir Khan', email: 'kabir.khan@demo.edu', branch: 'Information Technology', batch: '2022-2026',
+    84→    cgpa: 8.4, location: 'Hyderabad', githubUser: 'kabirkhan', bio: 'Backend engineer focused on distributed systems and APIs.',
+    85→    skills: [
+    86→      { name: 'java', level: 'advanced' },
+    87→      { name: 'go', level: 'intermediate' },
+    88→      { name: 'postgresql', level: 'advanced' },
+    89→      { name: 'redis', level: 'intermediate' },
+    90→      { name: 'docker', level: 'intermediate' },
+    91→      { name: 'kubernetes', level: 'beginner' },
+    92→      { name: 'system design', level: 'intermediate' },
+    93→    ],
+    94→  },
+    95→  {
+    96→    name: 'Meera Nair', email: 'meera.nair@demo.edu', branch: 'Computer Science', batch: '2022-2026',
+    97→    cgpa: 9.3, location: 'Chennai', githubUser: 'meeranair', bio: 'Frontend specialist. Loves accessible UI and design systems.',
+    98→    skills: [
+    99→      { name: 'javascript', level: 'advanced' },
+   100→      { name: 'react', level: 'advanced' },
+   101→      { name: 'tailwind css', level: 'advanced' },
+   102→      { name: 'next.js', level: 'intermediate' },
+   103→      { name: 'html', level: 'advanced' },
+   104→      { name: 'css', level: 'advanced' },
+   105→    ],
+   106→  },
+   107→  {
+   108→    name: 'Rohan Verma', email: 'rohan.verma@demo.edu', branch: 'Electronics & Communication', batch: '2021-2025',
+   109→    cgpa: 8.2, location: 'Pune', githubUser: 'rohanverma', bio: 'Robotics + embedded systems. C++ and Rust tinkerer.',
+   110→    skills: [
+   111→      { name: 'c++', level: 'advanced' },
+   112→      { name: 'python', level: 'intermediate' },
+   113→      { name: 'machine learning', level: 'beginner' },
+   114→      { name: 'algorithms', level: 'intermediate' },
+   115→      { name: 'data structures', level: 'intermediate' },
+   116→    ],
+   117→  },
+   118→  {
+   119→    name: 'Sana Reddy', email: 'sana.reddy@demo.edu', branch: 'Computer Science', batch: '2022-2026',
+   120→    cgpa: 8.9, location: 'Bengaluru', githubUser: 'sanareddy', bio: 'Data engineer. Loves pipelines, SQL and observability.',
+   121→    skills: [
+   122→      { name: 'python', level: 'advanced' },
+   123→      { name: 'postgresql', level: 'advanced' },
+   124→      { name: 'mysql', level: 'intermediate' },
+   125→      { name: 'aws', level: 'intermediate' },
+   126→      { name: 'docker', level: 'intermediate' },
+   127→      { name: 'ci/cd', level: 'beginner' },
+   128→    ],
+   129→  },
+   130→  {
+   131→    name: 'Vikram Desai', email: 'vikram.desai@demo.edu', branch: 'Information Technology', batch: '2022-2026',
+   132→    cgpa: 7.9, location: 'Ahmedabad', githubUser: 'vikramdesai', bio: 'Full-stack tinkerer. Shipping side projects.',
+   133→    skills: [
+   134→      { name: 'javascript', level: 'intermediate' },
+   135→      { name: 'node.js', level: 'intermediate' },
+   136→      { name: 'react', level: 'intermediate' },
+   137→      { name: 'mongodb', level: 'intermediate' },
+   138→      { name: 'express', level: 'intermediate' },
+   139→    ],
+   140→  },
+   141→  {
+   142→    name: 'Ananya Bose', email: 'ananya.bose@demo.edu', branch: 'Computer Science', batch: '2021-2025',
+   143→    cgpa: 9.0, location: 'Kolkata', githubUser: 'ananyabose', bio: 'Backend & cloud. Loves infrastructure as code.',
+   144→    skills: [
+   145→      { name: 'go', level: 'advanced' },
+   146→      { name: 'kubernetes', level: 'intermediate' },
+   147→      { name: 'docker', level: 'advanced' },
+   148→      { name: 'aws', level: 'advanced' },
+   149→      { name: 'system design', level: 'intermediate' },
+   150→      { name: 'postgresql', level: 'intermediate' },
+   151→    ],
+   152→  },
+   153→  {
+   154→    name: 'Karthik Rao', email: 'karthik.rao@demo.edu', branch: 'Computer Science', batch: '2022-2026',
+   155→    cgpa: 8.6, location: 'Bengaluru', githubUser: 'karthikrao', bio: 'Mobile + web hybrid developer.',
+   156→    skills: [
+   157→      { name: 'javascript', level: 'advanced' },
+   158→      { name: 'react', level: 'advanced' },
+   159→      { name: 'node.js', level: 'intermediate' },
+   160→      { name: 'graphql', level: 'intermediate' },
+   161→      { name: 'postgresql', level: 'intermediate' },
+   162→    ],
+   163→  },
+   164→  {
+   165→    name: 'Ishita Gupta', email: 'ishita.gupta@demo.edu', branch: 'Computer Science', batch: '2022-2026',
+   166→    cgpa: 8.8, location: 'Delhi', githubUser: 'ishitagupta', bio: 'AI/ML researcher. Published 2 papers in NLP.',
+   167→    skills: [
+   168→      { name: 'python', level: 'advanced' },
+   169→      { name: 'machine learning', level: 'advanced' },
+   170→      { name: 'natural language processing', level: 'advanced' },
+   171→      { name: 'deep learning', level: 'intermediate' },
+   172→    ],
+   173→  },
+   174→  {
+   175→    name: 'Aditya Joshi', email: 'aditya.joshi@demo.edu', branch: 'Information Technology', batch: '2022-2026',
+   176→    cgpa: 8.1, location: 'Nagpur', githubUser: 'adityajoshi', bio: 'DevOps enthusiast.',
+   177→    skills: [
+   178→      { name: 'docker', level: 'intermediate' },
+   179→      { name: 'kubernetes', level: 'beginner' },
+   180→      { name: 'ci/cd', level: 'intermediate' },
+   181→      { name: 'aws', level: 'intermediate' },
+   182→    ],
+   183→  },
+   184→  {
+   185→    name: 'Priya Menon', email: 'priya.menon@demo.edu', branch: 'Computer Science', batch: '2021-2025',
+   186→    cgpa: 9.4, location: 'Kochi', githubUser: 'priyamenon', bio: 'Backend + databases. Optimized query performance.',
+   187→    skills: [
+   188→      { name: 'java', level: 'advanced' },
+   189→      { name: 'postgresql', level: 'advanced' },
+   190→      { name: 'redis', level: 'intermediate' },
+   191→      { name: 'system design', level: 'intermediate' },
+   192→      { name: 'data structures', level: 'advanced' },
+   193→    ],
+   194→  },
+   195→  {
+   196→    name: 'Sahil Mehta', email: 'sahil.mehta@demo.edu', branch: 'Computer Science', batch: '2022-2026',
+   197→    cgpa: 7.6, location: 'Surat', githubUser: 'sahilmehta', bio: 'Frontend + UX designer.',
+   198→    skills: [
+   199→      { name: 'react', level: 'intermediate' },
+   200→      { name: 'css', level: 'intermediate' },
+   201→      { name: 'tailwind css', level: 'intermediate' },
+   202→    ],
+   203→  },
+   204→  {
+   205→    name: 'Tanvi Bhatt', email: 'tanvi.bhatt@demo.edu', branch: 'Computer Science', batch: '2022-2026',
+   206→    cgpa: 8.5, location: 'Indore', githubUser: 'tanvibhatt', bio: 'Full-stack with focus on testing and reliability.',
+   207→    skills: [
+   208→      { name: 'typescript', level: 'advanced' },
+   209→      { name: 'react', level: 'advanced' },
+   210→      { name: 'node.js', level: 'intermediate' },
+   211→      { name: 'postgresql', level: 'intermediate' },
+   212→    ],
+   213→  },
+   214→  {
+   215→    name: 'Yash Agarwal', email: 'yash.agarwal@demo.edu', branch: 'Information Technology', batch: '2021-2025',
+   216→    cgpa: 8.0, location: 'Lucknow', githubUser: 'yashagarwal', bio: 'Backend engineer. Loves Go and microservices.',
+   217→    skills: [
+   218→      { name: 'go', level: 'intermediate' },
+   219→      { name: 'docker', level: 'intermediate' },
+   220→      { name: 'kubernetes', level: 'beginner' },
+   221→      { name: 'postgresql', level: 'intermediate' },
+   222→      { name: 'rest api', level: 'intermediate' },
+   223→    ],
+   224→  },
+   225→  {
+   226→    name: 'Riya Kulkarni', email: 'riya.kulkarni@demo.edu', branch: 'Computer Science', batch: '2022-2026',
+   227→    cgpa: 8.3, location: 'Nashik', githubUser: 'riyakulkarni', bio: 'Mobile developer with React Native and Flutter.',
+   228→    skills: [
+   229→      { name: 'javascript', level: 'intermediate' },
+   230→      { name: 'react', level: 'intermediate' },
+   231→    ],
+   232→  },
+   233→]
+   234→
+   235→const JOBS = [
+   236→  {
+   237→    title: 'Frontend Engineer', company: 'Northwind Tech',
+   238→    description: 'Build delightful web UIs with React and TypeScript. Collaborate with designers to ship accessible, performant interfaces. Optimize rendering, write tests, and own features end-to-end.',
+   239→    location: 'Bengaluru', workArrangement: 'hybrid', employmentType: 'full-time',
+   240→    minExp: 0, maxExp: 2, salaryMin: 800000, salaryMax: 1400000, batch: '2022-2026',
+   241→    required: ['javascript', 'typescript', 'react', 'html', 'css'],
+   242→    preferred: ['tailwind css', 'next.js'],
+   243→    sourceType: 'MANUAL',
+   244→  },
+   245→  {
+   246→    title: 'Backend Engineer', company: 'Northwind Tech',
+   247→    description: 'Design APIs and services with Node.js and PostgreSQL. Build scalable data models, write integration tests, and own production reliability.',
+   248→    location: 'Bengaluru', workArrangement: 'hybrid', employmentType: 'full-time',
+   249→    minExp: 0, maxExp: 2, salaryMin: 900000, salaryMax: 1600000, batch: '2022-2026',
+   250→    required: ['javascript', 'node.js', 'postgresql', 'rest api'],
+   251→    preferred: ['docker', 'redis', 'typescript'],
+   252→    sourceType: 'MANUAL',
+   253→  },
+   254→  {
+   255→    title: 'ML Engineer', company: 'Quantum Labs',
+   256→    description: 'Train and deploy ML models for NLP and computer vision tasks. Build data pipelines, evaluate models, and integrate them into products.',
+   257→    location: 'Remote (India)', workArrangement: 'remote', employmentType: 'full-time',
+   258→    minExp: 0, maxExp: 2, salaryMin: 1000000, salaryMax: 1800000, batch: '2021-2025',
+   259→    required: ['python', 'machine learning', 'natural language processing'],
+   260→    preferred: ['deep learning', 'aws', 'docker'],
+   261→    sourceType: 'FEED', sourceUrl: 'https://careers.quantum.example/jobs/ml-engineer-2024',
+   262→  },
+   263→  {
+   264→    title: 'Cloud Infrastructure Engineer', company: 'Helix Cloud',
+   265→    description: 'Operate Kubernetes clusters, build CI/CD pipelines, automate everything. Strong focus on observability and reliability.',
+   266→    location: 'Hyderabad', workArrangement: 'onsite', employmentType: 'full-time',
+   267→    minExp: 0, maxExp: 3, salaryMin: 1100000, salaryMax: 2000000, batch: '2021-2025',
+   268→    required: ['docker', 'kubernetes', 'aws', 'ci/cd'],
+   269→    preferred: ['go', 'system design'],
+   270→    sourceType: 'FEED',
+   271→  },
+   272→  {
+   273→    title: 'Full-stack Developer', company: 'BrightPath Fintech',
+   274→    description: 'Build customer-facing fintech products with React, Node.js, and PostgreSQL. Care about security, auditability and performance.',
+   275→    location: 'Mumbai', workArrangement: 'hybrid', employmentType: 'full-time',
+   276→    minExp: 0, maxExp: 2, salaryMin: 1000000, salaryMax: 1800000, batch: '2022-2026',
+   277→    required: ['javascript', 'react', 'node.js', 'postgresql'],
+   278→    preferred: ['typescript', 'docker', 'redis'],
+   279→    sourceType: 'ALUMNI',
+   280→  },
+   281→  {
+   282→    title: 'Robotics Software Intern', company: 'Orbit Robotics',
+   283→    description: 'Write C++ code for embedded systems and perception pipelines. Work with the SLAM and controls teams.',
+   284→    location: 'Pune', workArrangement: 'onsite', employmentType: 'internship',
+   285→    minExp: 0, maxExp: 0, salaryMin: 30000, salaryMax: 50000, batch: '2022-2026',
+   286→    required: ['c++', 'algorithms', 'data structures'],
+   287→    preferred: ['python', 'machine learning'],
+   288→    sourceType: 'MANUAL',
+   289→  },
+   290→  {
+   291→    title: 'Data Engineer', company: 'Verdant Health',
+   292→    description: 'Build robust data pipelines using Python, PostgreSQL and AWS. Maintain data quality and observability.',
+   293→    location: 'Remote (India)', workArrangement: 'remote', employmentType: 'full-time',
+   294→    minExp: 0, maxExp: 2, salaryMin: 900000, salaryMax: 1700000, batch: '2021-2025',
+   295→    required: ['python', 'postgresql', 'aws'],
+   296→    preferred: ['docker', 'ci/cd', 'redis'],
+   297→    sourceType: 'MANUAL',
+   298→  },
+   299→  {
+   300→    title: 'Frontend Engineer', company: 'Northwind Tech',
+   301→    description: 'Build delightful web UIs with React and TypeScript. Collaborate with designers to ship accessible, performant interfaces. Optimize rendering, write tests, and own features end-to-end.',
+   302→    location: 'Bengaluru', workArrangement: 'hybrid', employmentType: 'full-time',
+   303→    minExp: 0, maxExp: 2, salaryMin: 800000, salaryMax: 1400000, batch: '2022-2026',
+   304→    required: ['javascript', 'typescript', 'react', 'html', 'css'],
+   305→    preferred: ['tailwind css', 'next.js'],
+   306→    sourceType: 'CSV', sourceUrl: 'https://careers.northwind.example/jobs/fe-2024', externalId: 'northwind-fe-001',
+   307→  },
+   308→  {
+   309→    title: 'Backend Engineer', company: 'Helix Cloud',
+   310→    description: 'Build Go services powering our cloud platform. Strong emphasis on system design and distributed systems.',
+   311→    location: 'Hyderabad', workArrangement: 'hybrid', employmentType: 'full-time',
+   312→    minExp: 0, maxExp: 2, salaryMin: 1100000, salaryMax: 1900000, batch: '2021-2025',
+   313→    required: ['go', 'postgresql', 'system design', 'docker'],
+   314→    preferred: ['kubernetes', 'redis', 'aws'],
+   315→    sourceType: 'MANUAL',
+   316→  },
+   317→  {
+   318→    title: 'Mobile Engineer', company: 'BrightPath Fintech',
+   319→    description: 'Build mobile fintech apps in React Native. Strong focus on UX, performance and security.',
+   320→    location: 'Mumbai', workArrangement: 'hybrid', employmentType: 'full-time',
+   321→    minExp: 0, maxExp: 1, salaryMin: 900000, salaryMax: 1600000, batch: '2022-2026',
+   322→    required: ['javascript', 'react'],
+   323→    preferred: ['typescript'],
+   324→    sourceType: 'ALUMNI',
+   325→  },
+   326→]
+   327→
+   328→async function main() {
+   329→  console.log('🌱 Seeding Placement Hub database...')
+   330→
+   331→  // Wipe existing data
+   332→  await db.notification.deleteMany()
+   333→  await db.auditEvent.deleteMany()
+   334→  await db.interviewReport.deleteMany()
+   335→  await db.offer.deleteMany()
+   336→  await db.interview.deleteMany()
+   337→  await db.applicationEvent.deleteMany()
+   338→  await db.application.deleteMany()
+   339→  await db.resumeBullet.deleteMany()
+   340→  await db.resume.deleteMany()
+   341→  await db.matchResult.deleteMany()
+   342→  await db.assessmentResult.deleteMany()
+   343→  await db.assessment.deleteMany()
+   344→  await db.evidenceReview.deleteMany()
+   345→  await db.evidenceSkill.deleteMany()
+   346→  await db.evidence.deleteMany()
+   347→  await db.project.deleteMany()
+   348→  await db.studentSkill.deleteMany()
+   349→  await db.education.deleteMany()
+   350→  await db.studentProfile.deleteMany()
+   351→  await db.officerProfile.deleteMany()
+   352→  await db.recruiterProfile.deleteMany()
+   353→  await db.alumniProfile.deleteMany()
+   354→  await db.duplicateJob.deleteMany()
+   355→  await db.jobSkill.deleteMany()
+   356→  await db.job.deleteMany()
+   357→  await db.company.deleteMany()
+   358→  await db.skillAlias.deleteMany()
+   359→  await db.skill.deleteMany()
+   360→  await db.jobSource.deleteMany()
+   361→  await db.user.deleteMany()
+   362→
+   363→  clearNormalizationCache()
+   364→
+   365→  // 1. Skills catalog
+   366→  console.log('  → Creating skill catalog...')
+   367→  const skillMap = new Map<string, string>()
+   368→  for (const s of SKILLS_CATALOG) {
+   369→    const skill = await db.skill.create({
+   370→      data: {
+   371→        canonicalName: s.canonical,
+   372→        displayName: s.display,
+   373→        category: s.category,
+   374→        aliases: {
+   375→          create: s.aliases.map(a => ({ alias: a, caseInsensitive: a.toLowerCase().trim() })),
+   376→        },
+   377→      },
+   378→    })
+   379→    skillMap.set(s.canonical, skill.id)
+   380→  }
+   381→  console.log(`  ✓ Created ${SKILLS_CATALOG.length} skills`)
+   382→
+   383→  // 2. Companies
+   384→  console.log('  → Creating companies...')
+   385→  const companyMap = new Map<string, string>()
+   386→  for (const c of COMPANIES) {
+   387→    const comp = await db.company.create({ data: c })
+   388→    companyMap.set(c.name, comp.id)
+   389→  }
+   390→
+   391→  // 3. Officer account
+   392→  console.log('  → Creating officer account...')
+   393→  const officer = await db.user.create({
+   394→    data: {
+   395→      email: 'officer@demo.edu',
+   396→      name: 'Dr. Priya Placement',
+   397→      role: 'OFFICER',
+   398→      passwordHash: hashPassword(DEMO_PASSWORD),
+   399→      phone: '+91-99999-00001',
+   400→      officerProfile: { create: { department: 'Career Development Cell', title: 'Placement Officer' } },
+   401→    },
+   402→  })
+   403→
+   404→  // 4. Recruiter accounts
+   405→  console.log('  → Creating recruiter accounts...')
+   406→  const recruiterEmails: Array<{ company: string; name: string; email: string }> = [
+   407→    { company: 'Northwind Tech', name: 'Anjali Rao', email: 'recruiter@northwind.example' },
+   408→    { company: 'Quantum Labs', name: 'Dev Patel', email: 'recruiter@quantum.example' },
+   409→    { company: 'Helix Cloud', name: 'Maya Iyer', email: 'recruiter@helix.example' },
+   410→    { company: 'BrightPath Fintech', name: 'Karan Sethi', email: 'recruiter@brightpath.example' },
+   411→  ]
+   412→  for (const r of recruiterEmails) {
+   413→    const companyId = companyMap.get(r.company)!
+   414→    await db.user.create({
+   415→      data: {
+   416→        email: r.email,
+   417→        name: r.name,
+   418→        role: 'RECRUITER',
+   419→        passwordHash: hashPassword(DEMO_PASSWORD),
+   420→        phone: '+91-99999-00002',
+   421→        recruiterProfile: {
+   422→          create: { companyId, position: 'Senior Technical Recruiter' },
+   423→        },
+   424→      },
+   425→    })
+   426→  }
+   427→
+   428→  // 5. Admin
+   429→  console.log('  → Creating admin account...')
+   430→  await db.user.create({
+   431→    data: {
+   432→      email: 'admin@demo.edu',
+   433→      name: 'System Administrator',
+   434→      role: 'ADMIN',
+   435→      passwordHash: hashPassword(DEMO_PASSWORD),
+   436→    },
+   437→  })
+   438→
+   439→  // 6. Students with profiles, skills, evidence
+   440→  console.log('  → Creating students with profiles, skills, evidence...')
+   441→  for (let i = 0; i < STUDENT_DATA.length; i++) {
+   442→    const s = STUDENT_DATA[i]
+   443→    const user = await db.user.create({
+   444→      data: {
+   445→        email: s.email,
+   446→        name: s.name,
+   447→        role: 'STUDENT',
+   448→        passwordHash: hashPassword(DEMO_PASSWORD),
+   449→      },
+   450→    })
+   451→    const profile = await db.studentProfile.create({
+   452→      data: {
+   453→        userId: user.id,
+   454→        university: 'National Institute of Technology',
+   455→        batch: s.batch,
+   456→        branch: s.branch,
+   457→        cgpa: s.cgpa,
+   458→        bio: s.bio,
+   459→        location: s.location,
+   460→        githubUser: s.githubUser,
+   461→        linkedinUrl: `https://linkedin.com/in/${s.githubUser}`,
+   462→        portfolioUrl: `https://${s.githubUser}.github.io`,
+   463→        graduationYear: parseInt(s.batch.split('-')[1], 10),
+   464→        profileCompletion: 75,
+   465→      },
+   466→    })
+   467→
+   468→    const [startYear, endYear] = s.batch.split('-').map(x => parseInt(x, 10))
+   469→    await db.education.create({
+   470→      data: {
+   471→        studentId: profile.id,
+   472→        degree: 'B.Tech',
+   473→        institution: 'National Institute of Technology',
+   474→        startYear,
+   475→        endYear,
+   476→        score: s.cgpa,
+   477→        scoreType: 'cgpa',
+   478→        field: s.branch,
+   479→      },
+   480→    })
+   481→
+   482→    let verified = true
+   483→    for (const sk of s.skills) {
+   484→      const skillId = skillMap.get(sk.name)
+   485→      if (!skillId) continue
+   486→      const isVerified = verified && sk.level !== 'beginner'
+   487→      await db.studentSkill.create({
+   488→        data: {
+   489→          studentId: profile.id,
+   490→          skillId,
+   491→          selfRated: sk.level,
+   492→          isClaimed: true,
+   493→          isVerified,
+   494→          source: 'self',
+   495→        },
+   496→      })
+   497→
+   498→      const status = isVerified ? 'VERIFIED' : (verified ? 'PENDING_REVIEW' : 'UNVERIFIED')
+   499→      const evidenceTypes = ['assessment', 'project', 'github', 'certification'] as const
+   500→      const evType = evidenceTypes[Math.floor(Math.random() * evidenceTypes.length)]
+   501→      const evidence = await db.evidence.create({
+   502→        data: {
+   503→          studentId: profile.id,
+   504→          type: evType,
+   505→          title: `${s.name.split(' ')[0]}'s ${sk.name.toUpperCase()} ${evType}`,
+   506→          description: `Evidence supporting ${sk.name} skill. Submitted by student for review.`,
+   507→          sourceUrl: evType === 'github' ? `https://github.com/${s.githubUser}/project-${i}-${sk.name.replace(/\W/g, '')}` : undefined,
+   508→          organization: evType === 'certification' ? 'Coursera' : evType === 'assessment' ? 'HackerRank' : undefined,
+   509→          assessor: evType === 'assessment' ? 'Prof. Reviewer' : undefined,
+   510→          score: evType === 'assessment' ? Math.floor(60 + Math.random() * 40) : null,
+   511→          maxScore: evType === 'assessment' ? 100 : null,
+   512→          status,
+   513→          reviewerId: status === 'VERIFIED' ? officer.id : null,
+   514→          reviewerNotes: status === 'VERIFIED' ? 'Verified during placement review cycle.' : undefined,
+   515→          reviewedAt: status === 'VERIFIED' ? new Date() : null,
+   516→          provenance: JSON.stringify({ submittedBy: user.id, source: 'self' }),
+   517→        },
+   518→      })
+   519→      await db.evidenceSkill.create({
+   520→        data: { evidenceId: evidence.id, skillId, relevance: 1.0 },
+   521→      })
+   522→      verified = !verified
+   523→    }
+   524→
+   525→    await db.project.create({
+   526→      data: {
+   527→        studentId: profile.id,
+   528→        title: `${s.name.split(' ')[0]}'s Capstone Project`,
+   529→        description: `A capstone project showcasing ${s.skills.slice(0, 3).map(x => x.name).join(', ')} capabilities.`,
+   530→        repoUrl: `https://github.com/${s.githubUser}/capstone`,
+   531→        demoUrl: `https://${s.githubUser}.github.io/capstone`,
+   532→        status: 'COMPLETED',
+   533→        teamSize: 3,
+   534→        role: 'Lead Developer',
+   535→      },
+   536→    })
+   537→  }
+   538→  console.log(`  ✓ Created ${STUDENT_DATA.length} students with skills and evidence`)
+   539→
+   540→  // 7. Assessments + results
+   541→  console.log('  → Creating assessments...')
+   542→  const dsaSkill = skillMap.get('data structures')!
+   543→  const dsaAssessment = await db.assessment.create({
+   544→    data: {
+   545→      name: 'DSA Proficiency Test',
+   546→      organization: 'HackerRank',
+   547→      skillId: dsaSkill,
+   548→      maxScore: 100,
+   549→      description: 'Standard DSA proficiency assessment covering arrays, trees, graphs and DP.',
+   550→    },
+   551→  })
+   552→  const studentsForResults = await db.studentProfile.findMany({ take: 8 })
+   553→  for (const sp of studentsForResults) {
+   554→    const score = 60 + Math.floor(Math.random() * 35)
+   555→    await db.assessmentResult.create({
+   556→      data: {
+   557→        assessmentId: dsaAssessment.id,
+   558→        studentId: sp.id,
+   559→        score,
+   560→        percentile: 50 + Math.floor(Math.random() * 45),
+   561→      },
+   562→    })
+   563→  }
+   564→
+   565→  // 8. Jobs
+   566→  console.log('  → Creating jobs...')
+   567→  const jobIds: string[] = []
+   568→  for (const j of JOBS) {
+   569→    const companyId = companyMap.get(j.company)
+   570→    if (!companyId) continue
+   571→    const job = await db.job.create({
+   572→      data: {
+   573→        title: j.title,
+   574→        companyId,
+   575→        description: j.description,
+   576→        location: j.location,
+   577→        workArrangement: j.workArrangement,
+   578→        employmentType: j.employmentType,
+   579→        minExperience: j.minExp,
+   580→        maxExperience: j.maxExp,
+   581→        salaryMin: j.salaryMin,
+   582→        salaryMax: j.salaryMax,
+   583→        applicationUrl: `https://example.com/apply/${j.title.toLowerCase().replace(/\W+/g, '-')}`,
+   584→        closingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+   585→        status: 'OPEN',
+   586→        sourceType: j.sourceType,
+   587→        sourceUrl: j.sourceUrl,
+   588→        externalId: j.externalId,
+   589→        batchEligible: j.batch,
+   590→        eligibilityCriteria: `Eligible batch: ${j.batch}. CGPA >= 7.0. No active backlogs.`,
+   591→      },
+   592→    })
+   593→    jobIds.push(job.id)
+   594→    for (const skName of j.required) {
+   595→      const sid = skillMap.get(skName)
+   596→      if (!sid) continue
+   597→      await db.jobSkill.create({
+   598→        data: { jobId: job.id, skillId: sid, weight: 4, isRequired: true, minLevel: 'intermediate' },
+   599→      })
+   600→    }
+   601→    for (const skName of j.preferred) {
+   602→      const sid = skillMap.get(skName)
+   603→      if (!sid) continue
+   604→      await db.jobSkill.create({
+   605→        data: { jobId: job.id, skillId: sid, weight: 1, isRequired: false, minLevel: 'beginner' },
+   606→      })
+   607→    }
+   608→  }
+   609→  console.log(`  ✓ Created ${JOBS.length} jobs`)
+   610→
+   611→  // 9. Pre-compute match results
+   612→  console.log('  → Pre-computing match results...')
+   613→  const students = await db.studentProfile.findMany({
+   614→    include: {
+   615→      skills: { include: { skill: true } },
+   616→      evidence: { include: { skills: true } },
+   617→    },
+   618→  })
+   619→  const jobs = await db.job.findMany({ include: { requirements: { include: { skill: true } } } })
+   620→  let matchCount = 0
+   621→  for (const job of jobs) {
+   622→    for (const student of students) {
+   623→      const reqs = job.requirements.map(r => ({
+   624→        skillId: r.skillId,
+   625→        displayName: r.skill.displayName,
+   626→        isRequired: r.isRequired,
+   627→        weight: r.weight,
+   628→      }))
+   629→      const studentEvidence = job.requirements.map(r => {
+   630→        const skillEvidence = student.evidence
+   631→          .filter(e => e.skills.some(es => es.skillId === r.skillId))
+   632→          .map(e => ({
+   633→            evidenceId: e.id,
+   634→            status: e.status,
+   635→            relevance: e.skills.find(es => es.skillId === r.skillId)?.relevance ?? 1,
+   636→            type: e.type,
+   637→            title: e.title,
+   638→          }))
+   639→        return { skillId: r.skillId, evidence: skillEvidence }
+   640→      })
+   641→      const EVIDENCE_VALUE_RULES: Record<string, number> = {
+   642→        VERIFIED: 1.0, PENDING_REVIEW: 0.25, UNVERIFIED: 0.25, REJECTED: 0, NEEDS_MORE_EVIDENCE: 0,
+   643→      }
+   644→      let totalWeightedMatch = 0, totalWeight = 0, reqCovered = 0, reqTotal = 0, prefCovered = 0, prefTotal = 0
+   645→      const matchingSkills: any[] = []
+   646→      const missingSkills: any[] = []
+   647→      const breakdown: any[] = []
+   648→      for (const req of reqs) {
+   649→        const ev = studentEvidence.find(se => se.skillId === req.skillId)?.evidence ?? []
+   650→        let max = 0, best: any = undefined
+   651→        for (const e of ev) {
+   652→          const base = EVIDENCE_VALUE_RULES[e.status] ?? 0
+   653→          const value = base * Math.max(0, Math.min(1, e.relevance))
+   654→          if (value > max) { max = value; best = e }
+   655→        }
+   656→        totalWeightedMatch += req.weight * max
+   657→        totalWeight += req.weight
+   658→        if (req.isRequired) {
+   659→          reqTotal += 1
+   660→          if (max >= 0.25) reqCovered += 1
+   661→          if (max === 0) missingSkills.push({ skillId: req.skillId, name: req.displayName, weight: req.weight, isRequired: true, status: ev.length === 0 ? 'NO_EVIDENCE' : 'INSUFFICIENT_EVIDENCE' })
+   662→        } else {
+   663→          prefTotal += 1
+   664→          if (max >= 0.25) prefCovered += 1
+   665→          if (max === 0) missingSkills.push({ skillId: req.skillId, name: req.displayName, weight: req.weight, isRequired: false, status: ev.length === 0 ? 'NO_EVIDENCE' : 'INSUFFICIENT_EVIDENCE' })
+   666→        }
+   667→        if (max >= 0.25 && best) {
+   668→          matchingSkills.push({ skillId: req.skillId, name: req.displayName, evidenceIds: ev.filter(e => EVIDENCE_VALUE_RULES[e.status] > 0).map(e => e.evidenceId) })
+   669→        }
+   670→        breakdown.push({ skillId: req.skillId, displayName: req.displayName, isRequired: req.isRequired, weight: req.weight, matchValue: max, bestEvidence: best, evidenceCount: ev.length })
+   671→      }
+   672→      const fitScore = totalWeight === 0 ? 0 : Math.round((totalWeightedMatch / totalWeight) * 1000) / 10
+   673→      const requiredCoverage = reqTotal === 0 ? 1 : reqCovered / reqTotal
+   674→      const preferredCoverage = prefTotal === 0 ? 1 : prefCovered / prefTotal
+   675→
+   676→      await db.matchResult.create({
+   677→        data: {
+   678→          jobId: job.id,
+   679→          studentId: student.id,
+   680→          fitScore,
+   681→          requiredCoverage,
+   682→          preferredCoverage,
+   683→          matchingSkills: JSON.stringify(matchingSkills),
+   684→          missingSkills: JSON.stringify(missingSkills),
+   685→          explanation: JSON.stringify({ breakdown, factorsSummary: '', recommendation: '' }),
+   686→          algorithmVersion: 'v1.0',
+   687→          inputs: JSON.stringify({}),
+   688→        },
+   689→      })
+   690→      matchCount++
+   691→    }
+   692→  }
+   693→  console.log(`  ✓ Created ${matchCount} match results`)
+   694→
+   695→  // 10. Sample applications
+   696→  console.log('  → Creating sample applications...')
+   697→  const statuses = ['APPLIED', 'UNDER_REVIEW', 'SHORTLISTED', 'INTERVIEW', 'OFFER', 'REJECTED', 'WITHDRAWN']
+   698→  let appCount = 0
+   699→  for (let i = 0; i < Math.min(students.length, 10); i++) {
+   700→    const student = students[i]
+   701→    const numApps = 2 + Math.floor(Math.random() * 3)
+   702→    for (let j = 0; j < numApps && j < jobs.length; j++) {
+   703→      const job = jobs[(i + j) % jobs.length]
+   704→      const status = statuses[Math.floor(Math.random() * statuses.length)]
+   705→      try {
+   706→        await db.application.create({
+   707→          data: {
+   708→            studentId: student.id,
+   709→            jobId: job.id,
+   710→            status,
+   711→            coverLetter: `I am excited to apply for the ${job.title} role.`,
+   712→            events: {
+   713→              create: [{
+   714→                newStatus: 'APPLIED',
+   715→                actorId: officer.id,
+   716→                reason: 'Initial application submitted',
+   717→              }],
+   718→            },
+   719→          },
+   720→        })
+   721→        appCount++
+   722→      } catch (e) {
+   723→        // skip duplicates
+   724→      }
+   725→    }
+   726→  }
+   727→  console.log(`  ✓ Created ${appCount} applications`)
+   728→
+   729→  // 11. Interviews and offers
+   730→  console.log('  → Creating interviews and offers...')
+   731→  const someApps = await db.application.findMany({ take: 5 })
+   732→  for (const app of someApps) {
+   733→    await db.interview.create({
+   734→      data: {
+   735→        applicationId: app.id,
+   736→        scheduledAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+   737→        duration: 60,
+   738→        location: 'Virtual',
+   739→        meetingUrl: `https://meet.example.com/interview-${app.id.slice(0, 6)}`,
+   740→        type: 'TECHNICAL',
+   741→        round: 1,
+   742→        notes: 'Technical interview. Be ready to discuss system design and DSA.',
+   743→      },
+   744→    })
+   745→    if (Math.random() > 0.5) {
+   746→      await db.offer.create({
+   747→        data: {
+   748→          applicationId: app.id,
+   749→          amount: 900000 + Math.floor(Math.random() * 800000),
+   750→          currency: 'INR',
+   751→          decision: Math.random() > 0.5 ? 'ACCEPTED' : 'PENDING',
+   752→          expiresAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+   753→        },
+   754→      })
+   755→    }
+   756→  }
+   757→
+   758→  // 12. Job sources
+   759→  await db.jobSource.create({ data: { name: 'Manual', type: 'MANUAL', status: 'ACTIVE', count: 5 } })
+   760→  await db.jobSource.create({ data: { name: 'Partner Feed - Northwind', type: 'FEED', status: 'ACTIVE', count: 2, endpoint: 'https://example.com/feed' } })
+   761→  await db.jobSource.create({ data: { name: 'Alumni Referrals', type: 'ALUMNI', status: 'ACTIVE', count: 2 } })
+   762→  await db.jobSource.create({ data: { name: 'CSV Import', type: 'CSV', status: 'ACTIVE', count: 1 } })
+   763→
+   764→  // 13. Audit event
+   765→  await db.auditEvent.create({
+   766→    data: {
+   767→      actorId: officer.id,
+   768→      action: 'EVIDENCE_REVIEW',
+   769→      targetType: 'Evidence',
+   770→      reason: 'Bulk evidence review during placement cycle',
+   771→      metadata: JSON.stringify({ status: 'VERIFIED' }),
+   772→    },
+   773→  })
+   774→
+   775→  console.log('✅ Seeding complete!\n')
+   776→  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+   777→  console.log(' DEMO CREDENTIALS (clearly fake/synthetic)')
+   778→  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+   779→  console.log(` Student:    <student-email>@demo.edu  / ${DEMO_PASSWORD}`)
+   780→  console.log('   (e.g. aarav.sharma@demo.edu)')
+   781→  console.log(` Officer:    officer@demo.edu       / ${DEMO_PASSWORD}`)
+   782→  console.log(` Recruiter:  recruiter@northwind.example / ${DEMO_PASSWORD}`)
+   783→  console.log(` Admin:      admin@demo.edu         / ${DEMO_PASSWORD}`)
+   784→  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n')
+   785→}
+   786→
+   787→main()
+   788→  .catch(e => {
+   789→    console.error('Seeding failed:', e)
+   790→    process.exit(1)
+   791→  })
+   792→  .finally(async () => {
+   793→    await db.$disconnect()
+   794→  })
+   795→

@@ -1,0 +1,1315 @@
+     1→     1→# MASTER DEVELOPMENT PROMPT — PS6: PLACEMENT HUB
+     2→     2→## Build a Complete, Production-Structured, Full-Stack Evidence-Based Campus Placement Platform
+     3→     3→
+     4→     4→### 1. ROLE AND MISSION
+     5→     5→
+     6→     6→Act as a senior full-stack software engineer, solution architect, UI/UX designer, database engineer, AI engineer and application security specialist.
+     7→     7→
+     8→     8→Build a complete, functional, responsive web application called **Placement Hub**.
+     9→     9→
+    10→    10→This application addresses the following problem:
+    11→    11→
+    12→    12→College students often apply to many jobs using generic resumes and unverified skill claims. Placement officers receive openings through multiple sources, struggle to track candidates and duplicate postings, and lack a reliable way to rank students. Employers need shortlists based on demonstrable skills rather than unsupported resume statements.
+    13→    13→
+    14→    14→Your mission is to implement a unified evidence-based placement management platform that connects:
+    15→    15→
+    16→    16→1. Employer job requirements.
+    17→    17→2. Students' actual skills and supporting evidence.
+    18→    18→3. Explainable job-fit scoring and skill-gap analysis.
+    19→    19→4. Truthful, job-specific resume generation.
+    20→    20→5. Centralized application tracking.
+    21→    21→6. Batch-wide student ranking.
+    22→    22→7. Recruiter shortlisting and optional alumni and interview-question features.
+    23→    23→
+    24→    24→**Core product principle: Every skill claim, match recommendation and generated resume bullet must be traceable to supporting evidence or explicitly identified as unverified.**
+    25→    25→
+    26→    26→Do not build a generic job board with decorative AI features. Implement the actual business logic behind the product.
+    27→    27→
+    28→    28→---
+    29→    29→
+    30→    30→# 2. DEVELOPMENT RULES
+    31→    31→
+    32→    32→Before writing code:
+    33→    33→
+    34→    34→- Inspect the existing repository, framework, files, dependencies and project structure.
+    35→    35→- Preserve useful existing work. Do not overwrite working functionality unnecessarily.
+    36→    36→- Identify the existing technology stack before deciding whether to extend or refactor it.
+    37→    37→- If the repository is empty, use the architecture specified below.
+    38→    38→- Create a short implementation plan and then start implementing immediately.
+    39→    39→- Do not stop after creating a plan, design mockup, landing page or initial scaffold.
+    40→    40→- Build the frontend, backend, database, API integration, authentication and business logic.
+    41→    41→- Connect every primary interface to real backend functionality.
+    42→    42→- Use seeded demonstration data so the application can be tested immediately.
+    43→    43→- Do not leave primary buttons, forms, dashboards or navigation elements nonfunctional.
+    44→    44→- Do not replace required backend operations with hardcoded frontend arrays.
+    45→    45→- Never claim that a feature, integration, test or deployment works unless it has actually been implemented and verified.
+    46→    46→- If an external service requires API credentials, build a functional integration adapter and a clearly labeled demonstration mode.
+    47→    47→- If context or execution limits prevent completion, prioritize a working end-to-end core product, document remaining work and continue from the existing implementation without restarting.
+    48→    48→
+    49→    49→Prefer readable, modular, maintainable code with appropriate validation, error handling, tests and documentation.
+    50→    50→
+    51→    51→---
+    52→    52→
+    53→    53→# 3. TECHNOLOGY STACK
+    54→    54→
+    55→    55→If no existing stack must be preserved, use the following architecture.
+    56→    56→
+    57→    57→## Frontend
+    58→    58→
+    59→    59→- React
+    60→    60→- TypeScript
+    61→    61→- Vite
+    62→    62→- Tailwind CSS
+    63→    63→- shadcn/ui or equivalent accessible UI primitives
+    64→    64→- Lucide icons
+    65→    65→- React Router
+    66→    66→- TanStack Query for API data fetching and caching
+    67→    67→- React Hook Form with Zod validation
+    68→    68→- Recharts for placement analytics
+    69→    69→- A maintained toast/notification component
+    70→    70→
+    71→    71→## Backend
+    72→    72→
+    73→    73→- Python 3.12+
+    74→    74→- FastAPI
+    75→    75→- Pydantic
+    76→    76→- SQLAlchemy 2
+    77→    77→- Alembic database migrations
+    78→    78→- PostgreSQL
+    79→    79→- JWT-based authentication with secure password hashing
+    80→    80→- Role-based authorization
+    81→    81→- Pytest for backend tests
+    82→    82→
+    83→    83→## Additional libraries and services
+    84→    84→
+    85→    85→- GitHub REST API for authorized repository metadata retrieval.
+    86→    86→- ReportLab or another suitable library for generating PDF resumes.
+    87→    87→- python-docx for optional DOCX resume export.
+    88→    88→- Docker and Docker Compose for reproducible local development.
+    89→    89→- A clear configuration layer using environment variables.
+    90→    90→
+    91→    91→Use supported, mutually compatible package versions. Pin versions or use compatible version ranges in dependency files.
+    92→    92→
+    93→    93→### Architecture requirements
+    94→    94→
+    95→    95→Create a clean monorepo, for example:
+    96→    96→
+    97→    97→    placement-hub/
+    98→    98→      frontend/
+    99→    99→        src/
+   100→   100→          components/
+   101→   101→          pages/
+   102→   102→          layouts/
+   103→   103→          hooks/
+   104→   104→          services/
+   105→   105→          types/
+   106→   106→          utils/
+   107→   107→        public/
+   108→   108→        package.json
+   109→   109→        vite.config.ts
+   110→   110→      backend/
+   111→   111→        app/
+   112→   112→          api/
+   113→   113→          core/
+   114→   114→          db/
+   115→   115→          models/
+   116→   116→          schemas/
+   117→   117→          services/
+   118→   118→          integrations/
+   119→   119→          tests/
+   120→   120→          main.py
+   121→   121→        alembic/
+   122→   122→        requirements.txt
+   123→   123→      docker-compose.yml
+   124→   124→      .env.example
+   125→   125→      README.md
+   126→   126→
+   127→   127→Adjust this structure when technically appropriate.
+   128→   128→
+   129→   129→Use clear separation between UI components, API endpoints, domain logic, database access and external integrations.
+   130→   130→
+   131→   131→Do not put the entire application into one giant component or one backend file.
+   132→   132→
+   133→   133→---
+   134→   134→
+   135→   135→# 4. USER ROLES AND ACCESS CONTROL
+   136→   136→
+   137→   137→Implement three principal roles, with optional administrator support.
+   138→   138→
+   139→   139→## A. Student
+   140→   140→
+   141→   141→Students can:
+   142→   142→
+   143→   143→- Register and sign in.
+   144→   144→- Complete their profile.
+   145→   145→- Add skills and link supporting evidence.
+   146→   146→- Upload project documents and permitted evidence files.
+   147→   147→- Connect a GitHub account or provide repository URLs.
+   148→   148→- View evidence-verification status.
+   149→   149→- Browse and filter suitable jobs.
+   150→   150→- View their job-fit score and matching explanations.
+   151→   151→- Review missing skills and recommended next steps.
+   152→   152→- Generate and download tailored resumes.
+   153→   153→- Manage their job applications.
+   154→   154→- Track interviews, results and offers.
+   155→   155→- View their own activity and application history.
+   156→   156→
+   157→   157→Students must not be able to verify their own evidence by changing a status field or sending an unauthorized API request.
+   158→   158→
+   159→   159→## B. Placement Officer
+   160→   160→
+   161→   161→Placement officers can:
+   162→   162→
+   163→   163→- View and manage authorized students.
+   164→   164→- Create, import and edit job openings.
+   165→   165→- Manage job sources and duplicate postings.
+   166→   166→- Review submitted skill evidence.
+   167→   167→- Approve, reject or request additional evidence with a reason.
+   168→   168→- Create or review assessments and assessment results.
+   169→   169→- Run matching against an entire eligible student batch.
+   170→   170→- View ranked candidate lists.
+   171→   171→- Understand why candidates received particular scores.
+   172→   172→- View unsupported claims and incomplete evidence.
+   173→   173→- Track applications from submission to final outcome.
+   174→   174→- Update application stages according to permissions.
+   175→   175→- View placement analytics.
+   176→   176→- Export authorized reports to CSV.
+   177→   177→
+   178→   178→A placement officer should not be able to silently alter evidence, assessments or historical application outcomes. Record important changes in an audit log.
+   179→   179→
+   180→   180→## C. Recruiter
+   181→   181→
+   182→   182→Recruiters can:
+   183→   183→
+   184→   184→- View jobs associated with their company.
+   185→   185→- Create or manage authorized job openings.
+   186→   186→- Specify required and preferred skills.
+   187→   187→- View candidates authorized for their openings.
+   188→   188→- See ranked shortlists and evidence summaries.
+   189→   189→- View resume versions shared with them.
+   190→   190→- Update authorized recruitment-stage information.
+   191→   191→- Record interview outcomes where permitted.
+   192→   192→
+   193→   193→Recruiters must not automatically gain access to every student's personal information, private evidence or unrelated job applications.
+   194→   194→
+   195→   195→## D. Administrator
+   196→   196→
+   197→   197→Provide an optional administrative role for managing users, roles, global configuration and integrations.
+   198→   198→
+   199→   199→Implement backend role checks on every protected endpoint. Frontend route guards alone are insufficient.
+   200→   200→
+   201→   201→---
+   202→   202→
+   203→   203→# 5. UI/UX AND VISUAL DESIGN
+   204→   204→
+   205→   205→Create a premium, polished SaaS application suitable for a college hackathon demonstration and realistic future deployment.
+   206→   206→
+   207→   207→## Design direction
+   208→   208→
+   209→   209→Use a modern enterprise dashboard aesthetic inspired by high-quality productivity and recruiting applications.
+   210→   210→
+   211→   211→Preferred visual characteristics:
+   212→   212→
+   213→   213→- Clean layout and strong visual hierarchy.
+   214→   214→- Deep navy or slate text.
+   215→   215→- Professional blue or indigo primary accents.
+   216→   216→- White and light-neutral surfaces.
+   217→   217→- Restrained use of green, amber and red for meaningful statuses.
+   218→   218→- Subtle borders, shadows and rounded corners.
+   219→   219→- Consistent typography and spacing.
+   220→   220→- Attractive charts and meaningful data visualization.
+   221→   221→- Responsive desktop, tablet and mobile layouts.
+   222→   222→- Accessible color contrast and keyboard navigation.
+   223→   223→
+   224→   224→Use consistent design tokens instead of arbitrary colors in every component.
+   225→   225→
+   226→   226→Avoid excessive gradients, glowing elements, unnecessary animation, huge empty hero sections and decorative UI that consumes space without conveying information.
+   227→   227→
+   228→   228→Make important information easy to understand quickly.
+   229→   229→
+   230→   230→## Main public pages
+   231→   231→
+   232→   232→1. Landing page.
+   233→   233→2. Product overview and feature sections.
+   234→   234→3. Sign-in page.
+   235→   235→4. Registration page.
+   236→   236→5. Unauthorized and not-found pages.
+   237→   237→
+   238→   238→## Student application
+   239→   239→
+   240→   240→Create the following pages:
+   241→   241→
+   242→   242→1. Student dashboard.
+   243→   243→2. Profile and education editor.
+   244→   244→3. Skills and evidence profile.
+   245→   245→4. GitHub projects.
+   246→   246→5. Job discovery.
+   247→   247→6. Job detail and fit analysis.
+   248→   248→7. Resume builder and preview.
+   249→   249→8. Application tracker.
+   250→   250→9. Interview and offer details.
+   251→   251→10. Account settings.
+   252→   252→
+   253→   253→## Placement officer application
+   254→   254→
+   255→   255→Create:
+   256→   256→
+   257→   257→1. Placement overview dashboard.
+   258→   258→2. Student directory.
+   259→   259→3. Individual student profile.
+   260→   260→4. Evidence-review queue.
+   261→   261→5. Job management and import.
+   262→   262→6. Duplicate-job review.
+   263→   263→7. Job requirements editor.
+   264→   264→8. Batch-ranking interface.
+   265→   265→9. Application pipeline.
+   266→   266→10. Placement analytics and export.
+   267→   267→
+   268→   268→## Recruiter application
+   269→   269→
+   270→   270→Create:
+   271→   271→
+   272→   272→1. Recruiter dashboard.
+   273→   273→2. Company job management.
+   274→   274→3. Candidate shortlist.
+   275→   275→4. Candidate evidence summary.
+   276→   276→5. Shared resume viewer.
+   277→   277→6. Recruitment pipeline.
+   278→   278→
+   279→   279→Every navigation item and primary call-to-action must lead to a working page or a clearly implemented action.
+   280→   280→
+   281→   281→Include realistic loading, error, empty, success and permission-denied states.
+   282→   282→
+   283→   283→Use pagination or server-side filtering for large tables.
+   284→   284→
+   285→   285→---
+   286→   286→
+   287→   287→# 6. DASHBOARDS AND ANALYTICS
+   288→   288→
+   289→   289→## Student dashboard
+   290→   290→
+   291→   291→Display real data from the backend:
+   292→   292→
+   293→   293→- Profile completion.
+   294→   294→- Number of supported and unverified skills.
+   295→   295→- Number of suitable active jobs.
+   296→   296→- Recent job matches.
+   297→   297→- Average fit score across selected jobs.
+   298→   298→- Active applications.
+   299→   299→- Upcoming interviews.
+   300→   300→- Recent application updates.
+   301→   301→- Missing skills in the student's target roles.
+   302→   302→
+   303→   303→Add clear navigation to the detailed pages.
+   304→   304→
+   305→   305→Do not inflate profile completion or verification counts by using invented values.
+   306→   306→
+   307→   307→## Placement officer dashboard
+   308→   308→
+   309→   309→Display:
+   310→   310→
+   311→   311→- Total active students.
+   312→   312→- Active job openings.
+   313→   313→- Pending evidence reviews.
+   314→   314→- Students matched to selected jobs.
+   315→   315→- Applications by stage.
+   316→   316→- Interviews and offers.
+   317→   317→- Job-source distribution.
+   318→   318→- Recent placement activity.
+   319→   319→- Top candidate matches for a selected opening.
+   320→   320→
+   321→   321→All metrics must be calculated from the database, with filters where appropriate.
+   322→   322→
+   323→   323→## Recruiter dashboard
+   324→   324→
+   325→   325→Display:
+   326→   326→
+   327→   327→- Active openings.
+   328→   328→- Candidate counts.
+   329→   329→- Ranked shortlists.
+   330→   330→- Candidates requiring review.
+   331→   331→- Recruitment-stage distribution.
+   332→   332→- Recent candidate and application activity.
+   333→   333→
+   334→   334→Use Recharts where useful. Charts must have proper titles, labels, legends where necessary and empty-state handling.
+   335→   335→
+   336→   336→---
+   337→   337→
+   338→   338→# 7. STUDENT PROFILE AND EVIDENCE VERIFICATION
+   339→   339→
+   340→   340→This is one of the core differentiators of Placement Hub.
+   341→   341→
+   342→   342→Do not treat a manually entered skill as verified simply because it appears on a student's profile.
+   343→   343→
+   344→   344→## Supported evidence types
+   345→   345→
+   346→   346→Implement a flexible evidence system that supports:
+   347→   347→
+   348→   348→- Assessment results.
+   349→   349→- Evaluated academic projects.
+   350→   350→- Personal and team projects.
+   351→   351→- GitHub repositories.
+   352→   352→- Certifications.
+   353→   353→- Demonstration URLs.
+   354→   354→- Uploaded reports and project documents.
+   355→   355→- Instructor or reviewer feedback.
+   356→   356→
+   357→   357→## Evidence data model
+   358→   358→
+   359→   359→Each evidence record should include, as applicable:
+   360→   360→
+   361→   361→- Evidence ID.
+   362→   362→- Student ID.
+   363→   363→- Evidence type.
+   364→   364→- Relevant skill IDs.
+   365→   365→- Title and description.
+   366→   366→- Source URL or secure file reference.
+   367→   367→- Date submitted.
+   368→   368→- Issuing organization or assessor when relevant.
+   369→   369→- Assessment score and maximum score when applicable.
+   370→   370→- Reviewer ID.
+   371→   371→- Verification status.
+   372→   372→- Reviewer notes.
+   373→   373→- Created and updated timestamps.
+   374→   374→- Provenance information.
+   375→   375→
+   376→   376→## Evidence statuses
+   377→   377→
+   378→   378→Use explicit states:
+   379→   379→
+   380→   380→- `unverified`
+   381→   381→- `pending_review`
+   382→   382→- `verified`
+   383→   383→- `rejected`
+   384→   384→- `needs_more_evidence`
+   385→   385→
+   386→   386→Only an authorized reviewer or a documented automated verification rule may transition evidence to a verified state.
+   387→   387→
+   388→   388→Every reviewer decision should record the actor, time and reason.
+   389→   389→
+   390→   390→## Skill verification rules
+   391→   391→
+   392→   392→Examples:
+   393→   393→
+   394→   394→- An assessment score can support a skill when the assessment identity, score and scoring rules are recorded.
+   395→   395→- A project can support a skill only after an appropriate review or evaluation rule.
+   396→   396→- A GitHub repository can provide metadata and code evidence but must not automatically establish professional-level mastery.
+   397→   397→- A certification can establish that a certificate was submitted; stronger verification may require issuer or credential checks.
+   398→   398→- Student self-reported skills must remain distinguishable from independently supported skills.
+   399→   399→
+   400→   400→Do not invent verification results.
+   401→   401→
+   402→   402→For a hackathon demonstration, use seed records explicitly marked as sample verified, sample pending or sample unverified.
+   403→   403→
+   404→   404→## Evidence viewer
+   405→   405→
+   406→   406→Build a usable evidence-review interface showing:
+   407→   407→
+   408→   408→- Skill supported.
+   409→   409→- Evidence source.
+   410→   410→- Verification history.
+   411→   411→- Review status.
+   412→   412→- Reviewer notes.
+   413→   413→- Relevant repository, assessment or project information.
+   414→   414→
+   415→   415→Provide approve, reject and request-more-evidence controls for authorized users.
+   416→   416→
+   417→   417→Each operation must call the backend and update the interface using the returned result.
+   418→   418→
+   419→   419→---
+   420→   420→
+   421→   421→# 8. SKILL NORMALIZATION ENGINE
+   422→   422→
+   423→   423→Different job sources use different names for the same skill.
+   424→   424→
+   425→   425→Implement a canonical skill catalog with aliases.
+   426→   426→
+   427→   427→Examples:
+   428→   428→
+   429→   429→- `ReactJS` → `React`
+   430→   430→- `React.js` → `React`
+   431→   431→- `React JS` → `React`
+   432→   432→- `Postgres` → `PostgreSQL`
+   433→   433→- `JS` → `JavaScript` only when context establishes that meaning.
+   434→   434→
+   435→   435→Store:
+   436→   436→
+   437→   437→- Canonical skill ID.
+   438→   438→- Canonical display name.
+   439→   439→- Aliases.
+   440→   440→- Optional category.
+   441→   441→- Version or variant where relevant.
+   442→   442→
+   443→   443→Normalization must be case-insensitive and whitespace-insensitive where appropriate.
+   444→   444→
+   445→   445→Do not collapse distinct technologies into the same skill. For example, Java and JavaScript are different skills. React and React Native are related but must not automatically become identical.
+   446→   446→
+   447→   447→Use a deterministic alias dictionary first. Add context-aware or semantic matching only when needed.
+   448→   448→
+   449→   449→Allow placement officers to review uncertain mappings and improve the canonical catalog.
+   450→   450→
+   451→   451→---
+   452→   452→
+   453→   453→# 9. JOB MANAGEMENT AND MULTI-SOURCE INGESTION
+   454→   454→
+   455→   455→Implement job creation, editing, discovery, importing and duplicate detection.
+   456→   456→
+   457→   457→## Job sources
+   458→   458→
+   459→   459→Support these source types:
+   460→   460→
+   461→   461→- Manual company posting.
+   462→   462→- Partner-company feed.
+   463→   463→- Alumni referral.
+   464→   464→- Authorized external job API.
+   465→   465→- CSV job import.
+   466→   466→
+   467→   467→Create a common job-source adapter interface so new integrations can be added without rewriting the job-management module.
+   468→   468→
+   469→   469→For unavailable integrations, provide:
+   470→   470→
+   471→   471→- A working CSV importer.
+   472→   472→- Manual job creation.
+   473→   473→- Seeded sample postings.
+   474→   474→- An integration status screen.
+   475→   475→- Clear instructions for adding actual credentials.
+   476→   476→
+   477→   477→Never fabricate live job data or claim that a source has been connected without verification.
+   478→   478→
+   479→   479→## Job record
+   480→   480→
+   481→   481→Each job should include:
+   482→   482→
+   483→   483→- Job ID.
+   484→   484→- Title.
+   485→   485→- Company.
+   486→   486→- Description.
+   487→   487→- Location.
+   488→   488→- Work arrangement.
+   489→   489→- Employment type.
+   490→   490→- Required skills.
+   491→   491→- Preferred skills.
+   492→   492→- Eligibility requirements.
+   493→   493→- Minimum and maximum relevant experience if supplied.
+   494→   494→- Compensation information only when available.
+   495→   495→- Application URL or application instructions.
+   496→   496→- Source references.
+   497→   497→- Posting date and closing date where known.
+   498→   498→- Job status.
+   499→   499→- Company contact information where authorized.
+   500→   500→- Creation and update timestamps.
+   501→   501→
+   502→   502→Do not invent missing salaries, deadlines or eligibility requirements.
+   503→   503→
+   504→   504→## Job description parsing
+   505→   505→
+   506→   506→Implement a job requirement service that can extract or help the officer define:
+   507→   507→
+   508→   508→- Required skills.
+   509→   509→- Preferred skills.
+   510→   510→- Qualifications.
+   511→   511→- Experience requirements.
+   512→   512→- Location.
+   513→   513→- Job type.
+   514→   514→- Relevant role terminology.
+   515→   515→
+   516→   516→A deterministic parser is acceptable for the MVP. An optional LLM integration can improve extraction, but extracted requirements must be reviewable before publication or scoring.
+   517→   517→
+   518→   518→## Duplicate detection
+   519→   519→
+   520→   520→Detect duplicates through several layers:
+   521→   521→
+   522→   522→1. Exact external source and job ID.
+   523→   523→2. Canonicalized source URL.
+   524→   524→3. Normalized company, title and location.
+   525→   525→4. Similarity of normalized job descriptions.
+   526→   526→5. Creation date and other available identifying fields.
+   527→   527→
+   528→   528→Use deterministic matching and configurable similarity thresholds.
+   529→   529→
+   530→   530→Distinguish confirmed duplicates from possible duplicates.
+   531→   531→
+   532→   532→Do not merge two jobs automatically solely because they have similar titles.
+   533→   533→
+   534→   534→Build a duplicate-review screen with candidate matches and a side-by-side comparison.
+   535→   535→
+   536→   536→When jobs are merged, preserve source references and an audit record.
+   537→   537→
+   538→   538→---
+   539→   539→
+   540→   540→# 10. JOB-FIT SCORING ENGINE
+   541→   541→
+   542→   542→Implement an explainable and independently testable matching service.
+   543→   543→
+   544→   544→The system should compare job requirements with the student's evidence-backed profile.
+   545→   545→
+   546→   546→## Initial scoring formula
+   547→   547→
+   548→   548→For a given job and student, calculate:
+   549→   549→
+   550→   550→Fit score = 100 × (sum of requirement weight × evidence match value) / (sum of requirement weights)
+   551→   551→
+   552→   552→Use the following initial configurable weights:
+   553→   553→
+   554→   554→- Required skill: weight 4.
+   555→   555→- Preferred skill: weight 1.
+   556→   556→
+   557→   557→Each requirement has an evidence match value between 0 and 1.
+   558→   558→
+   559→   559→An example policy:
+   560→   560→
+   561→   561→- No submitted supporting evidence: 0.
+   562→   562→- Relevant evidence submitted but not yet reviewed: partial provisional credit.
+   563→   563→- Relevant evidence verified: credit according to the configured verification and relevance rules.
+   564→   564→- Rejected or irrelevant evidence: no positive credit from that evidence.
+   565→   565→
+   566→   566→These values are configurable policy examples, not universal measures of ability.
+   567→   567→
+   568→   568→When multiple evidence items support a skill, deduplicate the underlying skill contribution so one student cannot inflate their score merely by attaching numerous similar links.
+   569→   569→
+   570→   570→Keep the following concepts separate:
+   571→   571→
+   572→   572→- Skill claimed.
+   573→   573→- Evidence submitted.
+   574→   574→- Evidence verification status.
+   575→   575→- Evidence relevance.
+   576→   576→- Assessment result.
+   577→   577→- Match score for a job.
+   578→   578→
+   579→   579→## Required skill handling
+   580→   580→
+   581→   581→Show required-skill coverage separately from the overall fit score.
+   582→   582→
+   583→   583→If a student lacks evidence for a critical required skill, explicitly flag the gap.
+   584→   584→
+   585→   585→Do not automatically describe a missing skill as a confirmed inability to perform the work.
+   586→   586→
+   587→   587→Allow the placement officer to configure whether certain eligibility requirements are hard filters or review flags. Do not silently apply academic, demographic or other discriminatory rules.
+   588→   588→
+   589→   589→## Explainability
+   590→   590→
+   591→   591→For every student-job pair, return:
+   592→   592→
+   593→   593→- Overall fit score.
+   594→   594→- Required-skill coverage.
+   595→   595→- Preferred-skill coverage.
+   596→   596→- Matching skills.
+   597→   597→- Missing or insufficiently supported skills.
+   598→   598→- Supporting evidence references.
+   599→   599→- Evidence verification states.
+   600→   600→- Explanation of the main factors affecting the score.
+   601→   601→- Recommendation for closing relevant skill gaps.
+   602→   602→
+   603→   603→Store the scoring algorithm version and the relevant inputs so results can be reproduced or audited.
+   604→   604→
+   605→   605→Build unit tests for correct scoring, missing evidence, rejected evidence, duplicate evidence and edge cases.
+   606→   606→
+   607→   607→---
+   608→   608→
+   609→   609→# 11. BATCH-WIDE CANDIDATE RANKING
+   610→   610→
+   611→   611→Placement officers must be able to select one job and rank an entire eligible student batch.
+   612→   612→
+   613→   613→Implement:
+   614→   614→
+   615→   615→- Student batch or eligibility filters.
+   616→   616→- Minimum eligibility filters when configured.
+   617→   617→- Match-score calculation.
+   618→   618→- Stable, deterministic sorting.
+   619→   619→- Required-skill coverage.
+   620→   620→- Evidence-quality summary.
+   621→   621→- Missing-skills column.
+   622→   622→- Score explanation panel.
+   623→   623→- Candidate profile links.
+   624→   624→- CSV export.
+   625→   625→
+   626→   626→Allow the officer to filter by fit-score range, evidence status and required-skill coverage.
+   627→   627→
+   628→   628→Explain ties deterministically, for example using required-skill coverage followed by evidence relevance, rather than random ordering.
+   629→   629→
+   630→   630→The system must not make unsupported guarantees that the highest-ranked candidate will be hired or perform best.
+   631→   631→
+   632→   632→Show ranking as a decision-support tool, not as an automatic hiring decision.
+   633→   633→
+   634→   634→Do not allow hidden demographic attributes to influence the matching score.
+   635→   635→
+   636→   636→---
+   637→   637→
+   638→   638→# 12. TRUTHFUL, ATS-FRIENDLY RESUME GENERATOR
+   639→   639→
+   640→   640→Build a working resume-generation workflow.
+   641→   641→
+   642→   642→## Inputs
+   643→   643→
+   644→   644→- Student's profile.
+   645→   645→- Selected job opening.
+   646→   646→- Supporting evidence.
+   647→   647→- Approved or suitably supported project details.
+   648→   648→- Student-approved personal and education information.
+   649→   649→
+   650→   650→## Resume sections
+   651→   651→
+   652→   652→Include:
+   653→   653→
+   654→   654→- Name and contact information.
+   655→   655→- Professional summary.
+   656→   656→- Education.
+   657→   657→- Relevant technical skills.
+   658→   658→- Relevant projects.
+   659→   659→- Verified or appropriately supported experience.
+   660→   660→- Certifications and achievements with supporting details where available.
+   661→   661→
+   662→   662→Adapt section ordering and bullet selection to the selected job.
+   663→   663→
+   664→   664→## Evidence traceability
+   665→   665→
+   666→   666→Every generated factual achievement or project bullet must link internally to one or more evidence records.
+   667→   667→
+   668→   668→For every bullet, store:
+   669→   669→
+   670→   670→- Resume ID.
+   671→   671→- Bullet text.
+   672→   672→- Supporting evidence IDs.
+   673→   673→- Related skills.
+   674→   674→- Claim-review status.
+   675→   675→
+   676→   676→The resume interface should let students view the evidence behind each bullet.
+   677→   677→
+   678→   678→When no supporting evidence exists:
+   679→   679→
+   680→   680→- Do not invent a replacement fact.
+   681→   681→- Do not add fake proficiency, work experience or achievements.
+   682→   682→- Mark the unsupported claim for review or exclude it from the generated resume.
+   683→   683→- Explain what information or evidence the student could provide.
+   684→   684→
+   685→   685→If an uploaded resume contains unverified claims, flag those claims for review. Do not silently treat them as false, and do not silently accept them as verified.
+   686→   686→
+   687→   687→## AI use
+   688→   688→
+   689→   689→An optional LLM can help rewrite verified project descriptions and select relevant content for a job.
+   690→   690→
+   691→   691→The LLM must not invent metrics, business impact, tools used, employment history or project achievements.
+   692→   692→
+   693→   693→Use a factual-claim validation layer and retain evidence references outside the language model's free-form output.
+   694→   694→
+   695→   695→If no AI API key is available, provide a deterministic template-based resume generator. The platform must remain functional without a paid AI service.
+   696→   696→
+   697→   697→## Output formats
+   698→   698→
+   699→   699→Generate:
+   700→   700→
+   701→   701→- A one-page, ATS-friendly PDF.
+   702→   702→- Optional DOCX.
+   703→   703→- Editable resume preview.
+   704→   704→- Resume version history.
+   705→   705→- Download and regeneration controls.
+   706→   706→
+   707→   707→Avoid complex tables, graphics and multi-column layouts in the exported resume unless explicitly requested. Use clear headings, selectable text and standard formatting.
+   708→   708→
+   709→   709→Before export, display validation results for unsupported claims and missing required fields.
+   710→   710→
+   711→   711→---
+   712→   712→
+   713→   713→# 13. APPLICATION TRACKING PIPELINE
+   714→   714→
+   715→   715→Implement a normalized application model that tracks the student-job relationship.
+   716→   716→
+   717→   717→Support configurable stages such as:
+   718→   718→
+   719→   719→- Applied.
+   720→   720→- Under review.
+   721→   721→- Shortlisted.
+   722→   722→- Assessment.
+   723→   723→- Interview.
+   724→   724→- Offer.
+   725→   725→- Rejected.
+   726→   726→- Withdrawn.
+   727→   727→
+   728→   728→An offer may have a decision status such as accepted, declined or pending.
+   729→   729→
+   730→   730→Do not force every application into the same linear sequence. Record valid transitions and allow authorized role-specific changes.
+   731→   731→
+   732→   732→Each application record should have:
+   733→   733→
+   734→   734→- Application ID.
+   735→   735→- Student ID.
+   736→   736→- Job ID.
+   737→   737→- Submitted resume version.
+   738→   738→- Current status.
+   739→   739→- Application timestamps.
+   740→   740→- Relevant notes where permitted.
+   741→   741→- Authorized reviewer or recruiter references.
+   742→   742→
+   743→   743→Create an application event history containing:
+   744→   744→
+   745→   745→- Previous status.
+   746→   746→- New status.
+   747→   747→- Actor.
+   748→   748→- Timestamp.
+   749→   749→- Change reason where required.
+   750→   750→
+   751→   751→Enforce uniqueness for the student-job pair unless the product explicitly supports separate application cycles.
+   752→   752→
+   753→   753→Build:
+   754→   754→
+   755→   755→- Student kanban or timeline view.
+   756→   756→- Placement officer pipeline view.
+   757→   757→- Search and filtering.
+   758→   758→- Interview scheduling details.
+   759→   759→- Status notifications within the application.
+   760→   760→- Offer tracking.
+   761→   761→- Outcome analytics.
+   762→   762→
+   763→   763→Keep access rules strict so students can only see their own application records and the parties authorized to participate in that recruitment process can see shared information.
+   764→   764→
+   765→   765→---
+   766→   766→
+   767→   767→# 14. OPTIONAL ADVANCED MODULES
+   768→   768→
+   769→   769→Build these after the core application works.
+   770→   770→
+   771→   771→## Alumni referral mapping
+   772→   772→
+   773→   773→Allow opted-in alumni to share public professional information, company affiliation and referral availability.
+   774→   774→
+   775→   775→Support company-wise alumni discovery and referral-request tracking.
+   776→   776→
+   777→   777→Do not scrape private profiles or expose alumni contact details without permission.
+   778→   778→
+   779→   779→## Interview question bank
+   780→   780→
+   781→   781→Collect post-interview reports from students and organize reported questions by:
+   782→   782→
+   783→   783→- Company.
+   784→   784→- Job role.
+   785→   785→- Topic.
+   786→   786→- Interview stage.
+   787→   787→- Report date.
+   788→   788→
+   789→   789→Include reporting, moderation and duplicate-question detection.
+   790→   790→
+   791→   791→Make it clear that these are student-reported questions, not necessarily official company questions.
+   792→   792→
+   793→   793→Restrict personal and confidential interview information.
+   794→   794→
+   795→   795→## Learning recommendations
+   796→   796→
+   797→   797→Recommend appropriate learning resources or tasks based on job skill gaps.
+   798→   798→
+   799→   799→Distinguish suggested learning tasks from evidence of actual proficiency.
+   800→   800→
+   801→   801→Track completion separately from skill verification.
+   802→   802→
+   803→   803→## Placement analytics
+   804→   804→
+   805→   805→Provide company-wise, batch-wise and time-based analytics based on actual recorded outcomes.
+   806→   806→
+   807→   807→Avoid generating misleading placement-rate claims from incomplete or synthetic data.
+   808→   808→
+   809→   809→---
+   810→   810→
+   811→   811→# 15. DATABASE AND MIGRATIONS
+   812→   812→
+   813→   813→Create proper SQLAlchemy models and Alembic migrations for:
+   814→   814→
+   815→   815→- Users.
+   816→   816→- Roles and permissions.
+   817→   817→- Student profiles.
+   818→   818→- Education records.
+   819→   819→- Companies.
+   820→   820→- Jobs.
+   821→   821→- Job source references.
+   822→   822→- Skills.
+   823→   823→- Skill aliases.
+   824→   824→- Student skills.
+   825→   825→- Evidence.
+   826→   826→- Evidence review history.
+   827→   827→- Assessments and assessment results.
+   828→   828→- Projects.
+   829→   829→- Match results.
+   830→   830→- Matching explanations.
+   831→   831→- Resumes.
+   832→   832→- Resume versions.
+   833→   833→- Resume bullets and evidence links.
+   834→   834→- Applications.
+   835→   835→- Application events.
+   836→   836→- Interviews.
+   837→   837→- Offers.
+   838→   838→- Alumni.
+   839→   839→- Interview reports.
+   840→   840→- Notifications.
+   841→   841→- Audit events.
+   842→   842→
+   843→   843→Use appropriate foreign keys, indexes, uniqueness constraints and transactions.
+   844→   844→
+   845→   845→Use UTC timestamps in storage and display dates appropriately in the interface.
+   846→   846→
+   847→   847→Avoid storing redundant data unless there is a clear reason. When caching scores, provide a reliable invalidation or recalculation strategy when relevant skills, evidence or job requirements change.
+   848→   848→
+   849→   849→Create versioned migrations and a reproducible seed-data process.
+   850→   850→
+   851→   851→Do not expose password hashes, JWT secrets, private integration tokens or unnecessary personal information in API responses.
+   852→   852→
+   853→   853→---
+   854→   854→
+   855→   855→# 16. BACKEND API REQUIREMENTS
+   856→   856→
+   857→   857→Build RESTful APIs with FastAPI.
+   858→   858→
+   859→   859→Expose Swagger/OpenAPI documentation.
+   860→   860→
+   861→   861→Use a consistent response format and meaningful HTTP status codes.
+   862→   862→
+   863→   863→Validate every request using Pydantic.
+   864→   864→
+   865→   865→Create endpoints for the following workflows, using appropriate REST conventions.
+   866→   866→
+   867→   867→## Authentication
+   868→   868→
+   869→   869→- Register.
+   870→   870→- Sign in.
+   871→   871→- Refresh session/token where implemented.
+   872→   872→- Sign out or revoke refresh tokens where supported.
+   873→   873→- Retrieve current user.
+   874→   874→- Update account settings.
+   875→   875→
+   876→   876→## Students and profiles
+   877→   877→
+   878→   878→- Create and update profile.
+   879→   879→- Retrieve authorized profile.
+   880→   880→- List skills.
+   881→   881→- Add and remove student skill claims.
+   882→   882→- Submit evidence.
+   883→   883→- Retrieve evidence.
+   884→   884→- View verification history.
+   885→   885→
+   886→   886→## Evidence review
+   887→   887→
+   888→   888→- List pending evidence.
+   889→   889→- Retrieve evidence details.
+   890→   890→- Approve, reject or request more evidence.
+   891→   891→- Retrieve reviewer decisions.
+   892→   892→
+   893→   893→## Jobs
+   894→   894→
+   895→   895→- Create, edit and archive jobs.
+   896→   896→- List and search jobs.
+   897→   897→- Retrieve job details.
+   898→   898→- Import CSV jobs.
+   899→   899→- Import from an available authorized integration.
+   900→   900→- Review duplicate candidates.
+   901→   901→- Merge confirmed duplicates.
+   902→   902→- Manage job requirements and skill weights.
+   903→   903→
+   904→   904→## Matching
+   905→   905→
+   906→   906→- Match a student to jobs.
+   907→   907→- Match a job to students.
+   908→   908→- Calculate and store a match explanation.
+   909→   909→- Rank a student batch.
+   910→   910→- Retrieve match history and algorithm version.
+   911→   911→
+   912→   912→## Resumes
+   913→   913→
+   914→   914→- Generate a resume.
+   915→   915→- Preview resume details.
+   916→   916→- Retrieve resume versions.
+   917→   917→- Validate factual claims.
+   918→   918→- Export PDF or DOCX.
+   919→   919→- Record the supporting evidence for each factual bullet.
+   920→   920→
+   921→   921→## Applications
+   922→   922→
+   923→   923→- Apply for a job.
+   924→   924→- Retrieve the student's applications.
+   925→   925→- Retrieve authorized placement pipelines.
+   926→   926→- Update permitted application stages.
+   927→   927→- Retrieve application-event history.
+   928→   928→- Record interviews and offers.
+   929→   929→
+   930→   930→## Analytics and integrations
+   931→   931→
+   932→   932→- Retrieve dashboard metrics.
+   933→   933→- Retrieve authorized placement analytics.
+   934→   934→- Export CSV reports.
+   935→   935→- Check external integration health.
+   936→   936→
+   937→   937→Implement authorization, input validation, filtering and pagination wherever appropriate.
+   938→   938→
+   939→   939→Do not use a single broad endpoint that exposes all data to every user.
+   940→   940→
+   941→   941→---
+   942→   942→
+   943→   943→# 17. SECURITY, PRIVACY AND RELIABILITY
+   944→   944→
+   945→   945→Treat the application as a system handling private student and recruitment information.
+   946→   946→
+   947→   947→Implement:
+   948→   948→
+   949→   949→- Secure password hashing.
+   950→   950→- Authentication and server-enforced role authorization.
+   951→   951→- Strict ownership checks for student-specific records.
+   952→   952→- Input validation and output encoding.
+   953→   953→- File type and file-size restrictions.
+   954→   954→- Randomized stored filenames and private file storage.
+   955→   955→- Safe handling of uploaded documents.
+   956→   956→- Protection against path traversal.
+   957→   957→- Safe outbound requests to external URLs.
+   958→   958→- Rate limiting on authentication and expensive operations.
+   959→   959→- Environment-based secrets.
+   960→   960→- Audit events for sensitive actions.
+   961→   961→- Sensible CORS configuration.
+   962→   962→- Structured application logs.
+   963→   963→- Appropriate database transaction handling.
+   964→   964→- Generic public error responses without exposing stack traces or secrets.
+   965→   965→- Backup and recovery guidance.
+   966→   966→- Minimal personal-data collection.
+   967→   967→
+   968→   968→For externally supplied URLs, prevent server-side request forgery by restricting destinations, validating redirects and blocking internal network targets.
+   969→   969→
+   970→   970→Do not allow uploaded files to execute.
+   971→   971→
+   972→   972→Never commit real credentials, personal tokens or production secrets.
+   973→   973→
+   974→   974→Do not log passwords, authentication tokens or sensitive resume contents.
+   975→   975→
+   976→   976→Use mock or synthetic records in the seeded demonstration environment.
+   977→   977→
+   978→   978→---
+   979→   979→
+   980→   980→# 18. SEED DATA AND DEMONSTRATION ACCOUNTS
+   981→   981→
+   982→   982→The application must work immediately after following the setup instructions.
+   983→   983→
+   984→   984→Provide a database seeding command that creates realistic synthetic data.
+   985→   985→
+   986→   986→Include:
+   987→   987→
+   988→   988→- At least 15 sample student profiles.
+   989→   989→- At least 10 sample job openings.
+   990→   990→- Several companies.
+   991→   991→- Required and preferred job skills.
+   992→   992→- Verified, pending, rejected and unverified evidence records.
+   993→   993→- Assessment results.
+   994→   994→- Project and repository references.
+   995→   995→- Multiple match results.
+   996→   996→- Applications at different stages.
+   997→   997→- Interview and offer records.
+   998→   998→- Some exact and near-duplicate sample jobs.
+   999→   999→- Resume drafts and generated example resumes where useful.
+  1000→  1000→
+  1001→  1001→Use enough variety to demonstrate ranking, evidence review, gap analysis and analytics.
+  1002→  1002→
+  1003→  1003→Create demo accounts for:
+  1004→  1004→
+  1005→  1005→- Student.
+  1006→  1006→- Placement officer.
+  1007→  1007→- Recruiter.
+  1008→  1008→- Optional administrator.
+  1009→  1009→
+  1010→  1010→Document the exact demo login credentials in the README for the local demonstration environment.
+  1011→  1011→
+  1012→  1012→Use clearly fake email addresses and synthetic data.
+  1013→  1013→
+  1014→  1014→Set any demonstration-only credentials through configuration or seed scripts, never hardcode production access into application logic.
+  1015→  1015→
+  1016→  1016→The production configuration must not rely on these demo credentials.
+  1017→  1017→
+  1018→  1018→---
+  1019→  1019→
+  1020→  1020→# 19. ERROR HANDLING AND USER EXPERIENCE DETAILS
+  1021→  1021→
+  1022→  1022→For every significant form or action, provide:
+  1023→  1023→
+  1024→  1024→- Loading indicator.
+  1025→  1025→- Input validation.
+  1026→  1026→- Clear error message.
+  1027→  1027→- Success confirmation.
+  1028→  1028→- Disabled state when the operation is in progress.
+  1029→  1029→- Recovery or retry guidance when possible.
+  1030→  1030→
+  1031→  1031→Important edge cases include:
+  1032→  1032→
+  1033→  1033→- No jobs available.
+  1034→  1034→- No skill evidence submitted.
+  1035→  1035→- Matching service returns no results.
+  1036→  1036→- Job has no required skills.
+  1037→  1037→- Evidence is rejected.
+  1038→  1038→- A source cannot be reached.
+  1039→  1039→- A duplicate job is detected.
+  1040→  1040→- An application has already been submitted.
+  1041→  1041→- A resume contains unsupported claims.
+  1042→  1042→- A user lacks permission for an operation.
+  1043→  1043→- A database or integration request fails.
+  1044→  1044→
+  1045→  1045→Do not present sample values as current live data.
+  1046→  1046→
+  1047→  1047→Whenever seeded demonstration data is active, clearly identify it as demo or sample data where appropriate.
+  1048→  1048→
+  1049→  1049→---
+  1050→  1050→
+  1051→  1051→# 20. TESTING REQUIREMENTS
+  1052→  1052→
+  1053→  1053→Implement actual tests, not just a testing plan.
+  1054→  1054→
+  1055→  1055→## Backend tests
+  1056→  1056→
+  1057→  1057→Test:
+  1058→  1058→
+  1059→  1059→- Registration and authentication.
+  1060→  1060→- Password handling.
+  1061→  1061→- Role authorization.
+  1062→  1062→- Student data isolation.
+  1063→  1063→- Evidence submission and review.
+  1064→  1064→- Evidence state transitions.
+  1065→  1065→- Skill normalization.
+  1066→  1066→- Exact and near-duplicate job detection.
+  1067→  1067→- Match-score calculations.
+  1068→  1068→- Rejected or unverified evidence treatment.
+  1069→  1069→- Required-skill coverage.
+  1070→  1070→- Duplicate evidence handling.
+  1071→  1071→- Batch ranking and deterministic ties.
+  1072→  1072→- Resume claim traceability.
+  1073→  1073→- Application duplicate prevention.
+  1074→  1074→- Application-stage validation.
+  1075→  1075→- Audit-event creation.
+  1076→  1076→- CSV import validation.
+  1077→  1077→
+  1078→  1078→## Frontend tests
+  1079→  1079→
+  1080→  1080→Test key interactions such as:
+  1081→  1081→
+  1082→  1082→- Login and logout.
+  1083→  1083→- Form validation.
+  1084→  1084→- Role-specific navigation.
+  1085→  1085→- Evidence submission.
+  1086→  1086→- Evidence-review decisions.
+  1087→  1087→- Job filtering.
+  1088→  1088→- Match explanation rendering.
+  1089→  1089→- Resume preview.
+  1090→  1090→- Application-stage updates.
+  1091→  1091→
+  1092→  1092→## End-to-end verification
+  1093→  1093→
+  1094→  1094→Using a suitable browser automation tool when available, verify this complete journey:
+  1095→  1095→
+  1096→  1096→1. Sign in as a student.
+  1097→  1097→2. View and update a profile.
+  1098→  1098→3. Submit a skill and supporting evidence.
+  1099→  1099→4. Sign in as a placement officer.
+  1100→  1100→5. Review the evidence.
+  1101→  1101→6. Create or select a job.
+  1102→  1102→7. Run the matching engine.
+  1103→  1103→8. Inspect the score explanation and skill gaps.
+  1104→  1104→9. Generate a resume for that job.
+  1105→  1105→10. Apply for the job.
+  1106→  1106→11. Update its application status using an authorized role.
+  1107→  1107→12. Confirm the student's dashboard reflects the latest state.
+  1108→  1108→
+  1109→  1109→Run the available tests and fix failures that arise from the implementation.
+  1110→  1110→
+  1111→  1111→If a particular test cannot be run because a dependency or environment is unavailable, document it honestly rather than reporting it as passing.
+  1112→  1112→
+  1113→  1113→---
+  1114→  1114→
+  1115→  1115→# 21. ENVIRONMENT AND DEPLOYMENT
+  1116→  1116→
+  1117→  1117→Create a `.env.example` with documented variables such as:
+  1118→  1118→
+  1119→  1119→    DATABASE_URL=
+  1120→  1120→    JWT_SECRET_KEY=
+  1121→  1121→    FRONTEND_URL=
+  1122→  1122→    GITHUB_TOKEN=
+  1123→  1123→    AI_PROVIDER_API_KEY=
+  1124→  1124→    AI_MODEL=
+  1125→  1125→    STORAGE_DIR=
+  1126→  1126→    DEMO_MODE=true
+  1127→  1127→
+  1128→  1128→Use only the variables actually needed by the chosen implementation. Never include real secrets.
+  1129→  1129→
+  1130→  1130→Provide:
+  1131→  1131→
+  1132→  1132→- Dockerfile for the frontend if appropriate.
+  1133→  1133→- Dockerfile for the backend.
+  1134→  1134→- Docker Compose configuration.
+  1135→  1135→- Database health checks.
+  1136→  1136→- Persistent PostgreSQL storage.
+  1137→  1137→- A migration command.
+  1138→  1138→- A seed-data command.
+  1139→  1139→- Development instructions.
+  1140→  1140→- Production build instructions.
+  1141→  1141→- Health-check endpoint.
+  1142→  1142→- Instructions for configuring GitHub access.
+  1143→  1143→- Instructions for enabling an optional AI provider.
+  1144→  1144→- Instructions for configuring authorized job APIs.
+  1145→  1145→
+  1146→  1146→The local setup must not require a paid AI API key.
+  1147→  1147→
+  1148→  1148→Choose sensible development defaults, but use secure production configuration. Do not silently enable insecure production authentication or unrestricted CORS.
+  1149→  1149→
+  1150→  1150→---
+  1151→  1151→
+  1152→  1152→# 22. README AND DOCUMENTATION
+  1153→  1153→
+  1154→  1154→Write a comprehensive README that includes:
+  1155→  1155→
+  1156→  1156→1. Project title and overview.
+  1157→  1157→2. Problem statement.
+  1158→  1158→3. Solution approach.
+  1159→  1159→4. Core differentiators.
+  1160→  1160→5. Feature list.
+  1161→  1161→6. Architecture diagram using Mermaid.
+  1162→  1162→7. Frontend and backend technology stack.
+  1163→  1163→8. Database model overview.
+  1164→  1164→9. Directory structure.
+  1165→  1165→10. Prerequisites.
+  1166→  1166→11. Environment setup.
+  1167→  1167→12. Docker-based startup instructions.
+  1168→  1168→13. Manual development startup instructions.
+  1169→  1169→14. Database migration and seeding commands.
+  1170→  1170→15. Demo accounts.
+  1171→  1171→16. API documentation location.
+  1172→  1172→17. Test commands.
+  1173→  1173→18. External integration setup.
+  1174→  1174→19. Common troubleshooting steps.
+  1175→  1175→20. Security and privacy considerations.
+  1176→  1176→21. Known limitations.
+  1177→  1177→22. Suggested future improvements.
+  1178→  1178→
+  1179→  1179→Include concise architecture notes that explain how the matching algorithm and evidence-traceability system operate.
+  1180→  1180→
+  1181→  1181→---
+  1182→  1182→
+  1183→  1183→# 23. IMPLEMENTATION ORDER
+  1184→  1184→
+  1185→  1185→Follow this sequence while building the project.
+  1186→  1186→
+  1187→  1187→### Phase 1: Repository inspection and foundation
+  1188→  1188→
+  1189→  1189→- Inspect the repository.
+  1190→  1190→- Establish the project structure.
+  1191→  1191→- Configure frontend, backend, database and development scripts.
+  1192→  1192→- Implement authentication and role-based access control.
+  1193→  1193→- Create database models and migrations.
+  1194→  1194→- Verify that the application starts.
+  1195→  1195→
+  1196→  1196→### Phase 2: Core profiles and evidence
+  1197→  1197→
+  1198→  1198→- Implement student profiles.
+  1199→  1199→- Implement the canonical skill catalog.
+  1200→  1200→- Implement evidence submission and review.
+  1201→  1201→- Add seeded students, skills, assessments and projects.
+  1202→  1202→- Write evidence-related tests.
+  1203→  1203→
+  1204→  1204→### Phase 3: Jobs and normalization
+  1205→  1205→
+  1206→  1206→- Implement job management.
+  1207→  1207→- Build manual and CSV import.
+  1208→  1208→- Implement job-source references.
+  1209→  1209→- Add skill normalization.
+  1210→  1210→- Implement duplicate detection and review.
+  1211→  1211→- Write job-ingestion tests.
+  1212→  1212→
+  1213→  1213→### Phase 4: Matching and ranking
+  1214→  1214→
+  1215→  1215→- Build the deterministic scoring engine.
+  1216→  1216→- Implement match explanations.
+  1217→  1217→- Add missing-skill analysis.
+  1218→  1218→- Implement batch ranking.
+  1219→  1219→- Add test coverage for calculations and edge cases.
+  1220→  1220→
+  1221→  1221→### Phase 5: Resume and applications
+  1222→  1222→
+  1223→  1223→- Build the evidence-linked resume generator.
+  1224→  1224→- Add PDF export and optional DOCX export.
+  1225→  1225→- Implement application tracking and event history.
+  1226→  1226→- Add placement and student dashboards.
+  1227→  1227→
+  1228→  1228→### Phase 6: Recruiter portal and polish
+  1229→  1229→
+  1230→  1230→- Implement recruiter workflows.
+  1231→  1231→- Improve filtering, pagination and visual presentation.
+  1232→  1232→- Add useful notifications and analytics.
+  1233→  1233→- Complete empty, loading, error and permission states.
+  1234→  1234→
+  1235→  1235→### Phase 7: Testing and final verification
+  1236→  1236→
+  1237→  1237→- Run migrations and seed data.
+  1238→  1238→- Run backend and frontend tests.
+  1239→  1239→- Test the complete user journey.
+  1240→  1240→- Fix broken UI controls, API errors and authorization issues.
+  1241→  1241→- Verify local startup from a clean environment.
+  1242→  1242→- Update documentation to match what actually works.
+  1243→  1243→
+  1244→  1244→If development must be split into multiple tasks, make sure each phase leaves the repository in a functional state and builds on the previous implementation.
+  1245→  1245→
+  1246→  1246→---
+  1247→  1247→
+  1248→  1248→# 24. ACCEPTANCE CRITERIA
+  1249→  1249→
+  1250→  1250→The project should not be declared complete until the following criteria are satisfied or any unavoidable limitation is explicitly documented.
+  1251→  1251→
+  1252→  1252→## Core functionality
+  1253→  1253→
+  1254→  1254→- [ ] Student, placement officer and recruiter authentication works.
+  1255→  1255→- [ ] Backend authorization protects private resources.
+  1256→  1256→- [ ] Students can manage profiles and submit skill evidence.
+  1257→  1257→- [ ] Authorized officers can review evidence.
+  1258→  1258→- [ ] Different skill aliases normalize correctly.
+  1259→  1259→- [ ] Jobs can be created and imported from CSV.
+  1260→  1260→- [ ] Duplicate jobs can be identified and reviewed.
+  1261→  1261→- [ ] Students can discover and filter jobs.
+  1262→  1262→- [ ] Job-fit scores are calculated by backend logic.
+  1263→  1263→- [ ] Every match has an understandable explanation.
+  1264→  1264→- [ ] Required-skill coverage and skill gaps are displayed.
+  1265→  1265→- [ ] Placement officers can rank an entire student batch.
+  1266→  1266→- [ ] Resume generation works using evidence-linked content.
+  1267→  1267→- [ ] Unsupported resume claims are flagged or excluded.
+  1268→  1268→- [ ] PDF resume export works.
+  1269→  1269→- [ ] Applications can be created and tracked.
+  1270→  1270→- [ ] Application changes have a history.
+  1271→  1271→- [ ] Dashboards display real database-backed results.
+  1272→  1272→- [ ] Seeded demo data works.
+  1273→  1273→- [ ] The system works without a paid AI API key.
+  1274→  1274→- [ ] The frontend and backend communicate successfully.
+  1275→  1275→- [ ] Setup instructions are accurate.
+  1276→  1276→- [ ] Automated tests cover the main business rules.
+  1277→  1277→
+  1278→  1278→## Quality requirements
+  1279→  1279→
+  1280→  1280→- No major navigation item should lead to a dead page.
+  1281→  1281→- No primary action should be merely decorative.
+  1282→  1282→- No hardcoded fake statistics should masquerade as database-backed metrics.
+  1283→  1283→- No invented job sources, live vacancies or verification results.
+  1284→  1284→- No automatic verification of a student's claim solely because they entered it.
+  1285→  1285→- No untraceable factual achievement in a generated resume.
+  1286→  1286→- No unauthorized access to another student's private records.
+  1287→  1287→- No secret keys committed to source control.
+  1288→  1288→- No completion claims for functionality that has not been tested.
+  1289→  1289→
+  1290→  1290→---
+  1291→  1291→
+  1292→  1292→# 25. FINAL INSTRUCTIONS TO GLM
+  1293→  1293→
+  1294→  1294→Now implement Placement Hub in the current workspace.
+  1295→  1295→
+  1296→  1296→Start by inspecting the existing repository and identifying the immediate implementation steps. Then proceed to write the actual code.
+  1297→  1297→
+  1298→  1298→Do not respond with only architecture, an implementation plan, pseudocode, screenshots or a static demonstration.
+  1299→  1299→
+  1300→  1300→Deliver the working frontend, backend, database models and migrations, API integrations, matching service, resume generator, application pipeline, seeded demo data, tests and documentation.
+  1301→  1301→
+  1302→  1302→Where an external dependency is not available, provide a clearly labeled working local alternative and document what is needed to enable the real integration.
+  1303→  1303→
+  1304→  1304→After implementation:
+  1305→  1305→
+  1306→  1306→1. Summarize what was actually built.
+  1307→  1307→2. List the main files and modules created.
+  1308→  1308→3. Provide exact startup commands.
+  1309→  1309→4. Explain how to load the demonstration data.
+  1310→  1310→5. Provide demo credentials for the local demonstration.
+  1311→  1311→6. Explain how to test the main workflows.
+  1312→  1312→7. Report which tests were run and their actual results.
+  1313→  1313→8. Identify any unfinished features, missing integrations or unresolved issues honestly.
+  1314→  1314→
+  1315→  1315→**Final product objective:** Deliver a functional, demonstrable and maintainable Placement Hub platform whose central differentiator is evidence-backed student skills, explainable job matching and truthful job-specific resumes.
