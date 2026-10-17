@@ -7,6 +7,7 @@ import { useAppStore } from '@/store/app-store'
 import {
   PageHeader, EmptyState, ErrorState, CardSkeleton,
 } from '@/components/placement/shared/ui'
+import { SkillTag } from '@/components/placement/shared/skill-tag'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -22,9 +23,12 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select'
 import {
-  Users, Search, ShieldCheck, ArrowRight, X, Loader2,
+  Users, Search, ShieldCheck, ArrowRight, X, Loader2, Download,
+  GraduationCap, ClipboardList, Target,
 } from 'lucide-react'
+import { toast } from 'sonner'
 
+interface TopSkill { name: string; category?: string | null; isVerified: boolean }
 interface StudentRow {
   id: string
   name: string
@@ -35,10 +39,15 @@ interface StudentRow {
   branch?: string | null
   cgpa?: number | null
   location?: string | null
+  graduationYear?: number | null
   skillsCount: number
   verifiedSkillsCount: number | null
   evidenceCount: number
+  evidenceByStatus?: Record<string, number>
+  applicationsCount?: number
+  matchesCount?: number
   profileCompletion: number
+  topSkills?: TopSkill[]
 }
 interface StudentsResponse {
   data: StudentRow[]
@@ -53,6 +62,11 @@ const BRANCH_OPTIONS = [
   'Computer Science', 'Electronics', 'Mechanical', 'Civil', 'Electrical',
   'Information Technology', 'Chemical',
 ]
+
+function escapeCsv(value: string): string {
+  if (/[",\n]/.test(value)) return `"${value.replace(/"/g, '""')}"`
+  return value
+}
 
 export function Students() {
   const navigate = useAppStore(s => s.navigate)
@@ -115,21 +129,67 @@ export function Students() {
 
   const anyFilter = Boolean(search || batch || branch || minCgpa > 0 || verifiedOnly)
 
+  function exportCsv() {
+    if (rows.length === 0) {
+      toast.error('No students to export')
+      return
+    }
+    const headers = [
+      'Name', 'Email', 'Batch', 'Branch', 'Graduation Year', 'CGPA',
+      'Skills Count', 'Verified Skills', 'Evidence Count', 'Applications', 'Matches', 'Profile Completion',
+    ]
+    const lines = [headers.join(',')]
+    for (const s of rows) {
+      const cols = [
+        s.name, s.email, s.batch ?? '', s.branch ?? '',
+        s.graduationYear != null ? String(s.graduationYear) : '',
+        s.cgpa != null ? s.cgpa.toFixed(2) : '',
+        String(s.skillsCount),
+        s.verifiedSkillsCount != null ? String(s.verifiedSkillsCount) : '',
+        String(s.evidenceCount),
+        String(s.applicationsCount ?? 0),
+        String(s.matchesCount ?? 0),
+        `${s.profileCompletion}%`,
+      ]
+      lines.push(cols.map(escapeCsv).join(','))
+    }
+    const csv = lines.join('\n')
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' })
+    const dlUrl = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = dlUrl
+    a.download = `students-${new Date().toISOString().slice(0, 10)}.csv`
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    URL.revokeObjectURL(dlUrl)
+    toast.success(`Exported ${rows.length} student${rows.length === 1 ? '' : 's'}`)
+  }
+
   return (
     <div className="space-y-6">
       <PageHeader
         title="Students"
         description={`${total} student${total === 1 ? '' : 's'} in the directory`}
-      />
+      >
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={exportCsv}
+          disabled={rows.length === 0}
+        >
+          <Download className="size-4 mr-1" /> Export CSV
+        </Button>
+      </PageHeader>
 
       {/* Filters */}
       <Card>
         <CardContent className="p-4 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="space-y-1.5 md:col-span-2 lg:col-span-1">
-              <Label htmlFor="search" className="text-xs text-slate-500">Search</Label>
+              <Label htmlFor="search" className="text-xs text-muted-foreground">Search</Label>
               <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                 <Input
                   id="search"
                   placeholder="Name, email, location…"
@@ -141,7 +201,7 @@ export function Students() {
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs text-slate-500">Batch</Label>
+              <Label className="text-xs text-muted-foreground">Batch</Label>
               <Select value={batch || 'ALL'} onValueChange={(v) => updateBatch(v === 'ALL' ? '' : v)}>
                 <SelectTrigger className="w-full"><SelectValue placeholder="All batches" /></SelectTrigger>
                 <SelectContent>
@@ -152,7 +212,7 @@ export function Students() {
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs text-slate-500">Branch</Label>
+              <Label className="text-xs text-muted-foreground">Branch</Label>
               <Select value={branch || 'ALL'} onValueChange={(v) => updateBranch(v === 'ALL' ? '' : v)}>
                 <SelectTrigger className="w-full"><SelectValue placeholder="All branches" /></SelectTrigger>
                 <SelectContent>
@@ -163,7 +223,7 @@ export function Students() {
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs text-slate-500">
+              <Label className="text-xs text-muted-foreground">
                 Min CGPA: <span className="font-medium tabular-nums">{minCgpa.toFixed(1)}</span>
               </Label>
               <Slider
@@ -183,7 +243,7 @@ export function Students() {
                 onCheckedChange={updateVerifiedOnly}
               />
               <span className="flex items-center gap-1">
-                <ShieldCheck className="size-4 text-emerald-600" />
+                <ShieldCheck className="size-4 text-[var(--verified-foreground)]" />
                 Verified skills only
               </span>
             </label>
@@ -212,7 +272,7 @@ export function Students() {
             <EmptyState
               icon={Users}
               title="No students found"
-              description={anyFilter ? 'Try adjusting filters' : 'Students will appear here once they register'}
+              description={anyFilter ? 'Try adjusting your filters' : 'Students will appear here once they register'}
               action={anyFilter ? <Button size="sm" onClick={clearFilters}>Clear filters</Button> : undefined}
             />
           ) : (
@@ -220,52 +280,106 @@ export function Students() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead className="hidden md:table-cell">Email</TableHead>
-                    <TableHead>Batch</TableHead>
-                    <TableHead className="hidden lg:table-cell">Branch</TableHead>
-                    <TableHead>CGPA</TableHead>
-                    <TableHead className="hidden md:table-cell">Skills</TableHead>
-                    <TableHead className="hidden lg:table-cell">Verified</TableHead>
+                    <TableHead>Student</TableHead>
+                    <TableHead className="hidden md:table-cell">Course / branch</TableHead>
+                    <TableHead className="hidden lg:table-cell">Grad year</TableHead>
+                    <TableHead className="hidden md:table-cell">Relevant skills</TableHead>
                     <TableHead className="hidden lg:table-cell">Evidence</TableHead>
+                    <TableHead className="hidden xl:table-cell">Matches</TableHead>
+                    <TableHead className="hidden lg:table-cell">Applications</TableHead>
                     <TableHead></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {rows.map((s) => (
-                    <TableRow
-                      key={s.id}
-                      className="cursor-pointer"
-                      onClick={() => navigate(`officer/students/${s.id}`)}
-                    >
-                      <TableCell>
-                        <div className="font-medium">{s.name}</div>
-                        <div className="text-xs text-slate-500 md:hidden">{s.email}</div>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell text-slate-500 text-sm">{s.email}</TableCell>
-                      <TableCell className="text-sm">{s.batch ?? '—'}</TableCell>
-                      <TableCell className="hidden lg:table-cell text-sm">{s.branch ?? '—'}</TableCell>
-                      <TableCell className="tabular-nums text-sm">
-                        {s.cgpa != null ? s.cgpa.toFixed(2) : '—'}
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell text-sm tabular-nums">{s.skillsCount}</TableCell>
-                      <TableCell className="hidden lg:table-cell text-sm">
-                        {s.verifiedSkillsCount != null ? (
-                          <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300">
-                            {s.verifiedSkillsCount}
-                          </Badge>
-                        ) : '—'}
-                      </TableCell>
-                      <TableCell className="hidden lg:table-cell text-sm tabular-nums">{s.evidenceCount}</TableCell>
-                      <TableCell>
-                        <ArrowRight className="size-4 text-slate-400" />
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {rows.map((s) => {
+                    const ev = s.evidenceByStatus ?? {}
+                    const verified = ev.VERIFIED ?? 0
+                    const pending = (ev.PENDING_REVIEW ?? 0) + (ev.NEEDS_MORE_EVIDENCE ?? 0) + (ev.UNVERIFIED ?? 0)
+                    return (
+                      <TableRow
+                        key={s.id}
+                        className="cursor-pointer"
+                        onClick={() => navigate('officer/students', { id: s.id })}
+                      >
+                        <TableCell>
+                          <div className="font-medium text-sm">{s.name}</div>
+                          <div className="text-xs text-muted-foreground truncate">{s.email}</div>
+                          <div className="text-xs text-muted-foreground md:hidden mt-0.5">
+                            {s.branch ?? '—'} · {s.batch ?? '—'}
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell text-sm">
+                          <div className="flex items-center gap-1">
+                            <GraduationCap className="size-3 text-muted-foreground" />
+                            <span>{s.branch ?? '—'}</span>
+                          </div>
+                          {s.university && (
+                            <div className="text-xs text-muted-foreground truncate max-w-[200px]" title={s.university}>
+                              {s.university}
+                            </div>
+                          )}
+                          <div className="text-xs text-muted-foreground">Batch {s.batch ?? '—'}</div>
+                        </TableCell>
+                        <TableCell className="hidden lg:table-cell text-sm tabular-nums">
+                          {s.graduationYear ?? '—'}
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          {s.topSkills && s.topSkills.length > 0 ? (
+                            <div className="flex flex-wrap gap-1">
+                              {s.topSkills.map((sk, i) => (
+                                <SkillTag key={i} name={sk.name} isVerified={sk.isVerified} size="sm" />
+                              ))}
+                            </div>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">No skills</span>
+                          )}
+                        </TableCell>
+                        <TableCell className="hidden lg:table-cell">
+                          {s.evidenceCount === 0 ? (
+                            <span className="text-xs text-muted-foreground">None</span>
+                          ) : (
+                            <div className="flex flex-col gap-1">
+                              <div className="flex items-center gap-1">
+                                <ShieldCheck className="size-3 text-[var(--verified-foreground)]" />
+                                <span className="text-xs tabular-nums">{verified} verified</span>
+                              </div>
+                              {pending > 0 && (
+                                <div className="flex items-center gap-1">
+                                  <ClipboardList className="size-3 text-[var(--pending-foreground)]" />
+                                  <span className="text-xs tabular-nums">{pending} pending</span>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </TableCell>
+                        <TableCell className="hidden xl:table-cell">
+                          {s.matchesCount != null && s.matchesCount > 0 ? (
+                            <Badge variant="outline" className="text-xs gap-1">
+                              <Target className="size-3" /> {s.matchesCount}
+                            </Badge>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">—</span>
+                          )}
+                        </TableCell>
+                        <TableCell className="hidden lg:table-cell">
+                          {s.applicationsCount != null && s.applicationsCount > 0 ? (
+                            <Badge variant="secondary" className="text-xs">
+                              {s.applicationsCount}
+                            </Badge>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">—</span>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <ArrowRight className="size-4 text-muted-foreground" />
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
                 </TableBody>
               </Table>
               <div className="flex items-center justify-between p-4 border-t">
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-muted-foreground">
                   Showing {skip + 1}–{skip + rows.length} of {total}
                 </p>
                 {hasMore ? (

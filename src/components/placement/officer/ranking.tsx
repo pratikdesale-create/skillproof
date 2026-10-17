@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, Fragment } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPost, api } from '@/lib/api-client'
 import { useAppStore } from '@/store/app-store'
@@ -16,6 +16,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table'
@@ -26,6 +27,7 @@ import {
   ListOrdered, Loader2, Download, RefreshCw, ChevronDown, ChevronRight,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
 
 interface JobsListResponse {
   data: Array<{
@@ -65,6 +67,8 @@ interface MatchExplanation {
   breakdown: Array<{ skillId: string; displayName: string; isRequired: boolean; weight: number; matchValue: number; evidenceCount: number }>
   factorsSummary: string
   recommendation: string
+  algorithmVersion?: string
+  storedAt?: string
 }
 
 export function Ranking({ initialJobId }: { initialJobId?: string }) {
@@ -72,6 +76,7 @@ export function Ranking({ initialJobId }: { initialJobId?: string }) {
   const qc = useQueryClient()
 
   const [jobId, setJobId] = useState<string>(initialJobId ?? '')
+  const [batchFilter, setBatchFilter] = useState('')
   const [minScore, setMinScore] = useState(0)
   const [requiredCoverageOnly, setRequiredCoverageOnly] = useState(false)
 
@@ -105,6 +110,14 @@ export function Ranking({ initialJobId }: { initialJobId?: string }) {
     staleTime: 30_000,
   })
 
+  // Apply batch filter on top of the API response (since the API doesn't support batch filtering).
+  const rows = useMemo(() => {
+    const all = rankingQuery.data?.data ?? []
+    if (!batchFilter.trim()) return all
+    return all.filter((r) => r.batch && r.batch.toLowerCase().includes(batchFilter.trim().toLowerCase()))
+  }, [rankingQuery.data, batchFilter])
+  const total = rankingQuery.data?.total ?? 0
+
   const recomputeMutation = useMutation({
     mutationFn: () => apiPost<{ computed: number }>(`/api/matches/recompute/${effectiveJobId}`),
     onSuccess: (resp) => {
@@ -116,9 +129,6 @@ export function Ranking({ initialJobId }: { initialJobId?: string }) {
       toast.error(e.message ?? 'Failed to recompute')
     },
   })
-
-  const rows = rankingQuery.data?.data ?? []
-  const total = rankingQuery.data?.total ?? 0
 
   const selectedJob = jobsQuery.data?.data.find((j) => j.id === effectiveJobId)
 
@@ -150,7 +160,7 @@ export function Ranking({ initialJobId }: { initialJobId?: string }) {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Batch Ranking"
+        title="Match & Rank"
         description={selectedJob ? `Candidates ranked for ${selectedJob.title}` : 'Pick a job to see ranked candidates'}
       >
         <Button
@@ -167,15 +177,15 @@ export function Ranking({ initialJobId }: { initialJobId?: string }) {
           disabled={!effectiveJobId || recomputeMutation.isPending}
         >
           {recomputeMutation.isPending ? <Loader2 className="size-4 mr-1 animate-spin" /> : <RefreshCw className="size-4 mr-1" />}
-          Recompute
+          Run matching
         </Button>
       </PageHeader>
 
       <Card>
         <CardContent className="p-4 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
             <div className="space-y-1.5">
-              <Label className="text-xs text-slate-500">Job</Label>
+              <Label className="text-xs text-muted-foreground">Job</Label>
               <Select
                 value={effectiveJobId}
                 onValueChange={(v) => setJobId(v)}
@@ -194,7 +204,15 @@ export function Ranking({ initialJobId }: { initialJobId?: string }) {
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs text-slate-500">
+              <Label className="text-xs text-muted-foreground">Batch filter</Label>
+              <Input
+                placeholder="e.g. 2025"
+                value={batchFilter}
+                onChange={(e) => setBatchFilter(e.target.value)}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">
                 Min score: <span className="font-medium tabular-nums">{minScore}</span>
               </Label>
               <Slider
@@ -245,7 +263,7 @@ export function Ranking({ initialJobId }: { initialJobId?: string }) {
             <EmptyState
               icon={ListOrdered}
               title="No candidates match"
-              description="Try lowering the minimum score or disabling the coverage filter"
+              description="Try lowering the minimum score, clearing the batch filter, or disabling the coverage filter"
             />
           </CardContent>
         </Card>
@@ -272,13 +290,14 @@ export function Ranking({ initialJobId }: { initialJobId?: string }) {
                     key={r.matchId}
                     row={r}
                     jobId={effectiveJobId}
-                    onStudentClick={() => navigate(`officer/students/${r.studentId}`)}
+                    onStudentClick={() => navigate('officer/students', { id: r.studentId })}
                   />
                 ))}
               </TableBody>
             </Table>
-            <div className="p-3 text-xs text-slate-500 border-t">
+            <div className="p-3 text-xs text-muted-foreground border-t">
               Showing {rows.length} of {total} candidate{total === 1 ? '' : 's'}
+              {batchFilter && <span> (batch filter applied)</span>}
             </div>
           </CardContent>
         </Card>
@@ -307,9 +326,9 @@ function RankingRowItem({
   })
 
   return (
-    <>
+    <Fragment>
       <TableRow className="cursor-pointer" onClick={() => setExpanded((e) => !e)}>
-        <TableCell className="font-bold tabular-nums text-slate-500">{row.rank}</TableCell>
+        <TableCell className="font-bold tabular-nums text-muted-foreground">{row.rank}</TableCell>
         <TableCell>
           <button
             className="font-medium text-sm hover:underline text-left"
@@ -317,7 +336,7 @@ function RankingRowItem({
           >
             {row.studentName}
           </button>
-          <div className="text-xs text-slate-500 md:hidden">
+          <div className="text-xs text-muted-foreground md:hidden">
             {row.batch} · {row.branch}
           </div>
         </TableCell>
@@ -330,29 +349,29 @@ function RankingRowItem({
         <TableCell className="hidden md:table-cell"><CoverageBadge value={row.requiredCoverage} /></TableCell>
         <TableCell className="hidden md:table-cell text-sm">
           {row.missingSkillsCount === 0 ? (
-            <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300">
+            <Badge variant="outline" className="bg-[var(--verified-muted)] text-[var(--verified-foreground)] border-[var(--verified)]/30">
               All covered
             </Badge>
           ) : (
-            <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300">
+            <Badge variant="outline" className="bg-[var(--pending-muted)] text-[var(--pending-foreground)] border-[var(--pending)]/30">
               {row.missingSkillsCount} missing
             </Badge>
           )}
         </TableCell>
         <TableCell>
           {expanded
-            ? <ChevronDown className="size-4 text-slate-400" />
-            : <ChevronRight className="size-4 text-slate-400" />}
+            ? <ChevronDown className="size-4 text-muted-foreground" />
+            : <ChevronRight className="size-4 text-muted-foreground" />}
         </TableCell>
       </TableRow>
       {expanded && (
         <TableRow>
-          <TableCell colSpan={9} className="bg-slate-50 dark:bg-slate-900">
+          <TableCell colSpan={9} className="bg-muted/30">
             <div className="p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <h4 className="text-sm font-medium">Match explanation</h4>
                 {explanationQuery.isLoading && (
-                  <span className="text-xs text-slate-500 flex items-center gap-1">
+                  <span className="text-xs text-muted-foreground flex items-center gap-1">
                     <Loader2 className="size-3 animate-spin" /> Loading…
                   </span>
                 )}
@@ -360,23 +379,23 @@ function RankingRowItem({
               {explanationQuery.data && (
                 <>
                   {explanationQuery.data.factorsSummary && (
-                    <p className="text-sm text-slate-700 dark:text-slate-300">
+                    <p className="text-sm text-foreground">
                       {explanationQuery.data.factorsSummary}
                     </p>
                   )}
                   {explanationQuery.data.recommendation && (
-                    <div className="rounded-md border border-slate-200 dark:border-slate-800 p-2 text-sm">
+                    <div className="rounded-md border p-2 text-sm bg-card">
                       <span className="font-medium">Recommendation:</span>{' '}
                       {explanationQuery.data.recommendation}
                     </div>
                   )}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
-                      <div className="text-xs uppercase tracking-wider text-slate-500 mb-1">
+                      <div className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
                         Matching skills ({explanationQuery.data.matchingSkills.length})
                       </div>
                       {explanationQuery.data.matchingSkills.length === 0 ? (
-                        <p className="text-xs text-slate-500">None</p>
+                        <p className="text-xs text-muted-foreground">None</p>
                       ) : (
                         <div className="flex flex-wrap gap-1">
                           {explanationQuery.data.matchingSkills.map((s) => (
@@ -386,12 +405,12 @@ function RankingRowItem({
                       )}
                     </div>
                     <div>
-                      <div className="text-xs uppercase tracking-wider text-slate-500 mb-1">
+                      <div className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
                         Missing skills ({explanationQuery.data.missingSkills.length})
                       </div>
                       {explanationQuery.data.missingSkills.length === 0 ? (
-                        <p className="text-xs text-emerald-700 dark:text-emerald-300">
-                          All required & preferred skills covered!
+                        <p className="text-xs text-[var(--verified-foreground)]">
+                          All required &amp; preferred skills covered
                         </p>
                       ) : (
                         <div className="flex flex-wrap gap-1">
@@ -402,16 +421,22 @@ function RankingRowItem({
                       )}
                     </div>
                   </div>
+                  {(explanationQuery.data.algorithmVersion || explanationQuery.data.storedAt) && (
+                    <div className="text-xs text-muted-foreground pt-2 border-t">
+                      {explanationQuery.data.algorithmVersion && <>Algorithm v{explanationQuery.data.algorithmVersion}</>}
+                      {explanationQuery.data.storedAt && <> · computed {new Date(explanationQuery.data.storedAt).toLocaleString()}</>}
+                    </div>
+                  )}
                 </>
               )}
               {missingList.length > 0 && (
                 <div>
-                  <div className="text-xs uppercase tracking-wider text-slate-500 mb-1">
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
                     Missing skills (CSV)
                   </div>
                   <div className="flex flex-wrap gap-1">
                     {missingList.map((s, i) => (
-                      <Badge key={i} variant="outline" className="text-xs">
+                      <Badge key={i} variant="outline" className={cn('text-xs')}>
                         {s}
                       </Badge>
                     ))}
@@ -422,6 +447,6 @@ function RankingRowItem({
           </TableCell>
         </TableRow>
       )}
-    </>
+    </Fragment>
   )
 }

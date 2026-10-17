@@ -31,6 +31,7 @@ import {
   Pencil, Archive, RefreshCw, ListOrdered, Loader2, Briefcase,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
 
 interface JobCompany { id: string; name: string; industry?: string | null; website?: string | null }
 interface JobRequirement {
@@ -68,10 +69,18 @@ interface JobDetail {
   createdAt: string
   updatedAt: string
   requirements: JobRequirement[]
+  _count?: { applications?: number; matches?: number }
 }
 
 const WORK_ARRANGEMENTS = ['remote', 'hybrid', 'onsite']
 const EMPLOYMENT_TYPES = ['full-time', 'internship', 'contract']
+
+const JOB_STATUS_CLS: Record<string, string> = {
+  OPEN: 'bg-[var(--verified-muted)] text-[var(--verified-foreground)] border-[var(--verified)]/30',
+  CLOSED: 'bg-muted text-muted-foreground border-border',
+  ARCHIVED: 'bg-[var(--danger-muted)] text-[var(--danger-foreground)] border-[var(--danger)]/30',
+  DRAFT: 'bg-[var(--pending-muted)] text-[var(--pending-foreground)] border-[var(--pending)]/30',
+}
 
 export function JobDetail({ id }: { id: string }) {
   const navigate = useAppStore(s => s.navigate)
@@ -137,7 +146,7 @@ export function JobDetail({ id }: { id: string }) {
           size="sm"
           onClick={() => navigate('officer/ranking', { jobId: data.id })}
         >
-          <ListOrdered className="size-4 mr-1" /> Batch ranking
+          <ListOrdered className="size-4 mr-1" /> Run batch ranking
         </Button>
         <Button
           variant="outline"
@@ -154,7 +163,7 @@ export function JobDetail({ id }: { id: string }) {
               <Button
                 variant="outline"
                 size="sm"
-                className="text-rose-600 border-rose-200 hover:bg-rose-50 hover:text-rose-700 dark:border-rose-900 dark:hover:bg-rose-950"
+                className="text-[var(--danger-foreground)] border-[var(--danger)]/30 hover:bg-[var(--danger-muted)]"
               >
                 <Archive className="size-4 mr-1" /> Archive
               </Button>
@@ -171,7 +180,7 @@ export function JobDetail({ id }: { id: string }) {
                 <AlertDialogAction
                   onClick={() => archiveMutation.mutate()}
                   disabled={archiveMutation.isPending}
-                  className="bg-rose-600 hover:bg-rose-700 text-white"
+                  className="bg-[var(--danger)] hover:bg-[var(--danger)]/90 text-[var(--danger-foreground)]"
                 >
                   {archiveMutation.isPending ? 'Archiving…' : 'Archive job'}
                 </AlertDialogAction>
@@ -186,30 +195,25 @@ export function JobDetail({ id }: { id: string }) {
           <div className="flex flex-col lg:flex-row lg:items-start gap-6">
             <div className="flex-1 min-w-0 space-y-3">
               <div className="flex flex-wrap gap-2">
-                <Badge variant="outline" className={
-                  data.status === 'OPEN' ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300' :
-                  data.status === 'CLOSED' ? 'bg-slate-50 text-slate-600 border-slate-200 dark:bg-slate-900 dark:text-slate-300' :
-                  data.status === 'ARCHIVED' ? 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950 dark:text-rose-300' :
-                  'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300'
-                }>
+                <Badge variant="outline" className={cn('text-xs', JOB_STATUS_CLS[data.status] ?? '')}>
                   {data.status}
                 </Badge>
                 {data.workArrangement && <Badge variant="outline" className="capitalize">{data.workArrangement}</Badge>}
                 {data.employmentType && <Badge variant="outline" className="capitalize">{data.employmentType}</Badge>}
                 {data.location && (
-                  <Badge variant="outline" className="bg-slate-50 dark:bg-slate-900">
+                  <Badge variant="outline" className="bg-muted/40">
                     <MapPin className="size-3 mr-1" /> {data.location}
                   </Badge>
                 )}
                 <Badge variant="secondary" className="capitalize">{data.sourceType}</Badge>
                 {data.batchEligible && (
-                  <Badge variant="outline" className="bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-950 dark:text-violet-300 dark:border-violet-900">
+                  <Badge variant="outline" className="bg-[var(--info-muted)] text-[var(--info-foreground)] border-[var(--info)]/30">
                     Batch {data.batchEligible}
                   </Badge>
                 )}
               </div>
 
-              <div className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
+              <div className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">
                 {data.description}
               </div>
 
@@ -229,7 +233,7 @@ export function JobDetail({ id }: { id: string }) {
               </div>
 
               {data.eligibilityCriteria && (
-                <div className="rounded-md border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/40 p-3 text-sm text-amber-800 dark:text-amber-300">
+                <div className="rounded-md border border-[var(--pending)]/30 bg-[var(--pending-muted)] p-3 text-sm text-[var(--pending-foreground)]">
                   <span className="font-medium">Eligibility:</span> {data.eligibilityCriteria}
                 </div>
               )}
@@ -237,36 +241,48 @@ export function JobDetail({ id }: { id: string }) {
               {(data.applicationUrl || data.sourceUrl || data.externalId) && (
                 <div className="flex flex-wrap gap-3 text-sm pt-2 border-t">
                   {data.applicationUrl && (
-                    <a href={data.applicationUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-slate-600 dark:text-slate-400 hover:underline">
+                    <a href={data.applicationUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[var(--info-foreground)] hover:underline">
                       <ExternalLink className="size-3.5" /> Application URL
                     </a>
                   )}
                   {data.sourceUrl && (
-                    <a href={data.sourceUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-slate-600 dark:text-slate-400 hover:underline">
+                    <a href={data.sourceUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[var(--info-foreground)] hover:underline">
                       <ExternalLink className="size-3.5" /> Source URL
                     </a>
                   )}
-                  {data.externalId && <span className="text-slate-500">External ID: {data.externalId}</span>}
+                  {data.externalId && <span className="text-muted-foreground">External ID: {data.externalId}</span>}
                 </div>
               )}
             </div>
 
             <div className="lg:w-64 space-y-3">
               <div className="rounded-md border p-3 space-y-2">
-                <div className="text-xs uppercase tracking-wider text-slate-500">Company</div>
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">Company</div>
                 <div className="flex items-center gap-2 text-sm font-medium">
-                  <Building2 className="size-4 text-slate-400" />
+                  <Building2 className="size-4 text-muted-foreground" />
                   {data.company.name}
                 </div>
                 {data.company.industry && (
-                  <div className="text-xs text-slate-500">{data.company.industry}</div>
+                  <div className="text-xs text-muted-foreground">{data.company.industry}</div>
                 )}
                 {data.company.website && (
-                  <a href={data.company.website} target="_blank" rel="noopener noreferrer" className="text-xs text-slate-600 dark:text-slate-400 hover:underline inline-flex items-center gap-1">
+                  <a href={data.company.website} target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--info-foreground)] hover:underline inline-flex items-center gap-1">
                     <ExternalLink className="size-3" /> Website
                   </a>
                 )}
               </div>
+              {data._count && (
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="rounded-md border p-3">
+                    <div className="text-xs uppercase tracking-wider text-muted-foreground">Matches</div>
+                    <div className="text-lg font-bold tabular-nums">{data._count.matches ?? 0}</div>
+                  </div>
+                  <div className="rounded-md border p-3">
+                    <div className="text-xs uppercase tracking-wider text-muted-foreground">Applications</div>
+                    <div className="text-lg font-bold tabular-nums">{data._count.applications ?? 0}</div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </CardContent>
@@ -289,7 +305,7 @@ export function JobDetail({ id }: { id: string }) {
                 {requiredSkills.map((r) => (
                   <li key={r.id} className="flex items-center justify-between gap-2 rounded-md border p-2">
                     <SkillTag name={r.name} isRequired size="sm" />
-                    <div className="flex items-center gap-2 text-xs text-slate-500">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       {r.category && <span>{r.category}</span>}
                       <span>weight: {r.weight}</span>
                     </div>
@@ -355,9 +371,6 @@ function EditJobDialog({
     job.requirements.filter((r) => !r.isRequired).map((r) => r.name).join(', ')
   )
 
-  // Reset state when dialog opens (so reopened edits show latest)
-  // Using key prop on parent is cleaner but state hooks are fine here.
-
   const mutation = useMutation({
     mutationFn: (body: Record<string, unknown>) => apiPatch(`/api/jobs/${job.id}`, body),
     onSuccess: (resp) => {
@@ -407,19 +420,19 @@ function EditJobDialog({
         </DialogHeader>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[60vh] overflow-y-auto p-1">
           <div className="space-y-1 md:col-span-2">
-            <Label className="text-xs text-slate-500">Title *</Label>
+            <Label className="text-xs text-muted-foreground">Title *</Label>
             <Input value={title} onChange={(e) => setTitle(e.target.value)} />
           </div>
           <div className="space-y-1 md:col-span-2">
-            <Label className="text-xs text-slate-500">Description *</Label>
+            <Label className="text-xs text-muted-foreground">Description *</Label>
             <Textarea rows={4} value={description} onChange={(e) => setDescription(e.target.value)} />
           </div>
           <div className="space-y-1">
-            <Label className="text-xs text-slate-500">Location</Label>
+            <Label className="text-xs text-muted-foreground">Location</Label>
             <Input value={location} onChange={(e) => setLocation(e.target.value)} />
           </div>
           <div className="space-y-1">
-            <Label className="text-xs text-slate-500">Work arrangement</Label>
+            <Label className="text-xs text-muted-foreground">Work arrangement</Label>
             <Select value={workArrangement || 'NONE'} onValueChange={(v) => setWorkArrangement(v === 'NONE' ? '' : v)}>
               <SelectTrigger className="w-full"><SelectValue placeholder="—" /></SelectTrigger>
               <SelectContent>
@@ -429,7 +442,7 @@ function EditJobDialog({
             </Select>
           </div>
           <div className="space-y-1">
-            <Label className="text-xs text-slate-500">Employment type</Label>
+            <Label className="text-xs text-muted-foreground">Employment type</Label>
             <Select value={employmentType || 'NONE'} onValueChange={(v) => setEmploymentType(v === 'NONE' ? '' : v)}>
               <SelectTrigger className="w-full"><SelectValue placeholder="—" /></SelectTrigger>
               <SelectContent>
@@ -439,27 +452,27 @@ function EditJobDialog({
             </Select>
           </div>
           <div className="space-y-1">
-            <Label className="text-xs text-slate-500">Salary min</Label>
+            <Label className="text-xs text-muted-foreground">Salary min</Label>
             <Input type="number" min={0} value={salaryMin} onChange={(e) => setSalaryMin(e.target.value)} />
           </div>
           <div className="space-y-1">
-            <Label className="text-xs text-slate-500">Salary max</Label>
+            <Label className="text-xs text-muted-foreground">Salary max</Label>
             <Input type="number" min={0} value={salaryMax} onChange={(e) => setSalaryMax(e.target.value)} />
           </div>
           <div className="space-y-1">
-            <Label className="text-xs text-slate-500">Batch eligible</Label>
+            <Label className="text-xs text-muted-foreground">Batch eligible</Label>
             <Input value={batchEligible} onChange={(e) => setBatchEligible(e.target.value)} />
           </div>
           <div className="space-y-1">
-            <Label className="text-xs text-slate-500">Eligibility criteria</Label>
+            <Label className="text-xs text-muted-foreground">Eligibility criteria</Label>
             <Input value={eligibilityCriteria} onChange={(e) => setEligibilityCriteria(e.target.value)} />
           </div>
           <div className="space-y-1 md:col-span-2">
-            <Label className="text-xs text-slate-500">Required skills (comma-separated)</Label>
+            <Label className="text-xs text-muted-foreground">Required skills (comma-separated)</Label>
             <Input value={requiredSkillsInput} onChange={(e) => setRequiredSkillsInput(e.target.value)} />
           </div>
           <div className="space-y-1 md:col-span-2">
-            <Label className="text-xs text-slate-500">Preferred skills (comma-separated)</Label>
+            <Label className="text-xs text-muted-foreground">Preferred skills (comma-separated)</Label>
             <Input value={preferredSkillsInput} onChange={(e) => setPreferredSkillsInput(e.target.value)} />
           </div>
         </div>
@@ -478,7 +491,7 @@ function EditJobDialog({
 function Meta({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <div className="text-xs uppercase tracking-wider text-slate-500">{label}</div>
+      <div className="text-xs uppercase tracking-wider text-muted-foreground">{label}</div>
       <div className="text-sm font-medium mt-0.5">{value}</div>
     </div>
   )

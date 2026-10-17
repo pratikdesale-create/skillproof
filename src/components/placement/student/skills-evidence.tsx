@@ -1,9 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPost, apiDelete } from '@/lib/api-client'
-import { PageHeader, CardSkeleton, EmptyState, ErrorState, formatDate } from '@/components/placement/shared/ui'
+import {
+  PageHeader, SectionHeader, CardSkeleton, EmptyState, ErrorState,
+  StatCard, formatDate,
+} from '@/components/placement/shared/ui'
 import { SkillTag, EvidenceStatusBadge } from '@/components/placement/shared/skill-tag'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -14,6 +17,9 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
+  Collapsible, CollapsibleContent, CollapsibleTrigger,
+} from '@/components/ui/collapsible'
+import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
 } from '@/components/ui/dialog'
 import {
@@ -21,9 +27,10 @@ import {
 } from '@/components/ui/select'
 import {
   ShieldCheck, Plus, Trash2, ExternalLink, FileText, Award, Link2, Github,
-  ClipboardList, Video, Star, AlertCircle,
+  ClipboardList, Star, AlertCircle, ChevronDown, ChevronRight, History,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
 import type { EvidenceStatus } from '@/types'
 
 interface StudentSkillRow {
@@ -61,6 +68,32 @@ interface EvidenceRow {
   skills: EvidenceSkillRef[]
 }
 
+interface EvidenceReviewRecord {
+  id: string
+  reviewerId: string
+  reviewerName: string
+  action: string
+  status: string
+  reason?: string | null
+  notes?: string | null
+  createdAt: string
+}
+
+interface EvidenceDetailResponse {
+  id: string
+  type: string
+  title: string
+  description?: string | null
+  sourceUrl?: string | null
+  organization?: string | null
+  status: EvidenceStatus
+  submittedAt: string
+  reviewedAt?: string | null
+  reviewerNotes?: string | null
+  skills: EvidenceSkillRef[]
+  reviews: EvidenceReviewRecord[]
+}
+
 interface ListResponse<T> { data: T[] }
 
 const EVIDENCE_TYPES = [
@@ -72,6 +105,28 @@ const EVIDENCE_TYPES = [
   { value: 'report', label: 'Report', icon: FileText },
   { value: 'feedback', label: 'Feedback', icon: Star },
 ] as const
+
+// Canonical skill categories (matching the Skill.category seed values)
+const CATEGORY_GROUPS: { key: string; label: string }[] = [
+  { key: 'language', label: 'Programming Languages' },
+  { key: 'framework', label: 'Frameworks' },
+  { key: 'database', label: 'Databases' },
+  { key: 'tool', label: 'Tools' },
+  { key: 'cloud', label: 'Cloud & DevOps' },
+  { key: 'domain', label: 'Domain Knowledge' },
+  { key: 'communication', label: 'Communication & Other' },
+]
+
+function bucketCategory(cat?: string | null): string {
+  const c = (cat ?? '').toLowerCase()
+  if (c.includes('language') || c === 'language') return 'language'
+  if (c.includes('framework')) return 'framework'
+  if (c.includes('database') || c.includes('db')) return 'database'
+  if (c.includes('tool')) return 'tool'
+  if (c.includes('cloud') || c.includes('devops') || c.includes('infra')) return 'cloud'
+  if (c.includes('domain') || c.includes('soft') || c.includes('communication')) return 'communication'
+  return 'communication' // default bucket
+}
 
 export function SkillsEvidence() {
   const qc = useQueryClient()
@@ -93,7 +148,6 @@ export function SkillsEvidence() {
 
   const addSkillMutation = useMutation({
     mutationFn: async (raw: string) => {
-      // First normalize the skill name
       const norm = await apiPost<{ results: Array<{ rawName: string; canonical: { skillId: string; displayName: string } | null }> }>('/api/skills/normalize', { names: [raw] })
       const matched = norm.results.find((r): r is { rawName: string; canonical: { skillId: string; displayName: string } } => r.canonical != null)
       if (!matched) {
@@ -118,7 +172,6 @@ export function SkillsEvidence() {
     },
   })
 
-  // --- Delete skill ---
   const deleteSkillMutation = useMutation({
     mutationFn: async (id: string) => apiDelete(`/api/student/skills/${id}`),
     onSuccess: () => {
@@ -137,8 +190,7 @@ export function SkillsEvidence() {
   const [evidenceDialogOpen, setEvidenceDialogOpen] = useState(false)
 
   const submitEvidenceMutation = useMutation({
-    mutationFn: async (body: Record<string, unknown>) =>
-      apiPost('/api/student/evidence', body),
+    mutationFn: async (body: Record<string, unknown>) => apiPost('/api/student/evidence', body),
     onSuccess: () => {
       toast.success('Evidence submitted — pending review')
       setEvidenceDialogOpen(false)
@@ -151,6 +203,31 @@ export function SkillsEvidence() {
       toast.error(e.message ?? 'Failed to submit evidence')
     },
   })
+
+  // Compute supporting evidence per skill (lookup: evidence -> skills)
+  const evidenceForSkill = useMemo(() => {
+    const map = new Map<string, EvidenceRow[]>()
+    for (const ev of evidenceQuery.data?.data ?? []) {
+      for (const s of ev.skills) {
+        const arr = map.get(s.skillId) ?? []
+        arr.push(ev)
+        map.set(s.skillId, arr)
+      }
+    }
+    return map
+  }, [evidenceQuery.data])
+
+  // Group skills by canonical category bucket
+  const groupedSkills = useMemo(() => {
+    const skills = skillsQuery.data?.data ?? []
+    const buckets: Record<string, StudentSkillRow[]> = {}
+    for (const cat of CATEGORY_GROUPS) buckets[cat.key] = []
+    for (const s of skills) {
+      const bucket = bucketCategory(s.category)
+      ;(buckets[bucket] ?? (buckets[bucket] = [])).push(s)
+    }
+    return CATEGORY_GROUPS.map(g => ({ ...g, skills: buckets[g.key] ?? [] })).filter(g => g.skills.length > 0)
+  }, [skillsQuery.data])
 
   const skills = skillsQuery.data?.data ?? []
   const evidence = evidenceQuery.data?.data ?? []
@@ -174,8 +251,8 @@ export function SkillsEvidence() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Skills & Evidence"
-        description="Claim skills, back them with verifiable evidence"
+        title="My Skills & Evidence"
+        description="Claim skills, back them with verifiable evidence, and track verification status"
       >
         <Dialog open={evidenceDialogOpen} onOpenChange={setEvidenceDialogOpen}>
           <DialogTrigger asChild>
@@ -192,25 +269,27 @@ export function SkillsEvidence() {
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <SummaryStat label="Total skills" value={skills.length} tone="default" />
-        <SummaryStat label="Verified" value={verifiedCount} tone="success" />
-        <SummaryStat label="Pending evidence" value={pendingEvidence} tone="warning" />
-        <SummaryStat label="Unverified claims" value={unverifiedClaims} tone={unverifiedClaims > 0 ? 'danger' : 'success'} />
+        <StatCard label="Total skills" value={skills.length} hint="Claimed in your inventory" icon={ShieldCheck} tone="info" />
+        <StatCard label="Verified" value={verifiedCount} hint="Backed by approved evidence" icon={Award} tone="success" />
+        <StatCard label="Pending evidence" value={pendingEvidence} hint="Awaiting officer review" icon={ClipboardList} tone={pendingEvidence > 0 ? 'warning' : 'default'} />
+        <StatCard label="Unverified claims" value={unverifiedClaims} hint="Need supporting evidence" icon={AlertCircle} tone={unverifiedClaims > 0 ? 'danger' : 'success'} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Left: skills */}
+        {/* Left: skills grouped by category */}
         <Card>
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
-              <ShieldCheck className="size-4" /> My skills
+              <ShieldCheck className="size-4" /> Skills by category
             </CardTitle>
-            <CardDescription>{verifiedCount} of {skills.length} verified by evidence</CardDescription>
+            <CardDescription>
+              {verifiedCount} of {skills.length} verified by evidence
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {/* Add skill form */}
-            <div className="border rounded-md p-3 bg-slate-50 dark:bg-slate-900 space-y-3">
-              <Label htmlFor="newSkill" className="text-xs uppercase tracking-wider text-slate-500">Add skill</Label>
+            <div className="rounded-md border p-3 bg-muted/40 space-y-3">
+              <Label htmlFor="newSkill" className="text-xs uppercase tracking-wider text-muted-foreground">Add skill</Label>
               <Input
                 id="newSkill"
                 placeholder="e.g. React, Python, PostgreSQL"
@@ -242,12 +321,12 @@ export function SkillsEvidence() {
                   {addSkillMutation.isPending ? 'Adding…' : 'Add'}
                 </Button>
               </div>
-              <p className="text-xs text-slate-500">
-                Skills must normalize to a canonical entry. Verified evidence upgrades your claim automatically.
+              <p className="text-xs text-muted-foreground">
+                Skills normalize to a canonical entry. Verified evidence upgrades your claim automatically.
               </p>
             </div>
 
-            {/* Skill list */}
+            {/* Skill list grouped by category */}
             {skills.length === 0 ? (
               <EmptyState
                 icon={ShieldCheck}
@@ -255,56 +334,31 @@ export function SkillsEvidence() {
                 description="Add the skills you can demonstrate — they drive your fit scores"
               />
             ) : (
-              <ScrollArea className="max-h-96">
-                <ul className="space-y-2">
-                  {skills.map((s) => (
-                    <li
-                      key={s.id}
-                      className="flex items-center justify-between gap-3 rounded-md border p-3"
-                    >
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <SkillTag name={s.name} isVerified={s.isVerified} />
-                          {s.category && (
-                            <Badge variant="outline" className="text-xs text-slate-500">
-                              {s.category}
-                            </Badge>
-                          )}
-                          {s.selfRated && (
-                            <Badge variant="secondary" className="text-xs">
-                              {s.selfRated}
-                            </Badge>
-                          )}
-                        </div>
-                        <div className="text-xs text-slate-400 mt-1">
-                          Added {formatDate(s.addedAt)}
-                          {s.source ? ` · via ${s.source}` : ''}
-                        </div>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/40 shrink-0"
-                        onClick={() => deleteSkillMutation.mutate(s.id)}
-                        disabled={deleteSkillMutation.isPending}
-                      >
-                        <Trash2 className="size-3.5" />
-                      </Button>
-                    </li>
-                  ))}
-                </ul>
-              </ScrollArea>
+              <div className="space-y-2">
+                {groupedSkills.map((group) => (
+                  <SkillCategoryGroup
+                    key={group.key}
+                    label={group.label}
+                    skills={group.skills}
+                    evidenceForSkill={evidenceForSkill}
+                    onDelete={(id) => deleteSkillMutation.mutate(id)}
+                    deleting={deleteSkillMutation.isPending}
+                  />
+                ))}
+              </div>
             )}
           </CardContent>
         </Card>
 
-        {/* Right: evidence */}
+        {/* Right: evidence list */}
         <Card>
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <FileText className="size-4" /> Evidence
             </CardTitle>
-            <CardDescription>{evidence.length} submissions · {pendingEvidence} pending review</CardDescription>
+            <CardDescription>
+              {evidence.length} submission{evidence.length === 1 ? '' : 's'} · {pendingEvidence} pending review
+            </CardDescription>
           </CardHeader>
           <CardContent className="p-0">
             {evidence.length === 0 ? (
@@ -319,64 +373,11 @@ export function SkillsEvidence() {
                 }
               />
             ) : (
-              <ScrollArea className="max-h-[28rem]">
+              <ScrollArea className="max-h-[32rem] scroll-area-thin">
                 <ul className="divide-y">
-                  {evidence.map((ev) => {
-                    const typeMeta = EVIDENCE_TYPES.find(t => t.value === ev.type)
-                    const TypeIcon = typeMeta?.icon ?? FileText
-                    return (
-                      <li key={ev.id} className="p-3">
-                        <div className="flex items-start gap-3">
-                          <div className="size-8 rounded-md bg-slate-100 dark:bg-slate-900 flex items-center justify-center shrink-0">
-                            <TypeIcon className="size-4 text-slate-600 dark:text-slate-400" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between gap-2 flex-wrap">
-                              <div className="font-medium text-sm truncate">{ev.title}</div>
-                              <EvidenceStatusBadge status={ev.status} />
-                            </div>
-                            <div className="text-xs text-slate-500 mt-0.5 flex items-center gap-2 flex-wrap">
-                              <Badge variant="outline" className="text-xs">{ev.type}</Badge>
-                              {ev.organization && <span>{ev.organization}</span>}
-                              {ev.assessor && <span>· Assessed by {ev.assessor}</span>}
-                              {(ev.score != null || ev.maxScore != null) && (
-                                <span>· Score: {ev.score ?? '—'}/{ev.maxScore ?? '—'}</span>
-                              )}
-                            </div>
-                            {ev.description && (
-                              <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 line-clamp-2">
-                                {ev.description}
-                              </p>
-                            )}
-                            <div className="flex items-center gap-1.5 mt-2 flex-wrap">
-                              {ev.skills.map(es => (
-                                <SkillTag key={es.skillId} name={es.name} size="sm" />
-                              ))}
-                            </div>
-                            {ev.sourceUrl && (
-                              <a
-                                href={ev.sourceUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-xs text-slate-600 dark:text-slate-400 hover:text-foreground underline inline-flex items-center gap-1 mt-2"
-                              >
-                                <ExternalLink className="size-3" /> {ev.sourceUrl.replace(/^https?:\/\//, '')}
-                              </a>
-                            )}
-                            {ev.reviewerNotes && (
-                              <div className="text-xs text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 rounded p-2 mt-2">
-                                <span className="font-medium">Reviewer:</span> {ev.reviewerNotes}
-                              </div>
-                            )}
-                            <div className="text-xs text-slate-400 mt-1">
-                              Submitted {formatDate(ev.submittedAt)}
-                              {ev.reviewedAt ? ` · Reviewed ${formatDate(ev.reviewedAt)}` : ''}
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                    )
-                  })}
+                  {evidence.map((ev) => (
+                    <EvidenceItem key={ev.id} ev={ev} />
+                  ))}
                 </ul>
               </ScrollArea>
             )}
@@ -384,11 +385,188 @@ export function SkillsEvidence() {
         </Card>
       </div>
 
-      <div className="flex items-center gap-3 text-xs text-slate-500 border-t pt-4">
+      <div className="flex items-center gap-3 text-xs text-muted-foreground border-t pt-4">
         <AlertCircle className="size-3.5" />
         Evidence needs officer approval to count as verified. Submit concrete artifacts (GitHub URLs, certs, project links).
       </div>
     </div>
+  )
+}
+
+function SkillCategoryGroup({
+  label, skills, evidenceForSkill, onDelete, deleting,
+}: {
+  label: string
+  skills: StudentSkillRow[]
+  evidenceForSkill: Map<string, EvidenceRow[]>
+  onDelete: (id: string) => void
+  deleting: boolean
+}) {
+  const [open, setOpen] = useState(true)
+  return (
+    <Collapsible open={open} onOpenChange={setOpen}>
+      <Card className="overflow-hidden">
+        <CollapsibleTrigger asChild>
+          <button className="w-full flex items-center justify-between gap-2 p-3 hover:bg-muted/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+            <div className="flex items-center gap-2 min-w-0">
+              {open ? <ChevronDown className="size-4 text-muted-foreground" /> : <ChevronRight className="size-4 text-muted-foreground" />}
+              <span className="text-sm font-semibold">{label}</span>
+            </div>
+            <Badge variant="secondary" className="text-xs tabular-nums">
+              {skills.length}
+            </Badge>
+          </button>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <ul className="divide-y border-t">
+            {skills.map((s) => {
+              const evidenceList = evidenceForSkill.get(s.skillId) ?? []
+              const mostRelevant = evidenceList.find(e => e.status === 'VERIFIED') ?? evidenceList[0]
+              return (
+                <li key={s.id} className="p-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1 space-y-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <SkillTag name={s.name} isVerified={s.isVerified} />
+                        {s.selfRated && (
+                          <Badge variant="secondary" className="text-xs capitalize">{s.selfRated}</Badge>
+                        )}
+                        {s.source && (
+                          <Badge variant="outline" className="text-xs">via {s.source}</Badge>
+                        )}
+                      </div>
+                      <div className="text-xs text-muted-foreground flex items-center gap-2 flex-wrap">
+                        <span>{evidenceList.length} supporting evidence</span>
+                        <span>·</span>
+                        <span>Added {formatDate(s.addedAt)}</span>
+                      </div>
+                      {mostRelevant && (
+                        <div className="text-xs text-muted-foreground">
+                          Most relevant: <span className="text-foreground">{mostRelevant.title}</span>{' '}
+                          <EvidenceStatusBadge status={mostRelevant.status} size="sm" />
+                        </div>
+                      )}
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="size-8 text-[var(--danger-foreground)] hover:bg-[var(--danger-muted)] hover:text-[var(--danger-foreground)] shrink-0"
+                      onClick={() => onDelete(s.id)}
+                      disabled={deleting}
+                      aria-label={`Remove ${s.name}`}
+                    >
+                      <Trash2 className="size-3.5" />
+                    </Button>
+                  </div>
+                </li>
+              )
+            })}
+          </ul>
+        </CollapsibleContent>
+      </Card>
+    </Collapsible>
+  )
+}
+
+function EvidenceItem({ ev }: { ev: EvidenceRow }) {
+  const [expanded, setExpanded] = useState(false)
+  const typeMeta = EVIDENCE_TYPES.find(t => t.value === ev.type)
+  const TypeIcon = typeMeta?.icon ?? FileText
+  return (
+    <li className="p-3">
+      <div className="flex items-start gap-3">
+        <div className="size-8 rounded-md bg-muted flex items-center justify-center shrink-0">
+          <TypeIcon className="size-4 text-muted-foreground" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            <div className="font-medium text-sm truncate">{ev.title}</div>
+            <EvidenceStatusBadge status={ev.status} />
+          </div>
+          <div className="text-xs text-muted-foreground mt-0.5 flex items-center gap-2 flex-wrap">
+            <Badge variant="outline" className="text-xs">{ev.type}</Badge>
+            {ev.organization && <span>{ev.organization}</span>}
+            {ev.assessor && <span>· Assessed by {ev.assessor}</span>}
+            {(ev.score != null || ev.maxScore != null) && (
+              <span>· Score: {ev.score ?? '—'}/{ev.maxScore ?? '—'}</span>
+            )}
+          </div>
+          {ev.description && (
+            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{ev.description}</p>
+          )}
+          <div className="flex items-center gap-1.5 mt-2 flex-wrap">
+            {ev.skills.map(es => (
+              <SkillTag key={es.skillId} name={es.name} size="sm" />
+            ))}
+          </div>
+          {ev.sourceUrl && (
+            <a
+              href={ev.sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-muted-foreground hover:text-foreground underline inline-flex items-center gap-1 mt-2"
+            >
+              <ExternalLink className="size-3" /> {ev.sourceUrl.replace(/^https?:\/\//, '')}
+            </a>
+          )}
+          {ev.reviewerNotes && (
+            <div className="text-xs text-[var(--pending-foreground)] bg-[var(--pending-muted)] border border-[var(--pending)]/30 rounded p-2 mt-2">
+              <span className="font-medium">Reviewer:</span> {ev.reviewerNotes}
+            </div>
+          )}
+          <div className="text-xs text-muted-foreground mt-1">
+            Submitted {formatDate(ev.submittedAt)}
+            {ev.reviewedAt ? ` · Reviewed ${formatDate(ev.reviewedAt)}` : ''}
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="mt-2 h-7 text-xs"
+            onClick={() => setExpanded(v => !v)}
+          >
+            <History className="size-3 mr-1" />
+            {expanded ? 'Hide review history' : 'View details'}
+          </Button>
+          {expanded && (
+            <ReviewHistory evidenceId={ev.id} />
+          )}
+        </div>
+      </div>
+    </li>
+  )
+}
+
+function ReviewHistory({ evidenceId }: { evidenceId: string }) {
+  const { data, isLoading, isError } = useQuery<EvidenceDetailResponse>({
+    queryKey: ['evidence-detail', evidenceId],
+    queryFn: () => apiGet<EvidenceDetailResponse>(`/api/evidence/${evidenceId}`),
+    staleTime: 30_000,
+  })
+  if (isLoading) return <div className="text-xs text-muted-foreground mt-2">Loading review history…</div>
+  if (isError) return <div className="text-xs text-[var(--danger-foreground)] mt-2">Could not load review history.</div>
+  const reviews = data?.reviews ?? []
+  if (reviews.length === 0) {
+    return (
+      <div className="text-xs text-muted-foreground mt-2 p-2 rounded border bg-muted/40">
+        No reviews recorded yet. This evidence is still awaiting officer action.
+      </div>
+    )
+  }
+  return (
+    <ol className="mt-2 space-y-2 border-l ml-1 pl-3">
+      {reviews.map((r) => (
+        <li key={r.id} className="text-xs space-y-0.5">
+          <div className="flex items-center gap-2 flex-wrap">
+            <EvidenceStatusBadge status={r.status as EvidenceStatus} size="sm" />
+            <Badge variant="outline" className="text-xs">{r.action}</Badge>
+            <span className="text-muted-foreground ml-auto">{formatDate(r.createdAt)}</span>
+          </div>
+          <div className="text-muted-foreground">by {r.reviewerName}</div>
+          {r.reason && <div className="text-foreground">Reason: {r.reason}</div>}
+          {r.notes && <div className="text-muted-foreground">{r.notes}</div>}
+        </li>
+      ))}
+    </ol>
   )
 }
 
@@ -542,7 +720,7 @@ function EvidenceSubmitDialog({
             onChange={(e) => setSkillNamesRaw(e.target.value)}
             placeholder="React, TypeScript, PostgreSQL (comma-separated)"
           />
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-muted-foreground">
             Skills auto-normalize to canonical entries. Unknown names are skipped.
           </p>
         </div>
@@ -556,33 +734,10 @@ function EvidenceSubmitDialog({
   )
 }
 
-function SummaryStat({
-  label, value, tone,
-}: {
-  label: string
-  value: number
-  tone: 'default' | 'success' | 'warning' | 'danger'
-}) {
-  const tones: Record<string, string> = {
-    default: 'border-slate-200 dark:border-slate-800',
-    success: 'border-emerald-200 bg-emerald-50 dark:bg-emerald-950/40 dark:border-emerald-900',
-    warning: 'border-amber-200 bg-amber-50 dark:bg-amber-950/40 dark:border-amber-900',
-    danger: 'border-rose-200 bg-rose-50 dark:bg-rose-950/40 dark:border-rose-900',
-  }
-  return (
-    <Card className={tones[tone]}>
-      <CardContent className="p-4">
-        <div className="text-xs uppercase tracking-wider text-slate-500">{label}</div>
-        <div className="text-2xl font-bold tabular-nums mt-1">{value}</div>
-      </CardContent>
-    </Card>
-  )
-}
-
 function SkillsSkeleton() {
   return (
     <div className="space-y-6">
-      <PageHeader title="Skills & Evidence" description="Claim skills, back them with verifiable evidence" />
+      <PageHeader title="My Skills & Evidence" description="Loading…" />
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[0, 1, 2, 3].map(i => <CardSkeleton key={i} />)}
       </div>

@@ -27,6 +27,7 @@ import {
   ExternalLink, FileText, DollarSign, History, ArrowRight, Loader2,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
 import type { ApplicationEvent, ApplicationStatus, Interview, Offer } from '@/types'
 
 interface AppStudent { id: string; user: { id: string; name: string; email: string } }
@@ -102,12 +103,12 @@ export function ApplicationDetail({ id }: { id: string }) {
           <ArrowLeft className="size-4 mr-1" /> Back
         </Button>
         {student && (
-          <Button variant="outline" size="sm" onClick={() => navigate(`officer/students/${student.id}`)}>
+          <Button variant="outline" size="sm" onClick={() => navigate('officer/students', { id: student.id })}>
             <User className="size-4 mr-1" /> Student
           </Button>
         )}
         {job && (
-          <Button variant="outline" size="sm" onClick={() => navigate(`officer/jobs/${job.id}`)}>
+          <Button variant="outline" size="sm" onClick={() => navigate('officer/jobs', { id: job.id })}>
             <Briefcase className="size-4 mr-1" /> Job
           </Button>
         )}
@@ -128,21 +129,21 @@ export function ApplicationDetail({ id }: { id: string }) {
       <Card>
         <CardContent className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <div className="text-xs uppercase tracking-wider text-slate-500">Student</div>
+            <div className="text-xs uppercase tracking-wider text-muted-foreground">Student</div>
             <div className="text-sm font-medium mt-1">{student?.user.name ?? '—'}</div>
-            <div className="text-xs text-slate-500">{student?.user.email ?? ''}</div>
+            <div className="text-xs text-muted-foreground">{student?.user.email ?? ''}</div>
           </div>
           <div>
-            <div className="text-xs uppercase tracking-wider text-slate-500">Status</div>
+            <div className="text-xs uppercase tracking-wider text-muted-foreground">Status</div>
             <div className="mt-1"><StatusBadge status={data.status} /></div>
           </div>
           <div>
-            <div className="text-xs uppercase tracking-wider text-slate-500">Applied</div>
+            <div className="text-xs uppercase tracking-wider text-muted-foreground">Applied</div>
             <div className="text-sm font-medium mt-1">{formatDate(data.appliedAt)}</div>
             {data.resume && (
               <button
-                className="text-xs text-slate-600 dark:text-slate-400 hover:underline mt-1 inline-flex items-center gap-1"
-                onClick={() => navigate(`officer/students/${student?.id}`)}
+                className="text-xs text-[var(--info-foreground)] hover:underline mt-1 inline-flex items-center gap-1"
+                onClick={() => student && navigate('officer/students', { id: student.id })}
               >
                 <FileText className="size-3" /> Resume: {data.resume.title}
               </button>
@@ -161,11 +162,11 @@ export function ApplicationDetail({ id }: { id: string }) {
                 <CardDescription>As submitted by student</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
+                <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">
                   {data.coverLetter}
                 </p>
                 {data.notes && (
-                  <div className="mt-4 p-3 rounded-md bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 text-sm text-amber-800 dark:text-amber-300">
+                  <div className="mt-4 p-3 rounded-md bg-[var(--pending-muted)] border border-[var(--pending)]/30 text-sm text-[var(--pending-foreground)]">
                     <span className="font-medium">Internal notes:</span> {data.notes}
                   </div>
                 )}
@@ -183,21 +184,22 @@ export function ApplicationDetail({ id }: { id: string }) {
             </CardHeader>
             <CardContent>
               {timeline.length === 0 ? (
-                <p className="text-sm text-slate-500">No events recorded.</p>
+                <p className="text-sm text-muted-foreground">No events recorded.</p>
               ) : (
-                <ol className="relative border-l border-slate-200 dark:border-slate-800 ml-3 space-y-4">
+                <ol className="relative border-l border-border ml-3 space-y-4">
                   {timeline.map((e, i) => (
                     <li key={e.id} className="pl-4 relative">
-                      <span className={`absolute -left-[7px] top-1.5 size-3 rounded-full border-2 border-white dark:border-slate-950 ${
-                        i === timeline.length - 1 ? 'bg-slate-900 dark:bg-slate-100' : 'bg-slate-300 dark:bg-slate-700'
-                      }`} />
+                      <span className={cn(
+                        'absolute -left-[7px] top-1.5 size-3 rounded-full border-2 border-card',
+                        i === timeline.length - 1 ? 'bg-primary' : 'bg-muted-foreground/40'
+                      )} />
                       <div className="flex flex-wrap items-center gap-2">
-                        {e.previousStatus && <StatusBadge status={e.previousStatus} />}
-                        {e.previousStatus && <ArrowRight className="size-3 text-slate-400" />}
-                        <StatusBadge status={e.newStatus} />
-                        <span className="text-xs text-slate-500 ml-auto">{formatDateTime(e.timestamp)}</span>
+                        {e.previousStatus && <StatusBadge status={e.previousStatus} size="sm" />}
+                        {e.previousStatus && <ArrowRight className="size-3 text-muted-foreground" />}
+                        <StatusBadge status={e.newStatus} size="sm" />
+                        <span className="text-xs text-muted-foreground ml-auto">{formatDateTime(e.timestamp)}</span>
                       </div>
-                      <div className="text-xs text-slate-500 mt-1">
+                      <div className="text-xs text-muted-foreground mt-1">
                         by {e.actor?.name ?? 'System'}
                         {e.reason ? ` — ${e.reason}` : ''}
                       </div>
@@ -212,28 +214,28 @@ export function ApplicationDetail({ id }: { id: string }) {
         {/* Right: interviews + offer */}
         <div className="space-y-6">
           {offer && (
-            <Card className="border-emerald-200 dark:border-emerald-900 bg-emerald-50/60 dark:bg-emerald-950/40">
+            <Card className="border-[var(--verified)]/30 bg-[var(--verified-muted)]/60">
               <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2 text-emerald-800 dark:text-emerald-300">
+                <CardTitle className="text-base flex items-center gap-2 text-[var(--verified-foreground)]">
                   <DollarSign className="size-4" /> Offer
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
                 {offer.amount != null && (
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-500">Compensation</span>
+                    <span className="text-muted-foreground">Compensation</span>
                     <span className="font-semibold tabular-nums">
                       {formatCurrency(offer.amount, offer.currency ?? 'INR')}
                     </span>
                   </div>
                 )}
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-slate-500">Decision</span>
+                  <span className="text-muted-foreground">Decision</span>
                   <StatusBadge status={offer.decision} />
                 </div>
                 {offer.expiresAt && (
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-500">Expires</span>
+                    <span className="text-muted-foreground">Expires</span>
                     <span className="font-medium">{formatDate(offer.expiresAt)}</span>
                   </div>
                 )}
@@ -262,17 +264,17 @@ export function ApplicationDetail({ id }: { id: string }) {
                         {formatDateTime(iv.scheduledAt)}
                       </div>
                       {iv.location && (
-                        <div className="text-xs text-slate-500 flex items-center gap-1">
+                        <div className="text-xs text-muted-foreground flex items-center gap-1">
                           <MapPin className="size-3" /> {iv.location}
                         </div>
                       )}
                       {iv.meetingUrl && (
-                        <a href={iv.meetingUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-slate-600 dark:text-slate-400 hover:underline inline-flex items-center gap-1">
+                        <a href={iv.meetingUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--info-foreground)] hover:underline inline-flex items-center gap-1">
                           <Video className="size-3" /> Join meeting
                           <ExternalLink className="size-3" />
                         </a>
                       )}
-                      {iv.notes && <p className="text-xs text-slate-500 mt-1">{iv.notes}</p>}
+                      {iv.notes && <p className="text-xs text-muted-foreground mt-1">{iv.notes}</p>}
                     </li>
                   ))}
                 </ul>
@@ -291,18 +293,18 @@ export function ApplicationDetail({ id }: { id: string }) {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium text-sm">{data.resume.title}</div>
-                    <div className="text-xs text-slate-500">Version {data.resume.version}</div>
+                    <div className="text-xs text-muted-foreground">Version {data.resume.version}</div>
                   </div>
                   <a
                     href={`/api/resumes/${data.resume.id}/pdf`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs text-slate-600 dark:text-slate-400 hover:underline inline-flex items-center gap-1"
+                    className="text-xs text-[var(--info-foreground)] hover:underline inline-flex items-center gap-1"
                   >
                     <ExternalLink className="size-3" /> View PDF
                   </a>
                 </div>
-                <p className="text-xs text-slate-500 mt-2 italic">
+                <p className="text-xs text-muted-foreground mt-2 italic">
                   Read-only summary. Full resume builder is on the student side.
                 </p>
               </CardContent>
@@ -389,7 +391,7 @@ function UpdateStatusDialog({
         </DialogHeader>
         <div className="space-y-3">
           <div>
-            <Label className="text-xs text-slate-500">New status</Label>
+            <Label className="text-xs text-muted-foreground">New status</Label>
             <Select value={newStatus} onValueChange={(v) => setNewStatus(v as ApplicationStatus)}>
               <SelectTrigger className="w-full"><SelectValue placeholder="Select status" /></SelectTrigger>
               <SelectContent>
@@ -400,7 +402,7 @@ function UpdateStatusDialog({
             </Select>
           </div>
           <div>
-            <Label className="text-xs text-slate-500">Reason (optional)</Label>
+            <Label className="text-xs text-muted-foreground">Reason (optional)</Label>
             <Textarea
               rows={3}
               value={reason}
@@ -494,7 +496,7 @@ function ScheduleInterviewDialog({
         </DialogHeader>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div className="space-y-1 md:col-span-2">
-            <Label className="text-xs text-slate-500">Scheduled at *</Label>
+            <Label className="text-xs text-muted-foreground">Scheduled at *</Label>
             <div className="flex gap-2">
               <Input
                 type="datetime-local"
@@ -505,7 +507,7 @@ function ScheduleInterviewDialog({
             </div>
           </div>
           <div className="space-y-1">
-            <Label className="text-xs text-slate-500">Type</Label>
+            <Label className="text-xs text-muted-foreground">Type</Label>
             <Select value={type} onValueChange={(v) => setType(v as typeof type)}>
               <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -514,23 +516,23 @@ function ScheduleInterviewDialog({
             </Select>
           </div>
           <div className="space-y-1">
-            <Label className="text-xs text-slate-500">Round</Label>
+            <Label className="text-xs text-muted-foreground">Round</Label>
             <Input type="number" min={1} max={20} value={round} onChange={(e) => setRound(e.target.value)} />
           </div>
           <div className="space-y-1">
-            <Label className="text-xs text-slate-500">Duration (min)</Label>
+            <Label className="text-xs text-muted-foreground">Duration (min)</Label>
             <Input type="number" min={5} max={480} value={duration} onChange={(e) => setDuration(e.target.value)} placeholder="e.g. 60" />
           </div>
           <div className="space-y-1">
-            <Label className="text-xs text-slate-500">Location</Label>
+            <Label className="text-xs text-muted-foreground">Location</Label>
             <Input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Office / room" />
           </div>
           <div className="space-y-1 md:col-span-2">
-            <Label className="text-xs text-slate-500">Meeting URL</Label>
+            <Label className="text-xs text-muted-foreground">Meeting URL</Label>
             <Input value={meetingUrl} onChange={(e) => setMeetingUrl(e.target.value)} placeholder="https://meet…" />
           </div>
           <div className="space-y-1 md:col-span-2">
-            <Label className="text-xs text-slate-500">Notes</Label>
+            <Label className="text-xs text-muted-foreground">Notes</Label>
             <Textarea rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Notes for student" />
           </div>
         </div>
@@ -598,15 +600,15 @@ function ExtendOfferDialog({
         </DialogHeader>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div className="space-y-1">
-            <Label className="text-xs text-slate-500">Amount</Label>
+            <Label className="text-xs text-muted-foreground">Amount</Label>
             <Input type="number" min={0} value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="e.g. 1200000" />
           </div>
           <div className="space-y-1">
-            <Label className="text-xs text-slate-500">Currency</Label>
+            <Label className="text-xs text-muted-foreground">Currency</Label>
             <Input value={currency} onChange={(e) => setCurrency(e.target.value)} placeholder="INR" />
           </div>
           <div className="space-y-1">
-            <Label className="text-xs text-slate-500">Decision</Label>
+            <Label className="text-xs text-muted-foreground">Decision</Label>
             <Select value={decision} onValueChange={(v) => setDecision(v as typeof decision)}>
               <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -615,7 +617,7 @@ function ExtendOfferDialog({
             </Select>
           </div>
           <div className="space-y-1">
-            <Label className="text-xs text-slate-500">Expires at</Label>
+            <Label className="text-xs text-muted-foreground">Expires at</Label>
             <Input type="date" value={expiresAt} onChange={(e) => setExpiresAt(e.target.value)} />
           </div>
         </div>

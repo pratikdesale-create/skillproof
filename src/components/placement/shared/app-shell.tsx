@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useAppStore } from '@/store/app-store'
+import { useAppStore, roleHomeView } from '@/store/app-store'
 import { useLogout, useNotifications, useMarkAllNotificationsRead } from '@/hooks/use-auth'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -9,12 +9,16 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import {
   Popover, PopoverContent, PopoverTrigger,
 } from '@/components/ui/popover'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
-  Bell, LogOut, Menu, Check, X, ChevronRight,
+  Bell, LogOut, Menu, Check, ChevronRight, User, Settings as SettingsIcon,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { formatDistanceToNow } from 'date-fns'
+import { formatRelativeTime } from './ui'
 import type { Role } from '@/types'
 
 export interface NavItem {
@@ -22,6 +26,8 @@ export interface NavItem {
   label: string
   icon: React.ComponentType<{ className?: string }>
   badge?: number
+  /** Group label for nav organization (e.g., "Plan", "Build", "Track"). Optional. */
+  group?: string
 }
 
 export function AppShell({
@@ -44,85 +50,150 @@ export function AppShell({
     STUDENT: 'Student', OFFICER: 'Placement Officer', RECRUITER: 'Recruiter', ADMIN: 'Administrator',
   }
 
+  // Group nav items by their "group" field, preserving order
+  const groups: { label?: string; items: NavItem[] }[] = []
+  for (const item of navItems) {
+    const g = item.group
+    const last = groups[groups.length - 1]
+    if (last && last.label === g) last.items.push(item)
+    else groups.push({ label: g, items: [item] })
+  }
+
+  const initials = user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
+
   const SidebarContent = (
-    <div className="flex flex-col h-full">
-      <div className="p-4 border-b">
+    <div className="flex flex-col h-full bg-sidebar text-sidebar-foreground">
+      {/* Brand */}
+      <div className="px-4 py-4 border-b border-sidebar-border">
         <button
-          className="flex items-center gap-2 w-full"
-          onClick={() => navigate(roleHomeViewSafe(user.role))}
+          className="flex items-center gap-2.5 w-full group"
+          onClick={() => navigate(roleHomeView(user.role))}
+          aria-label="Go to dashboard"
         >
-          <div className="size-8 rounded-lg bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 flex items-center justify-center font-bold text-sm">
+          <div className="size-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm shadow-sm group-hover:shadow transition-shadow">
             PH
           </div>
           <div className="flex-1 text-left">
-            <div className="text-sm font-semibold leading-tight">Placement Hub</div>
-            <div className="text-xs text-slate-500">{roleLabel[user.role]}</div>
+            <div className="text-sm font-semibold leading-tight text-sidebar-foreground">Placement Hub</div>
+            <div className="text-xs text-muted-foreground mt-0.5">{roleLabel[user.role]}</div>
           </div>
         </button>
       </div>
-      <nav className="flex-1 overflow-y-auto p-2 space-y-1">
-        {navItems.map(item => {
-          const Icon = item.icon
-          const active = route.view === item.view || route.view.startsWith(item.view + '/')
-          return (
-            <button
-              key={item.view}
-              onClick={() => navigate(item.view)}
-              className={cn(
-                'w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors',
-                active
-                  ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900'
-                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-              )}
-            >
-              <Icon className="size-4 shrink-0" />
-              <span className="flex-1 text-left">{item.label}</span>
-              {item.badge ? (
-                <Badge variant="secondary" className="text-xs px-1.5 py-0">{item.badge}</Badge>
-              ) : null}
-              {active && <ChevronRight className="size-3" />}
-            </button>
-          )
-        })}
+
+      {/* Nav */}
+      <nav className="flex-1 overflow-y-auto px-2 py-3 scroll-area-thin" aria-label="Primary">
+        {groups.map((group, gi) => (
+          <div key={gi} className={gi > 0 ? 'mt-4' : ''}>
+            {group.label && (
+              <div className="px-2 mb-1 text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">
+                {group.label}
+              </div>
+            )}
+            <ul className="space-y-0.5">
+              {group.items.map(item => {
+                const Icon = item.icon
+                const active = route.view === item.view || route.view.startsWith(item.view + '/')
+                return (
+                  <li key={item.view}>
+                    <button
+                      onClick={() => navigate(item.view)}
+                      aria-current={active ? 'page' : undefined}
+                      className={cn(
+                        'w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm transition-colors',
+                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                        active
+                          ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
+                          : 'text-sidebar-foreground/80 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground'
+                      )}
+                    >
+                      <Icon className={cn('size-4 shrink-0', active ? 'text-primary' : 'text-muted-foreground')} />
+                      <span className="flex-1 text-left truncate">{item.label}</span>
+                      {item.badge ? (
+                        <Badge variant="secondary" className="text-[10px] h-4 px-1 tabular-nums">{item.badge > 99 ? '99+' : item.badge}</Badge>
+                      ) : null}
+                      {active && <ChevronRight className="size-3 text-muted-foreground" />}
+                    </button>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+        ))}
       </nav>
-      <div className="p-3 border-t">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="w-full justify-start text-slate-700 dark:text-slate-300"
-          onClick={() => logout.mutate()}
-        >
-          <LogOut className="size-4 mr-2" /> Sign out
-        </Button>
+
+      {/* Profile footer */}
+      <div className="px-2 py-3 border-t border-sidebar-border">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="w-full flex items-center gap-2.5 px-2 py-1.5 rounded-md hover:bg-sidebar-accent/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              <Avatar className="size-7">
+                <AvatarFallback className="bg-primary text-primary-foreground text-[10px] font-semibold">{initials}</AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0 text-left">
+                <div className="text-xs font-medium truncate text-sidebar-foreground">{user.name}</div>
+                <div className="text-[10px] text-muted-foreground truncate">{user.email}</div>
+              </div>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" side="top" className="w-56">
+            <DropdownMenuLabel className="font-normal">
+              <div className="flex flex-col">
+                <span className="text-sm font-medium">{user.name}</span>
+                <span className="text-xs text-muted-foreground">{user.email}</span>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => navigate(roleHomeView(user.role))}>
+              <User className="size-4 mr-2" /> Dashboard
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate(getSettingsView(user.role))}>
+              <SettingsIcon className="size-4 mr-2" /> Settings
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => logout.mutate()} className="text-destructive focus:text-destructive">
+              <LogOut className="size-4 mr-2" /> Sign out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   )
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950">
+    <div className="min-h-screen flex flex-col bg-background">
       {/* Topbar */}
-      <header className="sticky top-0 z-30 border-b bg-white dark:bg-slate-950">
+      <header className="sticky top-0 z-30 border-b bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/60">
         <div className="flex items-center justify-between px-4 h-14">
           {/* Mobile menu */}
-          <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="sm" className="md:hidden -ml-2">
-                <Menu className="size-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="w-72 p-0">
-              {SidebarContent}
-            </SheetContent>
-          </Sheet>
+          <div className="flex items-center gap-2">
+            <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="md:hidden -ml-2 size-9" aria-label="Open menu">
+                  <Menu className="size-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-72 p-0">
+                {SidebarContent}
+              </SheetContent>
+            </Sheet>
+            {/* Breadcrumb-style page indicator on mobile */}
+            <div className="md:hidden">
+              <div className="text-sm font-medium truncate max-w-[60vw]">
+                {navItems.find(n => route.view === n.view || route.view.startsWith(n.view + '/'))?.label ?? 'Placement Hub'}
+              </div>
+            </div>
+          </div>
 
-          <div className="flex-1 flex items-center justify-end gap-2">
+          <div className="flex-1" />
+
+          <div className="flex items-center gap-1">
             {/* Notifications */}
             <Popover open={notifOpen} onOpenChange={setNotifOpen}>
               <PopoverTrigger asChild>
-                <Button variant="ghost" size="sm" className="relative">
+                <Button variant="ghost" size="icon" className="relative size-9" aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ''}`}>
                   <Bell className="size-4" />
                   {unreadCount > 0 && (
-                    <span className="absolute -top-0.5 -right-0.5 size-4 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center">
+                    <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
                       {unreadCount > 9 ? '9+' : unreadCount}
                     </span>
                   )}
@@ -143,51 +214,54 @@ export function AppShell({
                     </Button>
                   )}
                 </div>
-                <ScrollArea className="max-h-80">
+                <ScrollArea className="max-h-80 scroll-area-thin">
                   <div className="divide-y">
                     {notifQuery.isLoading && (
-                      <div className="p-4 text-sm text-slate-500">Loading…</div>
+                      <div className="p-4 text-sm text-muted-foreground">Loading…</div>
                     )}
                     {notifQuery.data?.length === 0 && (
-                      <div className="p-6 text-center text-sm text-slate-500">
-                        <Bell className="size-6 mx-auto mb-2 opacity-50" />
+                      <div className="p-6 text-center text-sm text-muted-foreground">
+                        <Bell className="size-5 mx-auto mb-2 opacity-40" />
                         No notifications yet.
                       </div>
                     )}
                     {notifQuery.data?.map(n => (
-                      <div
+                      <button
                         key={n.id}
-                        className={cn('p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-900', !n.read && 'bg-blue-50/50 dark:bg-blue-950/30')}
+                        className={cn(
+                          'w-full text-left p-3 hover:bg-muted/50 transition-colors',
+                          !n.read && 'bg-primary/[0.03]'
+                        )}
                         onClick={() => {
                           if (n.link) navigate(n.link)
                           setNotifOpen(false)
                         }}
                       >
                         <div className="flex items-start gap-2">
-                          {!n.read && <span className="size-2 rounded-full bg-blue-500 mt-1.5 shrink-0" />}
-                          <div className="flex-1 min-w-0">
-                            <div className="text-sm font-medium">{n.title}</div>
-                            <div className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">{n.message}</div>
-                            <div className="text-xs text-slate-400 mt-1">
-                              {formatDistanceToNow(new Date(n.createdAt), { addSuffix: true })}
+                          {!n.read && <span className="size-2 rounded-full bg-primary mt-1.5 shrink-0" />}
+                          <div className={cn('flex-1 min-w-0', n.read && 'pl-4')}>
+                            <div className="text-sm font-medium text-foreground">{n.title}</div>
+                            <div className="text-xs text-muted-foreground mt-0.5">{n.message}</div>
+                            <div className="text-[10px] text-muted-foreground/80 mt-1">
+                              {formatRelativeTime(n.createdAt)}
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </button>
                     ))}
                   </div>
                 </ScrollArea>
               </PopoverContent>
             </Popover>
 
-            {/* User avatar */}
-            <div className="flex items-center gap-2 pl-2 border-l">
-              <div className="size-8 rounded-full bg-gradient-to-br from-slate-700 to-slate-900 dark:from-slate-300 dark:to-slate-100 text-white dark:text-slate-900 flex items-center justify-center text-xs font-semibold">
-                {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
-              </div>
-              <div className="hidden md:block text-sm">
-                <div className="font-medium leading-tight">{user.name}</div>
-                <div className="text-xs text-slate-500">{roleLabel[user.role]}</div>
+            {/* User avatar (desktop) */}
+            <div className="hidden md:flex items-center gap-2 pl-2 ml-1 border-l">
+              <Avatar className="size-7">
+                <AvatarFallback className="bg-primary text-primary-foreground text-[10px] font-semibold">{initials}</AvatarFallback>
+              </Avatar>
+              <div className="text-sm leading-tight">
+                <div className="font-medium text-foreground max-w-[140px] truncate">{user.name}</div>
+                <div className="text-[10px] text-muted-foreground">{roleLabel[user.role]}</div>
               </div>
             </div>
           </div>
@@ -196,33 +270,30 @@ export function AppShell({
 
       {/* Body: sidebar + main */}
       <div className="flex-1 flex">
-        <aside className="hidden md:block w-64 border-r bg-white dark:bg-slate-950 sticky top-14 self-start h-[calc(100vh-3.5rem-3.5rem)] overflow-y-auto">
+        <aside className="hidden md:block w-60 border-r bg-sidebar sticky top-14 self-start h-[calc(100vh-3.5rem-2.5rem)] overflow-y-auto">
           {SidebarContent}
         </aside>
-        <main className="flex-1 min-w-0 p-4 md:p-6">
-          {children}
+        <main className="flex-1 min-w-0">
+          <div className="mx-auto w-full max-w-7xl p-4 md:p-6 lg:p-8">
+            {children}
+          </div>
         </main>
       </div>
 
-      {/* Footer */}
-      <footer className="border-t bg-white dark:bg-slate-950 py-3">
-        <div className="container mx-auto px-6 text-center text-xs text-slate-500">
+      {/* Sticky footer */}
+      <footer className="border-t bg-card py-3 mt-auto">
+        <div className="container mx-auto px-6 text-center text-xs text-muted-foreground">
           Placement Hub · Evidence-based placements · Algorithm v1.0 ·{' '}
-          <span className="text-amber-600">Demo data — do not use for real recruitment</span>
+          <span className="text-[var(--pending-foreground)]">Demo data — do not use for real recruitment</span>
         </div>
       </footer>
     </div>
   )
 }
 
-function roleHomeViewSafe(role: Role): string {
-  switch (role) {
-    case 'STUDENT': return 'student/dashboard'
-    case 'OFFICER': return 'officer/dashboard'
-    case 'RECRUITER': return 'recruiter/dashboard'
-    case 'ADMIN': return 'officer/dashboard'
-    default: return 'landing'
-  }
+function getSettingsView(role: Role): string {
+  if (role === 'STUDENT') return 'student/settings'
+  if (role === 'OFFICER') return 'officer/settings'
+  if (role === 'RECRUITER') return 'recruiter/settings'
+  return 'officer/settings'
 }
-
-export { X }

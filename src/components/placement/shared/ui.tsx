@@ -2,19 +2,53 @@
 
 import { Skeleton } from '@/components/ui/skeleton'
 import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import Link from 'next/link'
+
+// ============================================================
+// LAYOUT PRIMITIVES
+// ============================================================
 
 export function PageHeader({
-  title, description, children,
-}: { title: string; description?: string; children?: React.ReactNode }) {
+  title, description, children, breadcrumbs,
+}: {
+  title: string
+  description?: string
+  children?: React.ReactNode
+  breadcrumbs?: Array<{ label: string; href?: string }>
+}) {
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
-        {description && <p className="text-sm text-slate-500 mt-1">{description}</p>}
+    <div className="mb-6">
+      {breadcrumbs && breadcrumbs.length > 0 && (
+        <nav aria-label="Breadcrumb" className="mb-2">
+          <ol className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            {breadcrumbs.map((b, i) => (
+              <li key={i} className="flex items-center gap-1.5">
+                {b.href ? (
+                  <button
+                    onClick={() => { /* SPA navigation handled by parent */ }}
+                    className="hover:text-foreground transition-colors"
+                  >
+                    {b.label}
+                  </button>
+                ) : (
+                  <span className="text-foreground">{b.label}</span>
+                )}
+                {i < breadcrumbs.length - 1 && <span className="text-muted-foreground/60">/</span>}
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-foreground">{title}</h1>
+          {description && <p className="text-sm text-muted-foreground mt-1 max-w-2xl">{description}</p>}
+        </div>
+        {children && <div className="flex items-center gap-2 flex-wrap">{children}</div>}
       </div>
-      {children && <div className="flex items-center gap-2">{children}</div>}
     </div>
   )
 }
@@ -36,40 +70,46 @@ export function EmptyState({
   title,
   description,
   action,
+  className,
 }: {
   icon: LucideIcon
   title: string
   description?: string
   action?: React.ReactNode
+  className?: string
 }) {
   return (
-    <div className="flex flex-col items-center justify-center py-12 text-center">
-      <div className="size-12 rounded-full bg-slate-100 dark:bg-slate-900 flex items-center justify-center mb-4">
-        <Icon className="size-5 text-slate-500" />
+    <div className={cn('flex flex-col items-center justify-center py-12 px-4 text-center', className)}>
+      <div className="size-12 rounded-full bg-muted flex items-center justify-center mb-4 ring-1 ring-border">
+        <Icon className="size-5 text-muted-foreground" />
       </div>
-      <h3 className="text-base font-medium">{title}</h3>
-      {description && <p className="text-sm text-slate-500 mt-1 max-w-sm">{description}</p>}
-      {action && <div className="mt-4">{action}</div>}
+      <h3 className="text-base font-medium text-foreground">{title}</h3>
+      {description && <p className="text-sm text-muted-foreground mt-1.5 max-w-sm leading-relaxed">{description}</p>}
+      {action && <div className="mt-5">{action}</div>}
     </div>
   )
 }
 
 export function ErrorState({ message, onRetry }: { message: string; onRetry?: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-center py-12 text-center">
-      <div className="size-12 rounded-full bg-rose-100 dark:bg-rose-950 flex items-center justify-center mb-4">
-        <span className="text-rose-600 font-bold">!</span>
+    <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+      <div className="size-12 rounded-full bg-destructive/10 flex items-center justify-center mb-4 ring-1 ring-destructive/20">
+        <span className="text-destructive font-bold" aria-hidden>!</span>
       </div>
-      <h3 className="text-base font-medium">Something went wrong</h3>
-      <p className="text-sm text-slate-500 mt-1 max-w-sm">{message}</p>
+      <h3 className="text-base font-medium text-foreground">Something went wrong</h3>
+      <p className="text-sm text-muted-foreground mt-1.5 max-w-sm leading-relaxed">{message}</p>
       {onRetry && (
-        <button onClick={onRetry} className="mt-4 text-sm text-slate-700 dark:text-slate-300 underline">
+        <Button variant="outline" size="sm" className="mt-5" onClick={onRetry}>
           Try again
-        </button>
+        </Button>
       )}
     </div>
   )
 }
+
+// ============================================================
+// STAT CARD
+// ============================================================
 
 export function StatCard({
   label,
@@ -77,32 +117,60 @@ export function StatCard({
   hint,
   icon: Icon,
   tone = 'default',
+  emphasis = false,
+  onClick,
 }: {
   label: string
   value: string | number
   hint?: string
   icon?: LucideIcon
-  tone?: 'default' | 'success' | 'warning' | 'danger' | 'info'
+  tone?: 'default' | 'success' | 'warning' | 'danger' | 'info' | 'brand'
+  emphasis?: boolean
+  onClick?: () => void
 }) {
   const tones: Record<string, string> = {
-    default: 'bg-white dark:bg-slate-950',
-    success: 'bg-emerald-50 dark:bg-emerald-950/50 border-emerald-200 dark:border-emerald-900',
-    warning: 'bg-amber-50 dark:bg-amber-950/50 border-amber-200 dark:border-amber-900',
-    danger: 'bg-rose-50 dark:bg-rose-950/50 border-rose-200 dark:border-rose-900',
-    info: 'bg-blue-50 dark:bg-blue-950/50 border-blue-200 dark:border-blue-900',
+    default: 'bg-card',
+    success: 'bg-[var(--verified-muted)] border-[var(--verified)]/30',
+    warning: 'bg-[var(--pending-muted)] border-[var(--pending)]/30',
+    danger: 'bg-[var(--danger-muted)] border-[var(--danger)]/30',
+    info: 'bg-[var(--info-muted)] border-[var(--info)]/30',
+    brand: 'bg-primary text-primary-foreground border-primary',
   }
+  const iconTones: Record<string, string> = {
+    default: 'text-foreground',
+    success: 'text-[var(--verified-foreground)]',
+    warning: 'text-[var(--pending-foreground)]',
+    danger: 'text-[var(--danger-foreground)]',
+    info: 'text-[var(--info-foreground)]',
+    brand: 'text-primary-foreground',
+  }
+  const isBrand = tone === 'brand'
   return (
-    <Card className={cn(tones[tone])}>
+    <Card
+      className={cn(
+        'transition-shadow hover:shadow-sm',
+        emphasis && 'ring-1 ring-primary/30 shadow-sm',
+        tones[tone],
+        onClick && 'cursor-pointer hover:shadow-md'
+      )}
+      onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick() } } : undefined}
+    >
       <CardContent className="p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <div className="text-xs uppercase tracking-wider text-slate-500">{label}</div>
-            <div className="text-2xl font-bold tabular-nums mt-1">{value}</div>
-            {hint && <div className="text-xs text-slate-500 mt-1">{hint}</div>}
+            <div className={cn('text-xs uppercase tracking-wider font-medium', isBrand ? 'text-primary-foreground/80' : 'text-muted-foreground')}>{label}</div>
+            <div className={cn('text-2xl font-bold tabular-nums mt-1', isBrand ? 'text-primary-foreground' : 'text-foreground')}>{value}</div>
+            {hint && <div className={cn('text-xs mt-1.5', isBrand ? 'text-primary-foreground/70' : 'text-muted-foreground')}>{hint}</div>}
           </div>
           {Icon && (
-            <div className="size-9 rounded-lg bg-white dark:bg-slate-900 border flex items-center justify-center shrink-0">
-              <Icon className="size-4 text-slate-700 dark:text-slate-300" />
+            <div className={cn(
+              'size-9 rounded-lg flex items-center justify-center shrink-0',
+              isBrand ? 'bg-primary-foreground/10' : 'bg-muted'
+            )}>
+              <Icon className={cn('size-4', iconTones[tone])} />
             </div>
           )}
         </div>
@@ -111,7 +179,70 @@ export function StatCard({
   )
 }
 
-// Formatting helpers
+// ============================================================
+// SECTION HEADER (for grouping content within a page)
+// ============================================================
+
+export function SectionHeader({
+  title, description, action, className,
+}: {
+  title: string
+  description?: string
+  action?: React.ReactNode
+  className?: string
+}) {
+  return (
+    <div className={cn('flex items-start justify-between gap-3 mb-3', className)}>
+      <div className="min-w-0">
+        <h2 className="text-sm font-semibold tracking-tight text-foreground">{title}</h2>
+        {description && <p className="text-xs text-muted-foreground mt-0.5">{description}</p>}
+      </div>
+      {action && <div className="shrink-0">{action}</div>}
+    </div>
+  )
+}
+
+// ============================================================
+// PROGRESS / COMPLETION
+// ============================================================
+
+export function ProgressRing({
+  value, size = 48, strokeWidth = 4, label,
+}: {
+  value: number // 0..100
+  size?: number
+  strokeWidth?: number
+  label?: string
+}) {
+  const radius = (size - strokeWidth) / 2
+  const circ = 2 * Math.PI * radius
+  const offset = circ - (Math.max(0, Math.min(100, value)) / 100) * circ
+  return (
+    <div className="relative inline-flex items-center justify-center" style={{ width: size, height: size }}>
+      <svg width={size} height={size} className="-rotate-90">
+        <circle
+          cx={size / 2} cy={size / 2} r={radius}
+          fill="none" stroke="var(--muted)" strokeWidth={strokeWidth}
+        />
+        <circle
+          cx={size / 2} cy={size / 2} r={radius}
+          fill="none" stroke="var(--primary)" strokeWidth={strokeWidth}
+          strokeDasharray={circ} strokeDashoffset={offset} strokeLinecap="round"
+          className="transition-[stroke-dashoffset] duration-500 ease-out"
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="text-xs font-semibold tabular-nums">{Math.round(value)}%</span>
+        {label && <span className="text-[9px] text-muted-foreground leading-tight mt-0.5">{label}</span>}
+      </div>
+    </div>
+  )
+}
+
+// ============================================================
+// FORMATTING HELPERS
+// ============================================================
+
 export function formatCurrency(amount: number, currency = 'INR'): string {
   if (amount >= 100000) {
     return `${currency} ${(amount / 100000).toFixed(1)} L`
@@ -136,3 +267,63 @@ export function formatDateTime(iso?: string | null): string {
     year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
   })
 }
+
+export function formatRelativeTime(iso?: string | null): string {
+  if (!iso) return '—'
+  const now = Date.now()
+  const then = new Date(iso).getTime()
+  const diff = then - now
+  const abs = Math.abs(diff)
+  const minute = 60_000, hour = 60 * minute, day = 24 * hour, week = 7 * day
+  const fmt = new Intl.RelativeTimeFormat('en', { numeric: 'auto' })
+  if (abs < hour) return fmt.format(Math.round(diff / minute), 'minute')
+  if (abs < day) return fmt.format(Math.round(diff / hour), 'hour')
+  if (abs < week) return fmt.format(Math.round(diff / day), 'day')
+  return fmt.format(Math.round(diff / week), 'week')
+}
+
+// ============================================================
+// APP FOOTER (shared across landing + auth + app)
+// ============================================================
+
+export function AppFooter({ variant = 'default' }: { variant?: 'default' | 'minimal' }) {
+  if (variant === 'minimal') {
+    return (
+      <footer className="border-t bg-card py-3">
+        <div className="container mx-auto px-6 text-center text-xs text-muted-foreground">
+          Placement Hub · Evidence-based placements · Algorithm v1.0 ·{' '}
+          <span className="text-[var(--pending-foreground)]">Demo data — do not use for real recruitment</span>
+        </div>
+      </footer>
+    )
+  }
+  return (
+    <footer className="border-t bg-card">
+      <div className="container mx-auto px-6 py-8">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
+          <div className="max-w-md">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="size-6 rounded-md bg-primary text-primary-foreground flex items-center justify-center font-bold text-xs">
+                PH
+              </div>
+              <span className="text-sm font-semibold">Placement Hub</span>
+            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              One intelligent placement platform to connect verified skills with relevant jobs, build evidence-backed resumes and track your career progress.
+            </p>
+          </div>
+          <div className="text-xs text-muted-foreground space-y-1.5">
+            <div className="font-medium text-foreground mb-1">Status</div>
+            <div>Algorithm v1.0</div>
+            <div>Demo data — do not use for real recruitment</div>
+          </div>
+        </div>
+        <div className="border-t mt-6 pt-4 text-center text-xs text-muted-foreground">
+          © {new Date().getFullYear()} Placement Hub. Built as a hackathon demonstration.
+        </div>
+      </div>
+    </footer>
+  )
+}
+
+export { Link }

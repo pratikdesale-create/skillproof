@@ -3,7 +3,9 @@
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { useAppStore } from '@/store/app-store'
-import { PageHeader, CardSkeleton, EmptyState, ErrorState, formatDate } from '@/components/placement/shared/ui'
+import {
+  PageHeader, CardSkeleton, EmptyState, ErrorState, formatDate,
+} from '@/components/placement/shared/ui'
 import { StatusBadge } from '@/components/placement/shared/status-badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -11,7 +13,7 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
-  ListChecks, Briefcase, ArrowRight, Inbox, Clock,
+  Briefcase, ArrowRight, Inbox, Clock,
 } from 'lucide-react'
 import type { ApplicationStatus } from '@/types'
 
@@ -72,7 +74,7 @@ export function Applications() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Applications"
+        title="My Applications"
         description={`${total} application${total === 1 ? '' : 's'} across the pipeline`}
       />
 
@@ -82,7 +84,7 @@ export function Applications() {
             <EmptyState
               icon={Inbox}
               title="No applications yet"
-              description="Browse open jobs and apply with one click"
+              description="Explore matching roles to start your placement journey."
               action={
                 <Button size="sm" onClick={() => navigate('student/jobs')}>
                   <Briefcase className="size-4 mr-2" /> Browse jobs
@@ -99,7 +101,7 @@ export function Applications() {
               <Card key={col.status} className="flex flex-col">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-sm font-semibold flex items-center justify-between">
-                    <span className="uppercase tracking-wider text-slate-600 dark:text-slate-400">
+                    <span className="uppercase tracking-wider text-muted-foreground">
                       {col.label}
                     </span>
                     <Badge variant="secondary" className="text-xs tabular-nums">
@@ -109,19 +111,19 @@ export function Applications() {
                 </CardHeader>
                 <CardContent className="flex-1 p-2">
                   {items.length === 0 ? (
-                    <div className="text-xs text-slate-400 text-center py-6">No items</div>
+                    <div className="text-xs text-muted-foreground text-center py-6">No items</div>
                   ) : (
-                    <ScrollArea className="max-h-96">
+                    <ScrollArea className="max-h-96 scroll-area-thin">
                       <ul className="space-y-2">
                         {items.map((a) => (
                           <li
                             key={a.id}
-                            className="rounded-md border p-3 hover:bg-slate-50 dark:hover:bg-slate-900 cursor-pointer"
+                            className="rounded-md border p-3 hover:bg-muted/50 cursor-pointer transition-colors"
                             onClick={() => navigate(`student/applications/${a.id}`)}
                           >
                             <div className="text-sm font-medium truncate">{a.jobTitle}</div>
-                            <div className="text-xs text-slate-500 truncate mt-0.5">{a.companyName}</div>
-                            <div className="flex items-center justify-between mt-2 text-xs text-slate-400">
+                            <div className="text-xs text-muted-foreground truncate mt-0.5">{a.companyName}</div>
+                            <div className="flex items-center justify-between mt-2 text-xs text-muted-foreground">
                               <span className="flex items-center gap-1">
                                 <Clock className="size-3" />
                                 {formatDate(a.appliedAt)}
@@ -151,7 +153,7 @@ export function Applications() {
 function ApplicationsSkeleton() {
   return (
     <div className="space-y-6">
-      <PageHeader title="Applications" description="Loading…" />
+      <PageHeader title="My Applications" description="Loading…" />
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         {[0, 1, 2, 3].map(i => (
           <Card key={i}>

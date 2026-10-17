@@ -57,12 +57,25 @@ export async function GET(req: NextRequest) {
           branch: true,
           cgpa: true,
           location: true,
+          graduationYear: true,
           profileCompletion: true,
           user: { select: { id: true, name: true, email: true, avatarUrl: true } },
+          // Top 3 skills (verified first, then unverified) for the "relevant skills" column.
+          skills: {
+            take: 3,
+            orderBy: [{ isVerified: 'desc' }, { addedAt: 'desc' }],
+            select: {
+              isVerified: true,
+              skill: { select: { id: true, displayName: true, category: true } },
+            },
+          },
+          evidence: { select: { status: true } },
           _count: {
             select: {
               skills: { where: verifiedOnly ? { isVerified: true } : undefined },
               evidence: true,
+              applications: true,
+              matches: true,
             },
           },
         },
@@ -70,21 +83,37 @@ export async function GET(req: NextRequest) {
       db.studentProfile.count({ where }),
     ])
 
-    const data = students.map(s => ({
-      id: s.id,
-      name: s.user.name,
-      email: s.user.email,
-      avatarUrl: s.user.avatarUrl,
-      university: s.university,
-      batch: s.batch,
-      branch: s.branch,
-      cgpa: s.cgpa,
-      location: s.location,
-      skillsCount: s._count.skills,
-      verifiedSkillsCount: verifiedOnly ? s._count.skills : null,
-      evidenceCount: s._count.evidence,
-      profileCompletion: s.profileCompletion,
-    }))
+    const data = students.map(s => {
+      // Group evidence by status to surface verified/pending counts in the UI.
+      const evidenceByStatus: Record<string, number> = {}
+      for (const e of s.evidence) {
+        evidenceByStatus[e.status] = (evidenceByStatus[e.status] ?? 0) + 1
+      }
+      return {
+        id: s.id,
+        name: s.user.name,
+        email: s.user.email,
+        avatarUrl: s.user.avatarUrl,
+        university: s.university,
+        batch: s.batch,
+        branch: s.branch,
+        cgpa: s.cgpa,
+        location: s.location,
+        graduationYear: s.graduationYear,
+        skillsCount: s._count.skills,
+        verifiedSkillsCount: verifiedOnly ? s._count.skills : null,
+        evidenceCount: s._count.evidence,
+        evidenceByStatus,
+        applicationsCount: s._count.applications,
+        matchesCount: s._count.matches,
+        profileCompletion: s.profileCompletion,
+        topSkills: s.skills.map(ss => ({
+          name: ss.skill.displayName,
+          category: ss.skill.category ?? null,
+          isVerified: ss.isVerified,
+        })),
+      }
+    })
 
     return Response.json({ data, total, skip, take })
   } catch (err) {

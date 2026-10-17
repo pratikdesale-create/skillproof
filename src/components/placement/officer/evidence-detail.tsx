@@ -24,6 +24,7 @@ import {
   CheckCircle2, XCircle, AlertTriangle, History, Loader2,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
 
 interface EvidenceDetail {
   id: string
@@ -64,6 +65,50 @@ interface EvidenceDetail {
 
 type ReviewAction = 'APPROVE' | 'REJECT' | 'REQUEST_MORE'
 
+const ACTION_META: Record<ReviewAction, {
+  title: string
+  description: string
+  needsReason: boolean
+  cta: string
+  icon: React.ComponentType<{ className?: string }>
+  buttonCls: string
+  dialogBtnCls: string
+}> = {
+  APPROVE: {
+    title: 'Approve evidence',
+    description: 'Mark this evidence as verified. Related student skills will be marked verified.',
+    needsReason: false,
+    cta: 'Approve evidence',
+    icon: CheckCircle2,
+    buttonCls: 'bg-[var(--verified)] hover:bg-[var(--verified)]/90 text-[var(--verified-foreground)] border-transparent',
+    dialogBtnCls: 'bg-[var(--verified)] hover:bg-[var(--verified)]/90 text-[var(--verified-foreground)]',
+  },
+  REJECT: {
+    title: 'Reject evidence',
+    description: 'Reject this evidence. The student will be notified with your reason.',
+    needsReason: true,
+    cta: 'Reject evidence',
+    icon: XCircle,
+    buttonCls: 'bg-[var(--danger)] hover:bg-[var(--danger)]/90 text-[var(--danger-foreground)] border-transparent',
+    dialogBtnCls: 'bg-[var(--danger)] hover:bg-[var(--danger)]/90 text-[var(--danger-foreground)]',
+  },
+  REQUEST_MORE: {
+    title: 'Request more evidence',
+    description: 'Ask the student to provide additional supporting evidence.',
+    needsReason: true,
+    cta: 'Request more',
+    icon: AlertTriangle,
+    buttonCls: 'bg-[var(--pending)] hover:bg-[var(--pending)]/90 text-[var(--pending-foreground)] border-transparent',
+    dialogBtnCls: 'bg-[var(--pending)] hover:bg-[var(--pending)]/90 text-[var(--pending-foreground)]',
+  },
+}
+
+const ACTION_BADGE_CLS: Record<string, string> = {
+  APPROVE: 'bg-[var(--verified-muted)] text-[var(--verified-foreground)] border-[var(--verified)]/30',
+  REJECT: 'bg-[var(--danger-muted)] text-[var(--danger-foreground)] border-[var(--danger)]/30',
+  REQUEST_MORE: 'bg-[var(--pending-muted)] text-[var(--pending-foreground)] border-[var(--pending)]/30',
+}
+
 export function EvidenceDetail({ id }: { id: string }) {
   const navigate = useAppStore(s => s.navigate)
   const qc = useQueryClient()
@@ -100,7 +145,6 @@ export function EvidenceDetail({ id }: { id: string }) {
       setNotes('')
       qc.invalidateQueries({ queryKey: ['evidence', id] })
       qc.invalidateQueries({ queryKey: ['evidence-pending'] })
-      qc.invalidateQueries({ queryKey: ['evidence-history', id] })
       qc.invalidateQueries({ queryKey: ['officer-dashboard'] })
     },
     onError: (err: unknown) => {
@@ -111,7 +155,7 @@ export function EvidenceDetail({ id }: { id: string }) {
 
   function submit() {
     if (!dialogAction) return
-    if (dialogAction !== 'APPROVE' && !reason.trim()) {
+    if (ACTION_META[dialogAction].needsReason && !reason.trim()) {
       toast.error('Please provide a reason')
       return
     }
@@ -120,6 +164,18 @@ export function EvidenceDetail({ id }: { id: string }) {
       reason: reason.trim() || undefined,
       notes: notes.trim() || undefined,
     })
+  }
+
+  function openDialog(action: ReviewAction) {
+    setDialogAction(action)
+    setReason('')
+    setNotes('')
+  }
+
+  function closeDialog() {
+    setDialogAction(null)
+    setReason('')
+    setNotes('')
   }
 
   if (isLoading) return <EvidenceDetailSkeleton />
@@ -133,31 +189,9 @@ export function EvidenceDetail({ id }: { id: string }) {
   }
   if (!data) return <ErrorState message="Evidence not found" onRetry={() => refetch()} />
 
-  const reviews = [...data.reviews].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-
-  const dialogMeta: Record<ReviewAction, { title: string; description: string; needsReason: boolean; cta: string; tone: string }> = {
-    APPROVE: {
-      title: 'Approve evidence',
-      description: 'Mark this evidence as verified. Related student skills will be marked verified.',
-      needsReason: false,
-      cta: 'Approve evidence',
-      tone: 'bg-emerald-600 hover:bg-emerald-700 text-white',
-    },
-    REJECT: {
-      title: 'Reject evidence',
-      description: 'Reject this evidence. The student will be notified with your reason.',
-      needsReason: true,
-      cta: 'Reject evidence',
-      tone: 'bg-rose-600 hover:bg-rose-700 text-white',
-    },
-    REQUEST_MORE: {
-      title: 'Request more evidence',
-      description: 'Ask the student to provide additional supporting evidence.',
-      needsReason: true,
-      cta: 'Request more',
-      tone: 'bg-amber-600 hover:bg-amber-700 text-white',
-    },
-  }
+  const reviews = [...data.reviews].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  )
 
   return (
     <div className="space-y-6">
@@ -171,7 +205,7 @@ export function EvidenceDetail({ id }: { id: string }) {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => navigate(`officer/students/${data.student.id}`)}
+          onClick={() => navigate('officer/students', { id: data.student.id })}
         >
           <User className="size-4 mr-1" /> View student
         </Button>
@@ -179,7 +213,7 @@ export function EvidenceDetail({ id }: { id: string }) {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left: metadata */}
-        <Card className="lg:col-span-2 space-y-4">
+        <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <ShieldCheck className="size-4" /> Evidence details
@@ -209,8 +243,8 @@ export function EvidenceDetail({ id }: { id: string }) {
 
             {data.description && (
               <div>
-                <div className="text-xs uppercase tracking-wider text-slate-500 mb-1">Description</div>
-                <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
+                <div className="text-xs uppercase tracking-wider text-muted-foreground mb-1">Description</div>
+                <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">
                   {data.description}
                 </p>
               </div>
@@ -221,28 +255,28 @@ export function EvidenceDetail({ id }: { id: string }) {
                 href={data.sourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-sm text-slate-600 dark:text-slate-400 hover:underline"
+                className="inline-flex items-center gap-1 text-sm text-[var(--info-foreground)] hover:underline"
               >
                 <ExternalLink className="size-3.5" /> View source
               </a>
             )}
 
             {data.reviewerNotes && (
-              <div className="rounded-md border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/40 p-3 text-sm">
-                <div className="text-xs uppercase tracking-wider text-amber-700 dark:text-amber-300 mb-1">
+              <div className="rounded-md border border-[var(--pending)]/30 bg-[var(--pending-muted)] p-3 text-sm">
+                <div className="text-xs uppercase tracking-wider text-[var(--pending-foreground)] mb-1">
                   Previous reviewer notes
                 </div>
-                <p className="text-amber-800 dark:text-amber-200">{data.reviewerNotes}</p>
+                <p className="text-[var(--pending-foreground)]">{data.reviewerNotes}</p>
               </div>
             )}
 
             {/* Supported skills */}
             <div>
-              <div className="text-xs uppercase tracking-wider text-slate-500 mb-2">
+              <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
                 Skills supported ({data.skills.length})
               </div>
               {data.skills.length === 0 ? (
-                <p className="text-sm text-slate-500">No skills attached to this evidence.</p>
+                <p className="text-sm text-muted-foreground">No skills attached to this evidence.</p>
               ) : (
                 <div className="flex flex-wrap gap-2">
                   {data.skills.map((s) => (
@@ -254,7 +288,7 @@ export function EvidenceDetail({ id }: { id: string }) {
           </CardContent>
         </Card>
 
-        {/* Right: actions */}
+        {/* Right: actions + history */}
         <div className="space-y-6">
           <Card>
             <CardHeader>
@@ -262,24 +296,21 @@ export function EvidenceDetail({ id }: { id: string }) {
               <CardDescription>Choose how to resolve this evidence</CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
-              <Button
-                className="w-full justify-start bg-emerald-600 hover:bg-emerald-700 text-white"
-                onClick={() => { setDialogAction('APPROVE'); setReason(''); setNotes('') }}
-              >
-                <CheckCircle2 className="size-4 mr-2" /> Approve
-              </Button>
-              <Button
-                className="w-full justify-start bg-rose-600 hover:bg-rose-700 text-white"
-                onClick={() => { setDialogAction('REJECT'); setReason(''); setNotes('') }}
-              >
-                <XCircle className="size-4 mr-2" /> Reject
-              </Button>
-              <Button
-                className="w-full justify-start bg-amber-600 hover:bg-amber-700 text-white"
-                onClick={() => { setDialogAction('REQUEST_MORE'); setReason(''); setNotes('') }}
-              >
-                <AlertTriangle className="size-4 mr-2" /> Request more evidence
-              </Button>
+              {(Object.keys(ACTION_META) as ReviewAction[]).map((action) => {
+                const meta = ACTION_META[action]
+                const Icon = meta.icon
+                return (
+                  <Button
+                    key={action}
+                    className={cn('w-full justify-start', meta.buttonCls)}
+                    onClick={() => openDialog(action)}
+                    disabled={reviewMutation.isPending}
+                  >
+                    <Icon className="size-4 mr-2" />
+                    {meta.cta}
+                  </Button>
+                )
+              })}
             </CardContent>
           </Card>
 
@@ -294,25 +325,21 @@ export function EvidenceDetail({ id }: { id: string }) {
               {reviews.length === 0 ? (
                 <EmptyState icon={History} title="No reviews yet" description="Be the first to review this evidence" />
               ) : (
-                <ol className="relative border-l border-slate-200 dark:border-slate-800 ml-4 space-y-4 p-3">
+                <ol className="relative border-l border-border ml-4 space-y-4 p-3">
                   {reviews.map((r) => (
                     <li key={r.id} className="pl-4 relative">
-                      <span className="absolute -left-[7px] top-1.5 size-3 rounded-full border-2 border-white dark:border-slate-950 bg-slate-300 dark:bg-slate-700" />
+                      <span className="absolute -left-[7px] top-1.5 size-3 rounded-full border-2 border-card bg-muted-foreground/40" />
                       <div className="flex flex-wrap items-center gap-2">
-                        <Badge variant="outline" className={
-                          r.action === 'APPROVE' ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300' :
-                          r.action === 'REJECT' ? 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950 dark:text-rose-300' :
-                          'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300'
-                        }>
+                        <Badge variant="outline" className={cn('text-xs', ACTION_BADGE_CLS[r.action] ?? '')}>
                           {r.action.replace(/_/g, ' ')}
                         </Badge>
                         <Badge variant="outline" className="text-xs">{r.status.replace(/_/g, ' ')}</Badge>
-                        <span className="text-xs text-slate-500 ml-auto">{formatDateTime(r.createdAt)}</span>
+                        <span className="text-xs text-muted-foreground ml-auto">{formatDateTime(r.createdAt)}</span>
                       </div>
-                      <div className="text-xs text-slate-500 mt-1">By {r.reviewerName}</div>
-                      {r.reason && <div className="text-sm text-slate-700 dark:text-slate-300 mt-1">{r.reason}</div>}
+                      <div className="text-xs text-muted-foreground mt-1">By {r.reviewerName}</div>
+                      {r.reason && <div className="text-sm text-foreground mt-1">{r.reason}</div>}
                       {r.notes && (
-                        <div className="text-xs text-slate-500 mt-1 italic">Notes: {r.notes}</div>
+                        <div className="text-xs text-muted-foreground mt-1 italic">Notes: {r.notes}</div>
                       )}
                     </li>
                   ))}
@@ -326,17 +353,17 @@ export function EvidenceDetail({ id }: { id: string }) {
       {/* Review action dialog */}
       <Dialog
         open={dialogAction !== null}
-        onOpenChange={(open) => { if (!open) { setDialogAction(null); setReason(''); setNotes('') } }}
+        onOpenChange={(open) => { if (!open) closeDialog() }}
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{dialogAction ? dialogMeta[dialogAction].title : ''}</DialogTitle>
-            <DialogDescription>{dialogAction ? dialogMeta[dialogAction].description : ''}</DialogDescription>
+            <DialogTitle>{dialogAction ? ACTION_META[dialogAction].title : ''}</DialogTitle>
+            <DialogDescription>{dialogAction ? ACTION_META[dialogAction].description : ''}</DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
             <div>
-              <Label htmlFor="reason" className="text-xs text-slate-500">
-                Reason {dialogAction && dialogMeta[dialogAction].needsReason ? '(required)' : '(optional)'}
+              <Label htmlFor="reason" className="text-xs text-muted-foreground">
+                Reason {dialogAction && ACTION_META[dialogAction].needsReason ? '(required)' : '(optional)'}
               </Label>
               <Textarea
                 id="reason"
@@ -347,7 +374,7 @@ export function EvidenceDetail({ id }: { id: string }) {
               />
             </div>
             <div>
-              <Label htmlFor="notes" className="text-xs text-slate-500">Internal notes (optional)</Label>
+              <Label htmlFor="notes" className="text-xs text-muted-foreground">Internal notes (optional)</Label>
               <Textarea
                 id="notes"
                 placeholder="Private notes for officers only…"
@@ -358,18 +385,18 @@ export function EvidenceDetail({ id }: { id: string }) {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => { setDialogAction(null); setReason(''); setNotes('') }}>
+            <Button variant="outline" onClick={closeDialog}>
               Cancel
             </Button>
             <Button
-              className={dialogAction ? dialogMeta[dialogAction].tone : ''}
+              className={dialogAction ? ACTION_META[dialogAction].dialogBtnCls : ''}
               onClick={submit}
               disabled={reviewMutation.isPending}
             >
               {reviewMutation.isPending ? (
                 <><Loader2 className="size-4 mr-1 animate-spin" /> Submitting…</>
               ) : (
-                dialogAction ? dialogMeta[dialogAction].cta : 'Submit'
+                dialogAction ? ACTION_META[dialogAction].cta : 'Submit'
               )}
             </Button>
           </DialogFooter>
@@ -382,7 +409,7 @@ export function EvidenceDetail({ id }: { id: string }) {
 function Meta({ label, value, className }: { label: string; value: React.ReactNode; className?: string }) {
   return (
     <div>
-      <div className="text-xs uppercase tracking-wider text-slate-500">{label}</div>
+      <div className="text-xs uppercase tracking-wider text-muted-foreground">{label}</div>
       <div className={`text-sm font-medium mt-0.5 ${className ?? ''}`}>{value}</div>
     </div>
   )

@@ -1,0 +1,646 @@
+     1→'use client'
+     2→
+     3→import { useState } from 'react'
+     4→import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+     5→import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
+     6→import { useAppStore } from '@/store/app-store'
+     7→import {
+     8→  PageHeader, CardSkeleton, EmptyState, ErrorState,
+     9→  formatCurrency, formatDate, formatDateTime,
+    10→} from '@/components/placement/shared/ui'
+    11→import { StatusBadge } from '@/components/placement/shared/status-badge'
+    12→import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+    13→import { Button } from '@/components/ui/button'
+    14→import { Badge } from '@/components/ui/badge'
+    15→import { Skeleton } from '@/components/ui/skeleton'
+    16→import { Input } from '@/components/ui/input'
+    17→import { Label } from '@/components/ui/label'
+    18→import { Textarea } from '@/components/ui/textarea'
+    19→import {
+    20→  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+    21→} from '@/components/ui/select'
+    22→import {
+    23→  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
+    24→} from '@/components/ui/dialog'
+    25→import {
+    26→  ArrowLeft, User, Briefcase, Calendar, Clock, MapPin, Video,
+    27→  ExternalLink, FileText, DollarSign, History, ArrowRight, Loader2,
+    28→} from 'lucide-react'
+    29→import { toast } from 'sonner'
+    30→import type { ApplicationEvent, ApplicationStatus, Interview, Offer } from '@/types'
+    31→
+    32→interface AppStudent { id: string; user: { id: string; name: string; email: string } }
+    33→interface AppJob { id: string; title: string; company: { id: string; name: string } }
+    34→interface AppResume { id: string; title: string; version: number }
+    35→
+    36→interface ApplicationDetail {
+    37→  id: string
+    38→  studentId: string
+    39→  student?: AppStudent
+    40→  jobId: string
+    41→  job?: AppJob
+    42→  resume?: AppResume | null
+    43→  status: ApplicationStatus
+    44→  appliedAt: string
+    45→  coverLetter?: string | null
+    46→  notes?: string | null
+    47→  events?: (ApplicationEvent & { actor?: { id: string; name: string } | null })[]
+    48→  interviews?: Interview[]
+    49→  offer?: Offer | null
+    50→}
+    51→
+    52→const ALLOWED_TRANSITIONS: Record<ApplicationStatus, ApplicationStatus[]> = {
+    53→  APPLIED: ['UNDER_REVIEW', 'SHORTLISTED', 'ASSESSMENT', 'INTERVIEW', 'OFFER', 'REJECTED', 'WITHDRAWN'],
+    54→  UNDER_REVIEW: ['SHORTLISTED', 'ASSESSMENT', 'INTERVIEW', 'OFFER', 'REJECTED', 'WITHDRAWN'],
+    55→  SHORTLISTED: ['ASSESSMENT', 'INTERVIEW', 'OFFER', 'REJECTED', 'WITHDRAWN'],
+    56→  ASSESSMENT: ['INTERVIEW', 'OFFER', 'REJECTED', 'WITHDRAWN'],
+    57→  INTERVIEW: ['OFFER', 'REJECTED', 'WITHDRAWN'],
+    58→  OFFER: ['WITHDRAWN', 'REJECTED'],
+    59→  REJECTED: [],
+    60→  WITHDRAWN: [],
+    61→}
+    62→
+    63→const INTERVIEW_TYPES = ['TECHNICAL', 'HR', 'MANAGERIAL', 'GROUP']
+    64→const OFFER_DECISIONS = ['PENDING', 'ACCEPTED', 'DECLINED']
+    65→
+    66→export function ApplicationDetail({ id }: { id: string }) {
+    67→  const navigate = useAppStore(s => s.navigate)
+    68→  const qc = useQueryClient()
+    69→
+    70→  const { data, isLoading, isError, error, refetch } = useQuery<ApplicationDetail>({
+    71→    queryKey: ['application', id],
+    72→    queryFn: () => apiGet<ApplicationDetail>(`/api/applications/${id}`),
+    73→    staleTime: 30_000,
+    74→  })
+    75→
+    76→  const [statusDialog, setStatusDialog] = useState(false)
+    77→  const [interviewDialog, setInterviewDialog] = useState(false)
+    78→  const [offerDialog, setOfferDialog] = useState(false)
+    79→
+    80→  if (isLoading) return <ApplicationDetailSkeleton />
+    81→  if (isError) {
+    82→    return <ErrorState message={(error as Error)?.message ?? 'Failed to load application'} onRetry={() => refetch()} />
+    83→  }
+    84→  if (!data) return <ErrorState message="Application not found" onRetry={() => refetch()} />
+    85→
+    86→  const job = data.job
+    87→  const student = data.student
+    88→  const events = data.events ?? []
+    89→  const interviews = (data.interviews ?? []).filter((i) => !i.outcome)
+    90→  const offer = data.offer
+    91→  const timeline = [...events].reverse()
+    92→
+    93→  const allowedNext = ALLOWED_TRANSITIONS[data.status] ?? []
+    94→
+    95→  return (
+    96→    <div className="space-y-6">
+    97→      <PageHeader
+    98→        title={job?.title ?? 'Application'}
+    99→        description={`${job?.company.name ?? ''}`}
+   100→      >
+   101→        <Button variant="outline" size="sm" onClick={() => navigate('officer/applications')}>
+   102→          <ArrowLeft className="size-4 mr-1" /> Back
+   103→        </Button>
+   104→        {student && (
+   105→          <Button variant="outline" size="sm" onClick={() => navigate(`officer/students/${student.id}`)}>
+   106→            <User className="size-4 mr-1" /> Student
+   107→          </Button>
+   108→        )}
+   109→        {job && (
+   110→          <Button variant="outline" size="sm" onClick={() => navigate(`officer/jobs/${job.id}`)}>
+   111→            <Briefcase className="size-4 mr-1" /> Job
+   112→          </Button>
+   113→        )}
+   114→        {allowedNext.length > 0 && (
+   115→          <Button size="sm" onClick={() => setStatusDialog(true)}>
+   116→            Update status
+   117→          </Button>
+   118→        )}
+   119→        <Button size="sm" variant="outline" onClick={() => setInterviewDialog(true)}>
+   120→          <Calendar className="size-4 mr-1" /> Schedule interview
+   121→        </Button>
+   122→        <Button size="sm" variant="outline" onClick={() => setOfferDialog(true)}>
+   123→          <DollarSign className="size-4 mr-1" /> Extend offer
+   124→        </Button>
+   125→      </PageHeader>
+   126→
+   127→      {/* Status banner */}
+   128→      <Card>
+   129→        <CardContent className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+   130→          <div>
+   131→            <div className="text-xs uppercase tracking-wider text-slate-500">Student</div>
+   132→            <div className="text-sm font-medium mt-1">{student?.user.name ?? '—'}</div>
+   133→            <div className="text-xs text-slate-500">{student?.user.email ?? ''}</div>
+   134→          </div>
+   135→          <div>
+   136→            <div className="text-xs uppercase tracking-wider text-slate-500">Status</div>
+   137→            <div className="mt-1"><StatusBadge status={data.status} /></div>
+   138→          </div>
+   139→          <div>
+   140→            <div className="text-xs uppercase tracking-wider text-slate-500">Applied</div>
+   141→            <div className="text-sm font-medium mt-1">{formatDate(data.appliedAt)}</div>
+   142→            {data.resume && (
+   143→              <button
+   144→                className="text-xs text-slate-600 dark:text-slate-400 hover:underline mt-1 inline-flex items-center gap-1"
+   145→                onClick={() => navigate(`officer/students/${student?.id}`)}
+   146→              >
+   147→                <FileText className="size-3" /> Resume: {data.resume.title}
+   148→              </button>
+   149→            )}
+   150→          </div>
+   151→        </CardContent>
+   152→      </Card>
+   153→
+   154→      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+   155→        {/* Left: cover letter + timeline */}
+   156→        <div className="space-y-6 lg:col-span-2">
+   157→          {data.coverLetter && (
+   158→            <Card>
+   159→              <CardHeader>
+   160→                <CardTitle className="text-base">Cover letter</CardTitle>
+   161→                <CardDescription>As submitted by student</CardDescription>
+   162→              </CardHeader>
+   163→              <CardContent>
+   164→                <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
+   165→                  {data.coverLetter}
+   166→                </p>
+   167→                {data.notes && (
+   168→                  <div className="mt-4 p-3 rounded-md bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 text-sm text-amber-800 dark:text-amber-300">
+   169→                    <span className="font-medium">Internal notes:</span> {data.notes}
+   170→                  </div>
+   171→                )}
+   172→              </CardContent>
+   173→            </Card>
+   174→          )}
+   175→
+   176→          {/* Status timeline */}
+   177→          <Card>
+   178→            <CardHeader>
+   179→              <CardTitle className="text-base flex items-center gap-2">
+   180→                <History className="size-4" /> Status timeline
+   181→              </CardTitle>
+   182→              <CardDescription>{events.length} event{events.length === 1 ? '' : 's'}</CardDescription>
+   183→            </CardHeader>
+   184→            <CardContent>
+   185→              {timeline.length === 0 ? (
+   186→                <p className="text-sm text-slate-500">No events recorded.</p>
+   187→              ) : (
+   188→                <ol className="relative border-l border-slate-200 dark:border-slate-800 ml-3 space-y-4">
+   189→                  {timeline.map((e, i) => (
+   190→                    <li key={e.id} className="pl-4 relative">
+   191→                      <span className={`absolute -left-[7px] top-1.5 size-3 rounded-full border-2 border-white dark:border-slate-950 ${
+   192→                        i === timeline.length - 1 ? 'bg-slate-900 dark:bg-slate-100' : 'bg-slate-300 dark:bg-slate-700'
+   193→                      }`} />
+   194→                      <div className="flex flex-wrap items-center gap-2">
+   195→                        {e.previousStatus && <StatusBadge status={e.previousStatus} />}
+   196→                        {e.previousStatus && <ArrowRight className="size-3 text-slate-400" />}
+   197→                        <StatusBadge status={e.newStatus} />
+   198→                        <span className="text-xs text-slate-500 ml-auto">{formatDateTime(e.timestamp)}</span>
+   199→                      </div>
+   200→                      <div className="text-xs text-slate-500 mt-1">
+   201→                        by {e.actor?.name ?? 'System'}
+   202→                        {e.reason ? ` — ${e.reason}` : ''}
+   203→                      </div>
+   204→                    </li>
+   205→                  ))}
+   206→                </ol>
+   207→              )}
+   208→            </CardContent>
+   209→          </Card>
+   210→        </div>
+   211→
+   212→        {/* Right: interviews + offer */}
+   213→        <div className="space-y-6">
+   214→          {offer && (
+   215→            <Card className="border-emerald-200 dark:border-emerald-900 bg-emerald-50/60 dark:bg-emerald-950/40">
+   216→              <CardHeader>
+   217→                <CardTitle className="text-base flex items-center gap-2 text-emerald-800 dark:text-emerald-300">
+   218→                  <DollarSign className="size-4" /> Offer
+   219→                </CardTitle>
+   220→              </CardHeader>
+   221→              <CardContent className="space-y-2">
+   222→                {offer.amount != null && (
+   223→                  <div className="flex items-center justify-between text-sm">
+   224→                    <span className="text-slate-500">Compensation</span>
+   225→                    <span className="font-semibold tabular-nums">
+   226→                      {formatCurrency(offer.amount, offer.currency ?? 'INR')}
+   227→                    </span>
+   228→                  </div>
+   229→                )}
+   230→                <div className="flex items-center justify-between text-sm">
+   231→                  <span className="text-slate-500">Decision</span>
+   232→                  <StatusBadge status={offer.decision} />
+   233→                </div>
+   234→                {offer.expiresAt && (
+   235→                  <div className="flex items-center justify-between text-sm">
+   236→                    <span className="text-slate-500">Expires</span>
+   237→                    <span className="font-medium">{formatDate(offer.expiresAt)}</span>
+   238→                  </div>
+   239→                )}
+   240→              </CardContent>
+   241→            </Card>
+   242→          )}
+   243→
+   244→          {interviews.length > 0 && (
+   245→            <Card>
+   246→              <CardHeader>
+   247→                <CardTitle className="text-base flex items-center gap-2">
+   248→                  <Calendar className="size-4" /> Upcoming interviews
+   249→                </CardTitle>
+   250→                <CardDescription>{interviews.length} scheduled</CardDescription>
+   251→              </CardHeader>
+   252→              <CardContent className="p-0">
+   253→                <ul className="divide-y">
+   254→                  {interviews.map((iv) => (
+   255→                    <li key={iv.id} className="p-3 space-y-1">
+   256→                      <div className="flex items-center justify-between gap-2">
+   257→                        <Badge variant="outline" className="text-xs">{iv.type}</Badge>
+   258→                        <Badge variant="secondary" className="text-xs">Round {iv.round}</Badge>
+   259→                      </div>
+   260→                      <div className="text-sm font-medium flex items-center gap-1">
+   261→                        <Clock className="size-3" />
+   262→                        {formatDateTime(iv.scheduledAt)}
+   263→                      </div>
+   264→                      {iv.location && (
+   265→                        <div className="text-xs text-slate-500 flex items-center gap-1">
+   266→                          <MapPin className="size-3" /> {iv.location}
+   267→                        </div>
+   268→                      )}
+   269→                      {iv.meetingUrl && (
+   270→                        <a href={iv.meetingUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-slate-600 dark:text-slate-400 hover:underline inline-flex items-center gap-1">
+   271→                          <Video className="size-3" /> Join meeting
+   272→                          <ExternalLink className="size-3" />
+   273→                        </a>
+   274→                      )}
+   275→                      {iv.notes && <p className="text-xs text-slate-500 mt-1">{iv.notes}</p>}
+   276→                    </li>
+   277→                  ))}
+   278→                </ul>
+   279→              </CardContent>
+   280→            </Card>
+   281→          )}
+   282→
+   283→          {data.resume && (
+   284→            <Card>
+   285→              <CardHeader>
+   286→                <CardTitle className="text-base flex items-center gap-2">
+   287→                  <FileText className="size-4" /> Submitted resume
+   288→                </CardTitle>
+   289→              </CardHeader>
+   290→              <CardContent>
+   291→                <div className="flex items-center justify-between">
+   292→                  <div>
+   293→                    <div className="font-medium text-sm">{data.resume.title}</div>
+   294→                    <div className="text-xs text-slate-500">Version {data.resume.version}</div>
+   295→                  </div>
+   296→                  <a
+   297→                    href={`/api/resumes/${data.resume.id}/pdf`}
+   298→                    target="_blank"
+   299→                    rel="noopener noreferrer"
+   300→                    className="text-xs text-slate-600 dark:text-slate-400 hover:underline inline-flex items-center gap-1"
+   301→                  >
+   302→                    <ExternalLink className="size-3" /> View PDF
+   303→                  </a>
+   304→                </div>
+   305→                <p className="text-xs text-slate-500 mt-2 italic">
+   306→                  Read-only summary. Full resume builder is on the student side.
+   307→                </p>
+   308→              </CardContent>
+   309→            </Card>
+   310→          )}
+   311→        </div>
+   312→      </div>
+   313→
+   314→      {/* Update status dialog */}
+   315→      <UpdateStatusDialog
+   316→        open={statusDialog}
+   317→        onOpenChange={setStatusDialog}
+   318→        applicationId={id}
+   319→        currentStatus={data.status}
+   320→        allowedNext={allowedNext}
+   321→      />
+   322→
+   323→      {/* Schedule interview dialog */}
+   324→      <ScheduleInterviewDialog
+   325→        open={interviewDialog}
+   326→        onOpenChange={setInterviewDialog}
+   327→        applicationId={id}
+   328→      />
+   329→
+   330→      {/* Extend offer dialog */}
+   331→      <ExtendOfferDialog
+   332→        open={offerDialog}
+   333→        onOpenChange={setOfferDialog}
+   334→        applicationId={id}
+   335→        existingOffer={offer}
+   336→      />
+   337→    </div>
+   338→  )
+   339→}
+   340→
+   341→function UpdateStatusDialog({
+   342→  open, onOpenChange, applicationId, currentStatus, allowedNext,
+   343→}: {
+   344→  open: boolean
+   345→  onOpenChange: (open: boolean) => void
+   346→  applicationId: string
+   347→  currentStatus: ApplicationStatus
+   348→  allowedNext: ApplicationStatus[]
+   349→}) {
+   350→  const qc = useQueryClient()
+   351→  const [newStatus, setNewStatus] = useState<ApplicationStatus | ''>('')
+   352→  const [reason, setReason] = useState('')
+   353→
+   354→  const mutation = useMutation({
+   355→    mutationFn: (body: { status: ApplicationStatus; reason?: string }) =>
+   356→      apiPatch(`/api/applications/${applicationId}`, body),
+   357→    onSuccess: () => {
+   358→      toast.success('Status updated')
+   359→      onOpenChange(false)
+   360→      setNewStatus('')
+   361→      setReason('')
+   362→      qc.invalidateQueries({ queryKey: ['application', applicationId] })
+   363→      qc.invalidateQueries({ queryKey: ['officer-applications'] })
+   364→      qc.invalidateQueries({ queryKey: ['officer-dashboard'] })
+   365→    },
+   366→    onError: (err: unknown) => {
+   367→      const e = err as { message?: string }
+   368→      toast.error(e.message ?? 'Failed to update status')
+   369→    },
+   370→  })
+   371→
+   372→  function submit() {
+   373→    if (!newStatus) {
+   374→      toast.error('Select a status')
+   375→      return
+   376→    }
+   377→    mutation.mutate({ status: newStatus, reason: reason.trim() || undefined })
+   378→  }
+   379→
+   380→  return (
+   381→    <Dialog open={open} onOpenChange={(o) => { if (!o) { setNewStatus(''); setReason('') }; onOpenChange(o) }}>
+   382→      <DialogContent>
+   383→        <DialogHeader>
+   384→          <DialogTitle>Update application status</DialogTitle>
+   385→          <DialogDescription>
+   386→            Current: <StatusBadge status={currentStatus} />
+   387→            {allowedNext.length === 0 ? ' — terminal status, no further transitions.' : ' Select the next status.'}
+   388→          </DialogDescription>
+   389→        </DialogHeader>
+   390→        <div className="space-y-3">
+   391→          <div>
+   392→            <Label className="text-xs text-slate-500">New status</Label>
+   393→            <Select value={newStatus} onValueChange={(v) => setNewStatus(v as ApplicationStatus)}>
+   394→              <SelectTrigger className="w-full"><SelectValue placeholder="Select status" /></SelectTrigger>
+   395→              <SelectContent>
+   396→                {allowedNext.map((s) => (
+   397→                  <SelectItem key={s} value={s}>{s.replace(/_/g, ' ')}</SelectItem>
+   398→                ))}
+   399→              </SelectContent>
+   400→            </Select>
+   401→          </div>
+   402→          <div>
+   403→            <Label className="text-xs text-slate-500">Reason (optional)</Label>
+   404→            <Textarea
+   405→              rows={3}
+   406→              value={reason}
+   407→              onChange={(e) => setReason(e.target.value)}
+   408→              placeholder="Explain the transition…"
+   409→            />
+   410→          </div>
+   411→        </div>
+   412→        <DialogFooter>
+   413→          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+   414→          <Button onClick={submit} disabled={mutation.isPending || allowedNext.length === 0}>
+   415→            {mutation.isPending ? <Loader2 className="size-4 mr-1 animate-spin" /> : null}
+   416→            Update status
+   417→          </Button>
+   418→        </DialogFooter>
+   419→      </DialogContent>
+   420→    </Dialog>
+   421→  )
+   422→}
+   423→
+   424→function ScheduleInterviewDialog({
+   425→  open, onOpenChange, applicationId,
+   426→}: {
+   427→  open: boolean
+   428→  onOpenChange: (open: boolean) => void
+   429→  applicationId: string
+   430→}) {
+   431→  const qc = useQueryClient()
+   432→  const [scheduledAt, setScheduledAt] = useState('')
+   433→  const [duration, setDuration] = useState('')
+   434→  const [location, setLocation] = useState('')
+   435→  const [meetingUrl, setMeetingUrl] = useState('')
+   436→  const [type, setType] = useState<'TECHNICAL' | 'HR' | 'MANAGERIAL' | 'GROUP'>('TECHNICAL')
+   437→  const [round, setRound] = useState('1')
+   438→  const [notes, setNotes] = useState('')
+   439→
+   440→  function reset() {
+   441→    setScheduledAt(''); setDuration(''); setLocation(''); setMeetingUrl('')
+   442→    setType('TECHNICAL'); setRound('1'); setNotes('')
+   443→  }
+   444→
+   445→  const mutation = useMutation({
+   446→    mutationFn: (body: Record<string, unknown>) => apiPost(`/api/applications/${applicationId}/interview`, body),
+   447→    onSuccess: () => {
+   448→      toast.success('Interview scheduled — student notified')
+   449→      onOpenChange(false)
+   450→      reset()
+   451→      qc.invalidateQueries({ queryKey: ['application', applicationId] })
+   452→      qc.invalidateQueries({ queryKey: ['officer-applications'] })
+   453→      qc.invalidateQueries({ queryKey: ['officer-dashboard'] })
+   454→    },
+   455→    onError: (err: unknown) => {
+   456→      const e = err as { message?: string }
+   457→      toast.error(e.message ?? 'Failed to schedule interview')
+   458→    },
+   459→  })
+   460→
+   461→  function submit() {
+   462→    if (!scheduledAt) {
+   463→      toast.error('Pick a date & time')
+   464→      return
+   465→    }
+   466→    const body: Record<string, unknown> = {
+   467→      scheduledAt: new Date(scheduledAt).toISOString(),
+   468→      type,
+   469→      round: Number(round) || 1,
+   470→    }
+   471→    if (duration) body.duration = Number(duration)
+   472→    if (location) body.location = location
+   473→    if (meetingUrl) body.meetingUrl = meetingUrl
+   474→    if (notes) body.notes = notes
+   475→    mutation.mutate(body)
+   476→  }
+   477→
+   478→  // Default to next day 10am
+   479→  function setDefaultTime() {
+   480→    const d = new Date()
+   481→    d.setDate(d.getDate() + 1)
+   482→    d.setHours(10, 0, 0, 0)
+   483→    const tz = d.getTimezoneOffset() * 60000
+   484→    const local = new Date(d.getTime() - tz).toISOString().slice(0, 16)
+   485→    setScheduledAt(local)
+   486→  }
+   487→
+   488→  return (
+   489→    <Dialog open={open} onOpenChange={(o) => { if (!o) reset(); onOpenChange(o) }}>
+   490→      <DialogContent className="sm:max-w-lg">
+   491→        <DialogHeader>
+   492→          <DialogTitle>Schedule interview</DialogTitle>
+   493→          <DialogDescription>If the application is at an earlier stage, it will be advanced to INTERVIEW.</DialogDescription>
+   494→        </DialogHeader>
+   495→        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+   496→          <div className="space-y-1 md:col-span-2">
+   497→            <Label className="text-xs text-slate-500">Scheduled at *</Label>
+   498→            <div className="flex gap-2">
+   499→              <Input
+   500→                type="datetime-local"
+   501→                value={scheduledAt}
+   502→                onChange={(e) => setScheduledAt(e.target.value)}
+   503→              />
+   504→              <Button variant="outline" size="sm" onClick={setDefaultTime}>Now+1d 10am</Button>
+   505→            </div>
+   506→          </div>
+   507→          <div className="space-y-1">
+   508→            <Label className="text-xs text-slate-500">Type</Label>
+   509→            <Select value={type} onValueChange={(v) => setType(v as typeof type)}>
+   510→              <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+   511→              <SelectContent>
+   512→                {INTERVIEW_TYPES.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+   513→              </SelectContent>
+   514→            </Select>
+   515→          </div>
+   516→          <div className="space-y-1">
+   517→            <Label className="text-xs text-slate-500">Round</Label>
+   518→            <Input type="number" min={1} max={20} value={round} onChange={(e) => setRound(e.target.value)} />
+   519→          </div>
+   520→          <div className="space-y-1">
+   521→            <Label className="text-xs text-slate-500">Duration (min)</Label>
+   522→            <Input type="number" min={5} max={480} value={duration} onChange={(e) => setDuration(e.target.value)} placeholder="e.g. 60" />
+   523→          </div>
+   524→          <div className="space-y-1">
+   525→            <Label className="text-xs text-slate-500">Location</Label>
+   526→            <Input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Office / room" />
+   527→          </div>
+   528→          <div className="space-y-1 md:col-span-2">
+   529→            <Label className="text-xs text-slate-500">Meeting URL</Label>
+   530→            <Input value={meetingUrl} onChange={(e) => setMeetingUrl(e.target.value)} placeholder="https://meet…" />
+   531→          </div>
+   532→          <div className="space-y-1 md:col-span-2">
+   533→            <Label className="text-xs text-slate-500">Notes</Label>
+   534→            <Textarea rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Notes for student" />
+   535→          </div>
+   536→        </div>
+   537→        <DialogFooter>
+   538→          <Button variant="outline" onClick={() => { reset(); onOpenChange(false) }}>Cancel</Button>
+   539→          <Button onClick={submit} disabled={mutation.isPending}>
+   540→            {mutation.isPending ? <Loader2 className="size-4 mr-1 animate-spin" /> : null}
+   541→            Schedule
+   542→          </Button>
+   543→        </DialogFooter>
+   544→      </DialogContent>
+   545→    </Dialog>
+   546→  )
+   547→}
+   548→
+   549→function ExtendOfferDialog({
+   550→  open, onOpenChange, applicationId, existingOffer,
+   551→}: {
+   552→  open: boolean
+   553→  onOpenChange: (open: boolean) => void
+   554→  applicationId: string
+   555→  existingOffer?: Offer | null
+   556→}) {
+   557→  const qc = useQueryClient()
+   558→  const [amount, setAmount] = useState(existingOffer?.amount != null ? String(existingOffer.amount) : '')
+   559→  const [currency, setCurrency] = useState(existingOffer?.currency ?? 'INR')
+   560→  const [decision, setDecision] = useState<'PENDING' | 'ACCEPTED' | 'DECLINED'>(existingOffer?.decision as 'PENDING' | 'ACCEPTED' | 'DECLINED' ?? 'PENDING')
+   561→  const [expiresAt, setExpiresAt] = useState('')
+   562→
+   563→  const mutation = useMutation({
+   564→    mutationFn: (body: Record<string, unknown>) => apiPost(`/api/applications/${applicationId}/offer`, body),
+   565→    onSuccess: () => {
+   566→      toast.success('Offer updated — student notified')
+   567→      onOpenChange(false)
+   568→      qc.invalidateQueries({ queryKey: ['application', applicationId] })
+   569→      qc.invalidateQueries({ queryKey: ['officer-applications'] })
+   570→      qc.invalidateQueries({ queryKey: ['officer-dashboard'] })
+   571→    },
+   572→    onError: (err: unknown) => {
+   573→      const e = err as { message?: string }
+   574→      toast.error(e.message ?? 'Failed to extend offer')
+   575→    },
+   576→  })
+   577→
+   578→  function submit() {
+   579→    const body: Record<string, unknown> = {
+   580→      currency,
+   581→      decision,
+   582→    }
+   583→    if (amount) body.amount = Number(amount)
+   584→    if (expiresAt) body.expiresAt = new Date(expiresAt).toISOString()
+   585→    mutation.mutate(body)
+   586→  }
+   587→
+   588→  return (
+   589→    <Dialog open={open} onOpenChange={onOpenChange}>
+   590→      <DialogContent>
+   591→        <DialogHeader>
+   592→          <DialogTitle>
+   593→            {existingOffer ? 'Update offer' : 'Extend offer'}
+   594→          </DialogTitle>
+   595→          <DialogDescription>
+   596→            The application status will be moved to OFFER if it's at an earlier stage.
+   597→          </DialogDescription>
+   598→        </DialogHeader>
+   599→        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+   600→          <div className="space-y-1">
+   601→            <Label className="text-xs text-slate-500">Amount</Label>
+   602→            <Input type="number" min={0} value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="e.g. 1200000" />
+   603→          </div>
+   604→          <div className="space-y-1">
+   605→            <Label className="text-xs text-slate-500">Currency</Label>
+   606→            <Input value={currency} onChange={(e) => setCurrency(e.target.value)} placeholder="INR" />
+   607→          </div>
+   608→          <div className="space-y-1">
+   609→            <Label className="text-xs text-slate-500">Decision</Label>
+   610→            <Select value={decision} onValueChange={(v) => setDecision(v as typeof decision)}>
+   611→              <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+   612→              <SelectContent>
+   613→                {OFFER_DECISIONS.map((d) => <SelectItem key={d} value={d}>{d}</SelectItem>)}
+   614→              </SelectContent>
+   615→            </Select>
+   616→          </div>
+   617→          <div className="space-y-1">
+   618→            <Label className="text-xs text-slate-500">Expires at</Label>
+   619→            <Input type="date" value={expiresAt} onChange={(e) => setExpiresAt(e.target.value)} />
+   620→          </div>
+   621→        </div>
+   622→        <DialogFooter>
+   623→          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+   624→          <Button onClick={submit} disabled={mutation.isPending}>
+   625→            {mutation.isPending ? <Loader2 className="size-4 mr-1 animate-spin" /> : null}
+   626→            {existingOffer ? 'Update offer' : 'Extend offer'}
+   627→          </Button>
+   628→        </DialogFooter>
+   629→      </DialogContent>
+   630→    </Dialog>
+   631→  )
+   632→}
+   633→
+   634→function ApplicationDetailSkeleton() {
+   635→  return (
+   636→    <div className="space-y-6">
+   637→      <PageHeader title="Loading application…" description="Hang tight" />
+   638→      <CardSkeleton />
+   639→      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+   640→        <Card className="lg:col-span-2"><CardContent className="p-6 space-y-3"><Skeleton className="h-32 w-full" /></CardContent></Card>
+   641→        <Card><CardContent className="p-6 space-y-3"><Skeleton className="h-32 w-full" /></CardContent></Card>
+   642→      </div>
+   643→    </div>
+   644→  )
+   645→}
+   646→

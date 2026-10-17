@@ -4,13 +4,13 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPost } from '@/lib/api-client'
 import { useAppStore } from '@/store/app-store'
-import { PageHeader, CardSkeleton, EmptyState, ErrorState, formatDate } from '@/components/placement/shared/ui'
+import {
+  PageHeader, CardSkeleton, EmptyState, ErrorState, formatDate,
+} from '@/components/placement/shared/ui'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
 } from '@/components/ui/dialog'
@@ -95,8 +95,8 @@ export function Resumes() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Resume builder"
-        description="Auto-generate evidence-backed resumes for each role"
+        title="Resume Studio"
+        description="Build evidence-backed resumes tailored to each role"
       >
         <Dialog open={generateOpen} onOpenChange={setGenerateOpen}>
           <DialogTrigger asChild>
@@ -128,11 +128,11 @@ export function Resumes() {
                   </SelectContent>
                 </Select>
                 {jobsQuery.isLoading && (
-                  <p className="text-xs text-slate-500 flex items-center gap-1">
+                  <p className="text-xs text-muted-foreground flex items-center gap-1">
                     <Loader2 className="size-3 animate-spin" /> Loading jobs…
                   </p>
                 )}
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-muted-foreground">
                   A targeted resume highlights skills required by the chosen role.
                 </p>
               </div>
@@ -153,14 +153,13 @@ export function Resumes() {
         </Dialog>
       </PageHeader>
 
-      {/* Resume list */}
       {resumes.length === 0 ? (
         <Card>
           <CardContent className="p-0">
             <EmptyState
               icon={FileText}
               title="No resumes yet"
-              description="Generate your first evidence-backed resume in one click"
+              description="Generate your first evidence-backed resume — we'll assemble verified skills, projects, and certifications into a clean one-page PDF."
               action={
                 <Button size="sm" onClick={() => setGenerateOpen(true)}>
                   <Plus className="size-4 mr-2" /> Generate resume
@@ -198,11 +197,11 @@ export function Resumes() {
               </CardHeader>
               <CardContent className="flex-1 flex flex-col">
                 {r.summary && (
-                  <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-3 mb-3">
+                  <p className="text-xs text-muted-foreground line-clamp-3 mb-3">
                     {r.summary}
                   </p>
                 )}
-                <div className="mt-auto flex items-center justify-between text-xs text-slate-500 pt-3 border-t">
+                <div className="mt-auto flex items-center justify-between text-xs text-muted-foreground pt-3 border-t">
                   <span>v{r.version} · {r.bulletCount} bullets</span>
                   <span>{formatDate(r.createdAt)}</span>
                 </div>
@@ -221,7 +220,7 @@ export function Resumes() {
 function ResumesSkeleton() {
   return (
     <div className="space-y-6">
-      <PageHeader title="Resume builder" description="Loading…" />
+      <PageHeader title="Resume Studio" description="Loading…" />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {[0, 1, 2].map(i => <CardSkeleton key={i} />)}
       </div>

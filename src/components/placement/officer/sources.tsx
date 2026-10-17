@@ -13,24 +13,31 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table'
 import {
-  Database, RefreshCw, Loader2, Globe, Calendar,
+  Database, RefreshCw, Loader2, Globe, Calendar, FileText,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
 import { formatDateTime } from '@/components/placement/shared/ui'
 
 interface JobSourceRow {
   id: string
   name: string
   type: string
-  status: string
+  status: string // ACTIVE | INACTIVE | ERROR
   endpoint?: string | null
   apiKey?: string | null
   lastSyncAt?: string | null
-  syncInterval?: string | null
+  count: number
+  notes?: string | null
   createdAt: string
-  updatedAt: string
 }
 interface JobSourcesResponse { data: JobSourceRow[] }
+
+const STATUS_CLS: Record<string, string> = {
+  ACTIVE: 'bg-[var(--verified-muted)] text-[var(--verified-foreground)] border-[var(--verified)]/30',
+  INACTIVE: 'bg-muted text-muted-foreground border-border',
+  ERROR: 'bg-[var(--danger-muted)] text-[var(--danger-foreground)] border-[var(--danger)]/30',
+}
 
 export function Sources() {
   const qc = useQueryClient()
@@ -82,6 +89,7 @@ export function Sources() {
                   <TableHead>Name</TableHead>
                   <TableHead className="hidden md:table-cell">Type</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead className="hidden md:table-cell">Jobs ingested</TableHead>
                   <TableHead className="hidden lg:table-cell">Endpoint</TableHead>
                   <TableHead className="hidden md:table-cell">Last sync</TableHead>
                   <TableHead></TableHead>
@@ -92,12 +100,12 @@ export function Sources() {
                   <TableRow key={s.id}>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <div className="size-8 rounded-md bg-slate-100 dark:bg-slate-900 flex items-center justify-center">
-                          <Database className="size-4 text-slate-500" />
+                        <div className="size-8 rounded-md bg-muted flex items-center justify-center">
+                          <Database className="size-4 text-muted-foreground" />
                         </div>
                         <div>
                           <div className="text-sm font-medium">{s.name}</div>
-                          <div className="text-xs text-slate-500 md:hidden">{s.type}</div>
+                          <div className="text-xs text-muted-foreground md:hidden">{s.type}</div>
                         </div>
                       </div>
                     </TableCell>
@@ -105,13 +113,12 @@ export function Sources() {
                       <Badge variant="outline" className="text-xs">{s.type}</Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline" className={
-                        s.status === 'ACTIVE' ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300' :
-                        s.status === 'PAUSED' ? 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300' :
-                        'bg-slate-50 text-slate-600 border-slate-200 dark:bg-slate-900 dark:text-slate-300'
-                      }>
+                      <Badge variant="outline" className={cn('text-xs', STATUS_CLS[s.status] ?? '')}>
                         {s.status}
                       </Badge>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell text-sm tabular-nums">
+                      {s.count}
                     </TableCell>
                     <TableCell className="hidden lg:table-cell text-sm">
                       {s.endpoint ? (
@@ -119,23 +126,23 @@ export function Sources() {
                           href={s.endpoint}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-slate-600 dark:text-slate-400 hover:underline"
+                          className="inline-flex items-center gap-1 text-[var(--info-foreground)] hover:underline"
                         >
                           <Globe className="size-3" />
                           <span className="truncate max-w-[200px]" title={s.endpoint}>{s.endpoint}</span>
                         </a>
                       ) : (
-                        <span className="text-slate-400">—</span>
+                        <span className="text-muted-foreground">—</span>
                       )}
                     </TableCell>
                     <TableCell className="hidden md:table-cell text-sm">
                       {s.lastSyncAt ? (
-                        <span className="flex items-center gap-1 text-slate-500">
+                        <span className="flex items-center gap-1 text-muted-foreground">
                           <Calendar className="size-3" />
                           {formatDateTime(s.lastSyncAt)}
                         </span>
                       ) : (
-                        <span className="text-slate-400">Never</span>
+                        <span className="text-muted-foreground">Never</span>
                       )}
                     </TableCell>
                     <TableCell>
@@ -160,8 +167,10 @@ export function Sources() {
       </Card>
 
       <Card>
-        <CardContent className="p-4 text-xs text-slate-500 space-y-1">
-          <div className="font-medium text-sm text-slate-700 dark:text-slate-300 mb-2">About job sources</div>
+        <CardContent className="p-4 text-xs text-muted-foreground space-y-1">
+          <div className="font-medium text-sm text-foreground mb-2 flex items-center gap-2">
+            <FileText className="size-4" /> About job sources
+          </div>
           <p>• Sources let Placement Hub automatically pull jobs from external feeds, alumni networks, or partner APIs.</p>
           <p>• The <code>Sync now</code> action triggers a sync with the source. The current implementation updates the <code>lastSyncAt</code> timestamp and returns a demo payload — full ingestion is not configured in this demo build.</p>
           <p>• Contact your admin to enable real integration endpoints.</p>

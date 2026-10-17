@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { apiGet, api } from '@/lib/api-client'
 import {
-  PageHeader, EmptyState, ErrorState, CardSkeleton,
+  PageHeader, EmptyState, ErrorState, CardSkeleton, StatCard,
 } from '@/components/placement/shared/ui'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -18,7 +18,7 @@ import {
   PieChart, Pie, Cell, Legend,
 } from 'recharts'
 import {
-  BarChart3, PieChart as PieIcon, Activity, Download, Loader2, Users,
+  BarChart3, PieChart as PieIcon, Activity, Download, Loader2, Users, Target,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import type { OfficerDashboard } from '@/types'
@@ -28,7 +28,10 @@ const STAGE_ORDER = [
   'INTERVIEW', 'OFFER', 'REJECTED', 'WITHDRAWN',
 ] as const
 
-const PIE_COLORS = ['#0f766e', '#a16207', '#7c3aed', '#be123c', '#0369a1', '#475569']
+// Restrained chart palette from globals.css --chart-1..5
+const PIE_COLORS = [
+  'var(--chart-1)', 'var(--chart-2)', 'var(--chart-3)', 'var(--chart-4)', 'var(--chart-5)',
+]
 
 interface JobsListResponse {
   data: Array<{ id: string; title: string; company: { name: string }; status: string }>
@@ -42,7 +45,6 @@ export function Analytics() {
     staleTime: 30_000,
   })
 
-  // For CSV export job picker
   const [exportJobId, setExportJobId] = useState('')
   const [exporting, setExporting] = useState(false)
 
@@ -101,6 +103,25 @@ export function Analytics() {
 
   const totalJobs = Object.values(data.jobsBySource).reduce((a, b) => a + b, 0)
   const totalApps = Object.values(data.applicationsByStage).reduce((a, b) => a + b, 0)
+  const hasData = totalJobs > 0 || totalApps > 0 || data.totalActiveStudents > 0
+
+  // Overall empty state when there's literally no data
+  if (!hasData) {
+    return (
+      <div className="space-y-6">
+        <PageHeader title="Analytics" description="Placement effectiveness across the system" />
+        <Card>
+          <CardContent className="p-0">
+            <EmptyState
+              icon={BarChart3}
+              title="No analytics yet"
+              description="Once students register and apply to jobs, charts will appear here."
+            />
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -109,12 +130,12 @@ export function Analytics() {
         description="Placement effectiveness across the system"
       />
 
-      {/* Top summary */}
+      {/* Top summary tiles — use StatCard for consistent design language */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <SummaryTile label="Active students" value={data.totalActiveStudents} />
-        <SummaryTile label="Open jobs" value={data.totalOpenJobs} />
-        <SummaryTile label="Matches computed" value={data.totalMatchesComputed} />
-        <SummaryTile label="Total applications" value={totalApps} />
+        <StatCard label="Active students" value={data.totalActiveStudents} icon={Users} tone="info" />
+        <StatCard label="Open jobs" value={data.totalOpenJobs} icon={BarChart3} tone="success" />
+        <StatCard label="Matches computed" value={data.totalMatchesComputed} icon={Target} />
+        <StatCard label="Total applications" value={totalApps} icon={Activity} tone="brand" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -131,11 +152,24 @@ export function Analytics() {
             ) : (
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={stageRows} margin={{ top: 8, right: 8, left: 0, bottom: 8 }}>
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-slate-200 dark:stroke-slate-800" />
-                  <XAxis dataKey="stage" tick={{ fontSize: 10 }} interval={0} angle={-25} textAnchor="end" height={60} />
-                  <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
-                  <Tooltip cursor={{ fillOpacity: 0.2 }} contentStyle={{ borderRadius: 6, border: '1px solid #e2e8f0', fontSize: 12 }} />
-                  <Bar dataKey="count" name="Applications" radius={[4, 4, 0, 0]} fill="#0f766e" />
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-border" vertical={false} />
+                  <XAxis
+                    dataKey="stage"
+                    tick={{ fontSize: 10 }}
+                    interval={0}
+                    angle={-25}
+                    textAnchor="end"
+                    height={60}
+                    tickLine={false}
+                    axisLine={{ stroke: 'var(--border)' }}
+                  />
+                  <YAxis allowDecimals={false} tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
+                  <Tooltip
+                    cursor={{ fillOpacity: 0.15 }}
+                    contentStyle={{ borderRadius: 8, border: '1px solid var(--border)', fontSize: 12, background: 'var(--card)' }}
+                    formatter={(value: number) => [`${value} application${value === 1 ? '' : 's'}`, 'Count']}
+                  />
+                  <Bar dataKey="count" name="Applications" radius={[4, 4, 0, 0]} fill="var(--primary)" maxBarSize={56} />
                 </BarChart>
               </ResponsiveContainer>
             )}
@@ -171,7 +205,7 @@ export function Analytics() {
                       <Cell key={idx} fill={PIE_COLORS[idx % PIE_COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip contentStyle={{ borderRadius: 6, border: '1px solid #e2e8f0', fontSize: 12 }} />
+                  <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid var(--border)', fontSize: 12, background: 'var(--card)' }} />
                   <Legend wrapperStyle={{ fontSize: 11 }} />
                 </PieChart>
               </ResponsiveContainer>
@@ -180,7 +214,7 @@ export function Analytics() {
         </Card>
       </div>
 
-      {/* Source effectiveness */}
+      {/* Source effectiveness comparison */}
       <Card>
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
@@ -190,7 +224,7 @@ export function Analytics() {
         </CardHeader>
         <CardContent>
           {sourceRows.length === 0 ? (
-            <EmptyState icon={BarChart3} title="No source data" description="Jobs will appear here" />
+            <EmptyState icon={BarChart3} title="No source data" description="Jobs will appear here once added" />
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
               {['MANUAL', 'FEED', 'ALUMNI', 'API', 'CSV'].map((src) => {
@@ -198,9 +232,9 @@ export function Analytics() {
                 const pct = totalJobs > 0 ? Math.round((count / totalJobs) * 100) : 0
                 return (
                   <div key={src} className="rounded-md border p-3">
-                    <div className="text-xs uppercase tracking-wider text-slate-500">{src}</div>
+                    <div className="text-xs uppercase tracking-wider text-muted-foreground">{src}</div>
                     <div className="text-2xl font-bold tabular-nums mt-1">{count}</div>
-                    <div className="text-xs text-slate-500 mt-0.5">{pct}% of total</div>
+                    <div className="text-xs text-muted-foreground mt-0.5">{pct}% of total</div>
                   </div>
                 )
               })}
@@ -209,25 +243,42 @@ export function Analytics() {
         </CardContent>
       </Card>
 
-      {/* CSV export */}
+      {/* Conversion funnel: Applications → Interviews → Offers */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base flex items-center gap-2">
+            <Users className="size-4" /> Conversion funnel
+          </CardTitle>
+          <CardDescription>Applications → interviews → offers</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <FunnelStep label="Applications" value={totalApps} tone="info" />
+            <FunnelStep label="Interviews" value={data.totalInterviews} tone="warning" />
+            <FunnelStep label="Offers" value={data.totalOffers} tone="success" />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* CSV export — only enabled when a job is selected */}
       <Card>
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
             <Download className="size-4" /> Export ranking CSV
           </CardTitle>
-          <CardDescription>Download a ranked candidate list for any job</CardDescription>
+          <CardDescription>Select a job to download its ranked candidate list</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
             <div className="space-y-1 md:col-span-2">
-              <Label className="text-xs text-slate-500">Job</Label>
+              <Label className="text-xs text-muted-foreground">Job</Label>
               <Select
                 value={exportJobId}
                 onValueChange={setExportJobId}
                 disabled={jobsQuery.isLoading}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder={jobsQuery.isLoading ? 'Loading jobs…' : 'Select job'} />
+                  <SelectValue placeholder={jobsQuery.isLoading ? 'Loading jobs…' : 'Select a job'} />
                 </SelectTrigger>
                 <SelectContent>
                   {(jobsQuery.data?.data ?? []).map((j) => (
@@ -247,49 +298,14 @@ export function Analytics() {
               Export CSV
             </Button>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Application pipeline conversion */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base flex items-center gap-2">
-            <Users className="size-4" /> Conversion funnel
-          </CardTitle>
-          <CardDescription>Applications → interviews → offers</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <FunnelStep
-              label="Applications"
-              value={totalApps}
-              tone="info"
-            />
-            <FunnelStep
-              label="Interviews"
-              value={data.totalInterviews}
-              tone="warning"
-            />
-            <FunnelStep
-              label="Offers"
-              value={data.totalOffers}
-              tone="success"
-            />
-          </div>
+          {!exportJobId && (
+            <p className="text-xs text-muted-foreground">
+              Pick a job to enable the export button.
+            </p>
+          )}
         </CardContent>
       </Card>
     </div>
-  )
-}
-
-function SummaryTile({ label, value }: { label: string; value: number }) {
-  return (
-    <Card>
-      <CardContent className="p-4">
-        <div className="text-xs uppercase tracking-wider text-slate-500">{label}</div>
-        <div className="text-2xl font-bold tabular-nums mt-1">{value}</div>
-      </CardContent>
-    </Card>
   )
 }
 
@@ -301,10 +317,10 @@ function FunnelStep({
   tone: 'info' | 'warning' | 'success'
 }) {
   const cls = tone === 'success'
-    ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-900'
+    ? 'bg-[var(--verified-muted)] border-[var(--verified)]/30 text-[var(--verified-foreground)]'
     : tone === 'warning'
-    ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-900'
-    : 'bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800'
+    ? 'bg-[var(--pending-muted)] border-[var(--pending)]/30 text-[var(--pending-foreground)]'
+    : 'bg-[var(--info-muted)] border-[var(--info)]/30 text-[var(--info-foreground)]'
   return (
     <div className={`rounded-md border p-4 ${cls}`}>
       <div className="text-xs uppercase tracking-wider opacity-80">{label}</div>

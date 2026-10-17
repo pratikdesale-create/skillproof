@@ -27,6 +27,7 @@ import {
   Briefcase, Search, Plus, Upload, ArrowRight, X, Loader2, Building2,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
 
 interface JobCompany { id: string; name: string; industry?: string | null }
 interface JobListItem {
@@ -53,6 +54,13 @@ const WORK_ARRANGEMENTS = ['remote', 'hybrid', 'onsite']
 const EMPLOYMENT_TYPES = ['full-time', 'internship', 'contract']
 const SOURCE_TYPES = ['MANUAL', 'FEED', 'ALUMNI', 'API', 'CSV']
 const STATUSES = ['OPEN', 'CLOSED', 'DRAFT', 'ARCHIVED']
+
+const JOB_STATUS_CLS: Record<string, string> = {
+  OPEN: 'bg-[var(--verified-muted)] text-[var(--verified-foreground)] border-[var(--verified)]/30',
+  CLOSED: 'bg-muted text-muted-foreground border-border',
+  ARCHIVED: 'bg-[var(--danger-muted)] text-[var(--danger-foreground)] border-[var(--danger)]/30',
+  DRAFT: 'bg-[var(--pending-muted)] text-[var(--pending-foreground)] border-[var(--pending)]/30',
+}
 
 export function JobsManagement() {
   const navigate = useAppStore(s => s.navigate)
@@ -121,7 +129,7 @@ export function JobsManagement() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Job Management"
+        title="Jobs"
         description={`${total} job${total === 1 ? '' : 's'} in the system`}
       >
         <Button size="sm" variant="outline" onClick={() => setShowImport(true)}>
@@ -136,9 +144,9 @@ export function JobsManagement() {
         <CardContent className="p-4 space-y-3">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
             <div className="space-y-1.5 lg:col-span-2">
-              <Label className="text-xs text-slate-500">Search</Label>
+              <Label className="text-xs text-muted-foreground">Search</Label>
               <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                 <Input
                   placeholder="Title, company, description…"
                   value={searchInput}
@@ -148,7 +156,7 @@ export function JobsManagement() {
               </div>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs text-slate-500">Batch</Label>
+              <Label className="text-xs text-muted-foreground">Batch</Label>
               <Input
                 placeholder="e.g. 2025"
                 value={batch}
@@ -156,7 +164,7 @@ export function JobsManagement() {
               />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs text-slate-500">Company</Label>
+              <Label className="text-xs text-muted-foreground">Company</Label>
               <Select value={company || 'ALL'} onValueChange={(v) => setCompany(v === 'ALL' ? '' : v)}>
                 <SelectTrigger className="w-full"><SelectValue placeholder="All companies" /></SelectTrigger>
                 <SelectContent>
@@ -166,7 +174,7 @@ export function JobsManagement() {
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs text-slate-500">Source</Label>
+              <Label className="text-xs text-muted-foreground">Source</Label>
               <Select value={source || 'ALL'} onValueChange={(v) => setSource(v === 'ALL' ? '' : v)}>
                 <SelectTrigger className="w-full"><SelectValue placeholder="All sources" /></SelectTrigger>
                 <SelectContent>
@@ -178,7 +186,7 @@ export function JobsManagement() {
           </div>
           <div className="flex items-center justify-between flex-wrap gap-2 pt-2 border-t">
             <div className="flex items-center gap-2">
-              <Label className="text-xs text-slate-500">Status</Label>
+              <Label className="text-xs text-muted-foreground">Status</Label>
               <Select value={status} onValueChange={setStatus}>
                 <SelectTrigger className="h-8 w-[140px]"><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -208,7 +216,7 @@ export function JobsManagement() {
             <EmptyState
               icon={Briefcase}
               title="No jobs found"
-              description={anyFilter ? 'Try adjusting filters' : 'Create your first job to get started'}
+              description={anyFilter ? 'Try adjusting your filters' : 'Create your first job to get started'}
               action={
                 <Button size="sm" onClick={() => anyFilter ? clearFilters() : setShowCreate(true)}>
                   {anyFilter ? 'Clear filters' : <><Plus className="size-4 mr-1" /> Create job</>}
@@ -221,11 +229,11 @@ export function JobsManagement() {
                 <TableRow>
                   <TableHead>Title</TableHead>
                   <TableHead className="hidden md:table-cell">Company</TableHead>
-                  <TableHead className="hidden lg:table-cell">Location</TableHead>
                   <TableHead className="hidden md:table-cell">Source</TableHead>
-                  <TableHead>Batch</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead className="hidden lg:table-cell">Skills</TableHead>
+                  <TableHead className="hidden lg:table-cell">Required skills</TableHead>
+                  <TableHead className="hidden lg:table-cell">Applications</TableHead>
+                  <TableHead className="hidden md:table-cell">Batch</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
@@ -234,40 +242,37 @@ export function JobsManagement() {
                   <TableRow
                     key={j.id}
                     className="cursor-pointer"
-                    onClick={() => navigate(`officer/jobs/${j.id}`)}
+                    onClick={() => navigate('officer/jobs', { id: j.id })}
                   >
                     <TableCell>
                       <div className="font-medium text-sm">{j.title}</div>
-                      <div className="text-xs text-slate-500 md:hidden">{j.company.name}</div>
+                      <div className="text-xs text-muted-foreground md:hidden">{j.company.name}</div>
                     </TableCell>
                     <TableCell className="hidden md:table-cell text-sm">
                       <div className="flex items-center gap-1">
-                        <Building2 className="size-3 text-slate-400" />
+                        <Building2 className="size-3 text-muted-foreground" />
                         {j.company.name}
                       </div>
                     </TableCell>
-                    <TableCell className="hidden lg:table-cell text-sm">{j.location ?? '—'}</TableCell>
                     <TableCell className="hidden md:table-cell">
                       <Badge variant="secondary" className="text-xs">{j.sourceType}</Badge>
                     </TableCell>
-                    <TableCell className="text-sm">{j.batchEligible ?? '—'}</TableCell>
                     <TableCell>
-                      <Badge variant="outline" className={
-                        j.status === 'OPEN' ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300' :
-                        j.status === 'CLOSED' ? 'bg-slate-50 text-slate-600 border-slate-200 dark:bg-slate-900 dark:text-slate-300' :
-                        j.status === 'ARCHIVED' ? 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950 dark:text-rose-300' :
-                        'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300'
-                      }>
+                      <Badge variant="outline" className={cn('text-xs', JOB_STATUS_CLS[j.status] ?? '')}>
                         {j.status}
                       </Badge>
                     </TableCell>
                     <TableCell className="hidden lg:table-cell text-sm">
-                      <span className="text-rose-600">{j.requiredSkillCount} req</span>
-                      <span className="text-slate-400 mx-1">·</span>
-                      <span className="text-slate-600 dark:text-slate-400">{j.preferredSkillCount} pref</span>
+                      <span className="text-[var(--danger-foreground)]">{j.requiredSkillCount} req</span>
+                      <span className="text-muted-foreground mx-1">·</span>
+                      <span className="text-muted-foreground">{j.preferredSkillCount} pref</span>
                     </TableCell>
+                    <TableCell className="hidden lg:table-cell text-sm tabular-nums">
+                      {(j as JobListItem & { applicationsCount?: number }).applicationsCount ?? '—'}
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell text-sm">{j.batchEligible ?? '—'}</TableCell>
                     <TableCell>
-                      <ArrowRight className="size-4 text-slate-400" />
+                      <ArrowRight className="size-4 text-muted-foreground" />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -275,7 +280,7 @@ export function JobsManagement() {
             </Table>
           )}
           {isFetching && jobs.length > 0 && (
-            <div className="p-2 text-xs text-slate-500 text-center flex items-center justify-center gap-2">
+            <div className="p-2 text-xs text-muted-foreground text-center flex items-center justify-center gap-2">
               <Loader2 className="size-3 animate-spin" /> Refreshing…
             </div>
           )}
@@ -292,7 +297,7 @@ export function JobsManagement() {
             navigate('officer/duplicates')
           } else {
             toast.success(`Created "${resp.title}"`)
-            navigate(`officer/jobs/${resp.id}`)
+            navigate('officer/jobs', { id: resp.id })
           }
         }}
       />
@@ -516,13 +521,13 @@ Frontend Dev,WebCo,Build React apps,Remote,remote,full-time,0,2,600000,1200000,,
             <div className="rounded-md border p-3 text-sm space-y-2">
               <div className="flex items-center justify-between">
                 <span className="font-medium">Result</span>
-                <span className="text-xs text-slate-500">
+                <span className="text-xs text-muted-foreground">
                   Imported {result.imported}/{result.totalRows}
                   {result.errors.length > 0 && ` · ${result.errors.length} error${result.errors.length === 1 ? '' : 's'}`}
                 </span>
               </div>
               {result.errors.length > 0 && (
-                <ul className="text-xs text-rose-600 dark:text-rose-400 space-y-0.5">
+                <ul className="text-xs text-[var(--danger-foreground)] space-y-0.5">
                   {result.errors.slice(0, 10).map((e, i) => (
                     <li key={i}>Row {e.row}: {e.message}</li>
                   ))}
@@ -547,7 +552,7 @@ Frontend Dev,WebCo,Build React apps,Remote,remote,full-time,0,2,600000,1200000,,
 function Field({ label, children, className }: { label: string; children: React.ReactNode; className?: string }) {
   return (
     <div className={`space-y-1 ${className ?? ''}`}>
-      <Label className="text-xs text-slate-500">{label}</Label>
+      <Label className="text-xs text-muted-foreground">{label}</Label>
       {children}
     </div>
   )

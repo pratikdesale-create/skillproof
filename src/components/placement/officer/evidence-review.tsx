@@ -6,6 +6,7 @@ import { apiGet } from '@/lib/api-client'
 import { useAppStore } from '@/store/app-store'
 import {
   PageHeader, EmptyState, ErrorState,
+  formatDate, formatRelativeTime,
 } from '@/components/placement/shared/ui'
 import { EvidenceStatusBadge } from '@/components/placement/shared/skill-tag'
 import { SkillTag } from '@/components/placement/shared/skill-tag'
@@ -20,7 +21,6 @@ import {
 import {
   ShieldCheck, ArrowRight, Loader2, Inbox, Clock,
 } from 'lucide-react'
-import { formatDate } from '@/components/placement/shared/ui'
 
 interface PendingEvidenceItem {
   id: string
@@ -48,9 +48,11 @@ interface PendingResponse { data: PendingEvidenceItem[]; total: number; skip: nu
 
 const PAGE_SIZE = 20
 
+type StatusFilter = 'ALL' | 'PENDING_REVIEW' | 'NEEDS_MORE_EVIDENCE' | 'UNVERIFIED'
+
 export function EvidenceReview() {
   const navigate = useAppStore(s => s.navigate)
-  const [statusFilter, setStatusFilter] = useState<'ALL' | 'PENDING_REVIEW' | 'NEEDS_MORE_EVIDENCE' | 'UNVERIFIED'>('ALL')
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('ALL')
   const [skip, setSkip] = useState(0)
 
   const url = useMemo(() => {
@@ -71,17 +73,27 @@ export function EvidenceReview() {
   const filtered = statusFilter === 'ALL'
     ? items
     : items.filter((i) => i.status === statusFilter)
+
+  // Backlog breakdown by status — surfaced as a sub-summary above the list.
+  const backlog = useMemo(() => {
+    const map: Record<string, number> = {}
+    for (const i of items) {
+      map[i.status] = (map[i.status] ?? 0) + 1
+    }
+    return map
+  }, [items])
+
   const total = data?.total ?? 0
   const hasMore = skip + items.length < total
 
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Evidence Review"
+        title="Evidence Reviews"
         description={`${total} evidence item${total === 1 ? '' : 's'} awaiting review`}
       >
-        <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}>
-          <SelectTrigger className="w-[180px]">
+        <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as StatusFilter)}>
+          <SelectTrigger className="w-[200px]">
             <SelectValue placeholder="All statuses" />
           </SelectTrigger>
           <SelectContent>
@@ -92,6 +104,18 @@ export function EvidenceReview() {
           </SelectContent>
         </Select>
       </PageHeader>
+
+      {/* Backlog breakdown */}
+      {items.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {Object.entries(backlog).map(([status, count]) => (
+            <div key={status} className="flex items-center gap-2 rounded-md border bg-card px-3 py-1.5">
+              <EvidenceStatusBadge status={status as never} size="sm" />
+              <span className="text-sm font-semibold tabular-nums">{count}</span>
+            </div>
+          ))}
+        </div>
+      )}
 
       <Card>
         <CardContent className="p-0">
@@ -107,17 +131,21 @@ export function EvidenceReview() {
           ) : filtered.length === 0 ? (
             <EmptyState
               icon={Inbox}
-              title={statusFilter === 'ALL' ? 'No pending evidence' : 'No items match filter'}
-              description={statusFilter === 'ALL' ? 'All evidence has been reviewed' : 'Try selecting a different status'}
+              title={statusFilter === 'ALL' ? 'No pending evidence to review' : 'No items match this filter'}
+              description={
+                statusFilter === 'ALL'
+                  ? 'All submitted evidence has been reviewed.'
+                  : 'Try selecting a different status filter.'
+              }
             />
           ) : (
-            <ScrollArea className="max-h-[70vh]">
+            <ScrollArea className="max-h-[70vh] scroll-area-thin">
               <ul className="divide-y">
                 {filtered.map((e) => (
                   <li
                     key={e.id}
-                    className="p-4 hover:bg-slate-50 dark:hover:bg-slate-900 cursor-pointer"
-                    onClick={() => navigate(`officer/evidence/${e.id}`)}
+                    className="p-4 hover:bg-muted/40 cursor-pointer"
+                    onClick={() => navigate('officer/evidence', { id: e.id })}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0 flex-1">
@@ -125,19 +153,28 @@ export function EvidenceReview() {
                           <div className="font-medium text-sm truncate">{e.title}</div>
                           <EvidenceStatusBadge status={e.status as never} size="sm" />
                         </div>
-                        <div className="text-xs text-slate-500 mt-0.5 capitalize">
+                        <div className="text-xs text-muted-foreground mt-0.5 capitalize">
                           {e.type.toLowerCase().replace(/_/g, ' ')}
                           {e.organization ? ` · ${e.organization}` : ''}
                           {e.assessor ? ` · Assessor: ${e.assessor}` : ''}
                         </div>
-                        <div className="text-xs text-slate-500 mt-0.5 flex items-center gap-1">
+                        <div className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
                           <ShieldCheck className="size-3" />
-                          {e.student.name}
+                          <button
+                            className="hover:underline"
+                            onClick={(ev) => {
+                              ev.stopPropagation()
+                              navigate('officer/students', { id: e.student.id })
+                            }}
+                          >
+                            {e.student.name}
+                          </button>
                           {e.student.batch ? ` · ${e.student.batch}` : ''}
                           {e.student.branch ? ` · ${e.student.branch}` : ''}
                         </div>
-                        <div className="text-xs text-slate-400 mt-0.5 flex items-center gap-1">
+                        <div className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
                           <Clock className="size-3" /> Submitted {formatDate(e.submittedAt)}
+                          <span className="text-muted-foreground/70">· {formatRelativeTime(e.submittedAt)}</span>
                         </div>
                         {e.skills.length > 0 && (
                           <div className="flex flex-wrap gap-1 mt-2">
@@ -158,7 +195,7 @@ export function EvidenceReview() {
                             Score: {e.score}{e.maxScore != null ? `/${e.maxScore}` : ''}
                           </Badge>
                         )}
-                        <ArrowRight className="size-4 text-slate-400" />
+                        <ArrowRight className="size-4 text-muted-foreground" />
                       </div>
                     </div>
                   </li>
@@ -171,7 +208,7 @@ export function EvidenceReview() {
 
       {total > 0 && (
         <div className="flex items-center justify-between">
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-muted-foreground">
             Showing {skip + 1}–{skip + items.length} of {total}
           </p>
           {hasMore && (

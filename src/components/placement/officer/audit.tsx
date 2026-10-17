@@ -38,6 +38,14 @@ interface AuditResponse { data: AuditRow[]; total: number; skip: number; take: n
 
 const PAGE_SIZE = 50
 
+// Role badge tones
+const ROLE_CLS: Record<string, string> = {
+  OFFICER: 'bg-[var(--info-muted)] text-[var(--info-foreground)] border-[var(--info)]/30',
+  ADMIN: 'bg-[var(--danger-muted)] text-[var(--danger-foreground)] border-[var(--danger)]/30',
+  RECRUITER: 'bg-[var(--verified-muted)] text-[var(--verified-foreground)] border-[var(--verified)]/30',
+  STUDENT: 'bg-muted text-muted-foreground border-border',
+}
+
 export function Audit() {
   const [searchInput, setSearchInput] = useState('')
   const [search, setSearch] = useState('')
@@ -88,9 +96,9 @@ export function Audit() {
       <Card>
         <CardContent className="p-4 space-y-3">
           <div className="space-y-1.5">
-            <Label className="text-xs text-slate-500" htmlFor="audit-search">Search by action, actor, target</Label>
+            <Label className="text-xs text-muted-foreground" htmlFor="audit-search">Search by action, actor, target</Label>
             <div className="relative">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
               <Input
                 id="audit-search"
                 placeholder="e.g. EVIDENCE_REVIEW, sharma@…"
@@ -101,7 +109,7 @@ export function Audit() {
             </div>
           </div>
           {isFetching && filtered.length > 0 && (
-            <div className="text-xs text-slate-500 flex items-center gap-1">
+            <div className="text-xs text-muted-foreground flex items-center gap-1">
               <Loader2 className="size-3 animate-spin" /> Refreshing…
             </div>
           )}
@@ -119,11 +127,11 @@ export function Audit() {
           ) : filtered.length === 0 ? (
             <EmptyState
               icon={ScrollText}
-              title="No events match"
-              description={search ? 'Try adjusting your search' : 'Audit events will appear here'}
+              title={search ? 'No events match your search' : 'No audit events yet'}
+              description={search ? 'Try a different action name or actor email' : 'Audit events will appear here as actions happen'}
             />
           ) : (
-            <ScrollArea className="max-h-[70vh]">
+            <ScrollArea className="max-h-[70vh] scroll-area-thin">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -137,19 +145,21 @@ export function Audit() {
                 <TableBody>
                   {filtered.map((e) => (
                     <TableRow key={e.id}>
-                      <TableCell className="text-xs text-slate-500 whitespace-nowrap">
+                      <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
                         {formatDateTime(e.timestamp)}
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          <div className="size-6 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-xs font-semibold">
+                          <div className="size-6 rounded-full bg-muted flex items-center justify-center text-xs font-semibold">
                             <User className="size-3" />
                           </div>
                           <div>
                             <div className="text-sm font-medium">{e.actorName}</div>
-                            <div className="text-xs text-slate-500">{e.actorEmail}</div>
+                            <div className="text-xs text-muted-foreground">{e.actorEmail}</div>
                           </div>
-                          <Badge variant="outline" className="text-xs">{e.actorRole}</Badge>
+                          <Badge variant="outline" className={`text-xs ${ROLE_CLS[e.actorRole] ?? ''}`}>
+                            {e.actorRole}
+                          </Badge>
                         </div>
                       </TableCell>
                       <TableCell>
@@ -162,14 +172,14 @@ export function Audit() {
                           <div>
                             <div className="font-medium">{e.targetType}</div>
                             {e.targetId && (
-                              <div className="text-xs text-slate-400 truncate max-w-[200px]" title={e.targetId}>
+                              <div className="text-xs text-muted-foreground truncate max-w-[200px]" title={e.targetId}>
                                 {e.targetId}
                               </div>
                             )}
                           </div>
                         ) : '—'}
                       </TableCell>
-                      <TableCell className="hidden lg:table-cell text-sm text-slate-500 max-w-xs">
+                      <TableCell className="hidden lg:table-cell text-sm text-muted-foreground max-w-xs">
                         <div className="truncate" title={e.reason ?? ''}>
                           {e.reason ?? '—'}
                         </div>
@@ -185,7 +195,7 @@ export function Audit() {
 
       {total > 0 && (
         <div className="flex items-center justify-between">
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-muted-foreground">
             Showing {skip + 1}–{skip + all.length} of {total}
           </p>
           {hasMore && (

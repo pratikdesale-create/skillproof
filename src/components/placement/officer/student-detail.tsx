@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { useAppStore } from '@/store/app-store'
 import {
-  PageHeader, CardSkeleton, EmptyState, ErrorState,
+  PageHeader, CardSkeleton, EmptyState, ErrorState, ProgressRing,
   formatDate,
 } from '@/components/placement/shared/ui'
 import { StatusBadge } from '@/components/placement/shared/status-badge'
@@ -12,8 +12,6 @@ import { SkillTag, EvidenceStatusBadge } from '@/components/placement/shared/ski
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
-import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
@@ -128,21 +126,17 @@ export function StudentDetail({ id }: { id: string }) {
         <Button variant="outline" size="sm" onClick={() => navigate('officer/students')}>
           <ArrowLeft className="size-4 mr-1" /> Back
         </Button>
-        {data.applicationsCount > 0 && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => navigate('officer/applications', { studentId: data.id })}
-          >
-            <FileText className="size-4 mr-1" /> View applications ({data.applicationsCount})
-          </Button>
-        )}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => navigate('officer/applications', { studentId: data.id })}
+        >
+          <FileText className="size-4 mr-1" /> View applications{data.applicationsCount > 0 ? ` (${data.applicationsCount})` : ''}
+        </Button>
         <Button
           size="sm"
           variant="outline"
-          onClick={() => {
-            navigate('officer/ranking')
-          }}
+          onClick={() => navigate('officer/ranking')}
         >
           <Target className="size-4 mr-1" /> Batch ranking
         </Button>
@@ -155,59 +149,65 @@ export function StudentDetail({ id }: { id: string }) {
             <div className="space-y-3">
               <div className="flex flex-wrap gap-2">
                 {data.batch && <Badge variant="outline">Batch {data.batch}</Badge>}
-                {data.branch && <Badge variant="outline" className="bg-slate-50 dark:bg-slate-900">{data.branch}</Badge>}
+                {data.branch && <Badge variant="outline" className="bg-muted/40">{data.branch}</Badge>}
                 {data.cgpa != null && (
-                  <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300">
+                  <Badge variant="outline" className="bg-[var(--verified-muted)] text-[var(--verified-foreground)] border-[var(--verified)]/30">
                     CGPA {data.cgpa.toFixed(2)}
                   </Badge>
                 )}
                 {data.graduationYear && (
-                  <Badge variant="outline" className="bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-950 dark:text-violet-300">
+                  <Badge variant="outline" className="bg-[var(--info-muted)] text-[var(--info-foreground)] border-[var(--info)]/30">
                     Class of {data.graduationYear}
                   </Badge>
                 )}
               </div>
               {data.bio && (
-                <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   {data.bio}
                 </p>
               )}
-              <div className="space-y-1.5 text-sm text-slate-600 dark:text-slate-400">
-                <div className="flex items-center gap-2"><Mail className="size-3.5 text-slate-400" /> {data.email}</div>
+              <div className="space-y-1.5 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2"><Mail className="size-3.5" /> {data.email}</div>
                 {data.phone && (
-                  <div className="flex items-center gap-2"><Phone className="size-3.5 text-slate-400" /> {data.phone}</div>
+                  <div className="flex items-center gap-2"><Phone className="size-3.5" /> {data.phone}</div>
                 )}
                 {data.location && (
-                  <div className="flex items-center gap-2"><MapPin className="size-3.5 text-slate-400" /> {data.location}</div>
+                  <div className="flex items-center gap-2"><MapPin className="size-3.5" /> {data.location}</div>
                 )}
                 {data.university && (
-                  <div className="flex items-center gap-2"><GraduationCap className="size-3.5 text-slate-400" /> {data.university}</div>
+                  <div className="flex items-center gap-2"><GraduationCap className="size-3.5" /> {data.university}</div>
                 )}
                 {data.githubUser && (
                   <a href={`https://github.com/${data.githubUser}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline">
-                    <Github className="size-3.5 text-slate-400" /> {data.githubUser}
+                    <Github className="size-3.5" /> {data.githubUser}
                   </a>
                 )}
                 {data.linkedinUrl && (
                   <a href={data.linkedinUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline">
-                    <Linkedin className="size-3.5 text-slate-400" /> LinkedIn
+                    <Linkedin className="size-3.5" /> LinkedIn
                   </a>
                 )}
                 {data.portfolioUrl && (
                   <a href={data.portfolioUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline">
-                    <Globe className="size-3.5 text-slate-400" /> Portfolio
+                    <Globe className="size-3.5" /> Portfolio
                   </a>
                 )}
               </div>
             </div>
 
             <div className="lg:col-span-2 space-y-3">
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <Label className="text-xs uppercase tracking-wider text-slate-500">Profile completion</Label>
-                  <span className="text-xs font-medium tabular-nums">{data.profileCompletion}%</span>
+              <div className="flex items-center gap-4">
+                <ProgressRing value={data.profileCompletion} size={64} strokeWidth={6} label="complete" />
+                <div>
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground">Profile completion</div>
+                  <div className="text-sm text-muted-foreground mt-1">
+                    {data.profileCompletion >= 90
+                      ? 'Profile is complete and ready for recruiters.'
+                      : data.profileCompletion >= 60
+                      ? 'Good progress — add more details to stand out.'
+                      : 'Add details, skills, and evidence to boost placement readiness.'}
+                  </div>
                 </div>
-                <Progress value={data.profileCompletion} className="h-2" />
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
                 <StatPill label="Skills" value={data.skills.length} tone="info" />
@@ -235,7 +235,7 @@ export function StudentDetail({ id }: { id: string }) {
             {data.skills.length === 0 ? (
               <EmptyState icon={ShieldCheck} title="No skills" description="Student has not added any skills yet" />
             ) : (
-              <ScrollArea className="max-h-96">
+              <ScrollArea className="max-h-96 scroll-area-thin">
                 <ul className="space-y-2">
                   {data.skills.map((s) => (
                     <li
@@ -245,18 +245,18 @@ export function StudentDetail({ id }: { id: string }) {
                       <div className="min-w-0">
                         <SkillTag name={s.name} isVerified={s.isVerified} />
                         {s.category && (
-                          <div className="text-xs text-slate-500 mt-1">{s.category}</div>
+                          <div className="text-xs text-muted-foreground mt-1">{s.category}</div>
                         )}
                         {s.selfRated && (
-                          <div className="text-xs text-slate-500">Self-rated: {s.selfRated}</div>
+                          <div className="text-xs text-muted-foreground">Self-rated: {s.selfRated}</div>
                         )}
                       </div>
                       {s.isVerified ? (
-                        <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 text-xs">
+                        <Badge variant="outline" className="bg-[var(--verified-muted)] text-[var(--verified-foreground)] border-[var(--verified)]/30 text-xs">
                           Verified
                         </Badge>
                       ) : (
-                        <Badge variant="outline" className="bg-slate-50 text-slate-600 border-slate-200 dark:bg-slate-900 dark:text-slate-300 text-xs">
+                        <Badge variant="outline" className="bg-muted text-muted-foreground text-xs">
                           Unverified
                         </Badge>
                       )}
@@ -282,22 +282,22 @@ export function StudentDetail({ id }: { id: string }) {
             {data.evidence.length === 0 ? (
               <EmptyState icon={FileText} title="No evidence" description="Student has not submitted any evidence yet" />
             ) : (
-              <ScrollArea className="max-h-96">
+              <ScrollArea className="max-h-96 scroll-area-thin">
                 <ul className="divide-y">
                   {data.evidence.map((e) => (
                     <li
                       key={e.id}
-                      className="p-3 hover:bg-slate-50 dark:hover:bg-slate-900 cursor-pointer"
-                      onClick={() => navigate(`officer/evidence/${e.id}`)}
+                      className="p-3 hover:bg-muted/40 cursor-pointer"
+                      onClick={() => navigate('officer/evidence', { id: e.id })}
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0 flex-1">
                           <div className="font-medium text-sm truncate">{e.title}</div>
-                          <div className="text-xs text-slate-500 mt-0.5 capitalize">
+                          <div className="text-xs text-muted-foreground mt-0.5 capitalize">
                             {e.type.toLowerCase().replace(/_/g, ' ')}
                             {e.organization ? ` · ${e.organization}` : ''}
                           </div>
-                          <div className="text-xs text-slate-400 mt-0.5 flex items-center gap-1">
+                          <div className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
                             <Calendar className="size-3" />
                             {formatDate(e.submittedAt)}
                           </div>
@@ -347,7 +347,7 @@ export function StudentDetail({ id }: { id: string }) {
                       <TableCell>
                         <div className="font-medium text-sm">{e.institution ?? '—'}</div>
                         {e.fieldOfStudy && (
-                          <div className="text-xs text-slate-500">{e.fieldOfStudy}</div>
+                          <div className="text-xs text-muted-foreground">{e.fieldOfStudy}</div>
                         )}
                       </TableCell>
                       <TableCell className="hidden md:table-cell text-sm">{e.degree ?? '—'}</TableCell>
@@ -376,14 +376,14 @@ export function StudentDetail({ id }: { id: string }) {
             {data.assessmentResults.length === 0 ? (
               <EmptyState icon={Target} title="No assessments" description="No assessment results recorded" />
             ) : (
-              <ScrollArea className="max-h-80">
+              <ScrollArea className="max-h-80 scroll-area-thin">
                 <ul className="divide-y">
                   {data.assessmentResults.map((a) => (
                     <li key={a.id} className="p-3">
                       <div className="font-medium text-sm">
                         {a.assessment?.name ?? 'Assessment'}
                       </div>
-                      <div className="text-xs text-slate-500 mt-0.5">
+                      <div className="text-xs text-muted-foreground mt-0.5">
                         {a.assessment?.organization ?? 'Unknown org'}
                         {a.date ? ` · ${formatDate(a.date)}` : ''}
                       </div>
@@ -415,10 +415,10 @@ export function StudentDetail({ id }: { id: string }) {
                 <li key={p.id} className="rounded-md border p-3">
                   <div className="font-medium text-sm">{p.title ?? 'Untitled'}</div>
                   {p.description && (
-                    <p className="text-xs text-slate-500 mt-1 line-clamp-3">{p.description}</p>
+                    <p className="text-xs text-muted-foreground mt-1 line-clamp-3">{p.description}</p>
                   )}
                   {p.link && (
-                    <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-xs text-slate-600 dark:text-slate-400 hover:underline mt-2 inline-flex items-center gap-1">
+                    <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--info-foreground)] hover:underline mt-2 inline-flex items-center gap-1">
                       <Globe className="size-3" /> View project
                     </a>
                   )}
@@ -459,13 +459,13 @@ function StatPill({
   tone?: 'default' | 'success' | 'info'
 }) {
   const cls = tone === 'success'
-    ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-900'
+    ? 'bg-[var(--verified-muted)] border-[var(--verified)]/30'
     : tone === 'info'
-    ? 'bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800'
-    : 'bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800'
+    ? 'bg-[var(--info-muted)] border-[var(--info)]/30'
+    : 'bg-muted border-border'
   return (
     <div className={`rounded-md border p-3 ${cls}`}>
-      <div className="text-xs uppercase tracking-wider opacity-80">{label}</div>
+      <div className="text-xs uppercase tracking-wider text-muted-foreground">{label}</div>
       <div className="text-xl font-bold tabular-nums mt-0.5">{value}</div>
     </div>
   )

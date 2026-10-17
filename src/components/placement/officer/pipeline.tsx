@@ -25,7 +25,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select'
 import {
-  Search, ArrowRight, Clock, Loader2, Briefcase,
+  Search, ArrowRight, Clock, Loader2, Briefcase, ArrowLeft,
 } from 'lucide-react'
 import type { ApplicationStatus } from '@/types'
 
@@ -125,12 +125,12 @@ export function Pipeline({ filterStudentId }: { filterStudentId?: string }) {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Application Pipeline"
+        title="Applications"
         description={`${filtered.length} application${filtered.length === 1 ? '' : 's'}`}
       >
         {filterStudentId && (
-          <Button variant="outline" size="sm" onClick={() => navigate(`officer/students/${filterStudentId}`)}>
-            <ArrowRight className="size-4 mr-1 rotate-180" /> View student
+          <Button variant="outline" size="sm" onClick={() => navigate('officer/students', { id: filterStudentId })}>
+            <ArrowLeft className="size-4 mr-1" /> View student
           </Button>
         )}
       </PageHeader>
@@ -139,9 +139,9 @@ export function Pipeline({ filterStudentId }: { filterStudentId?: string }) {
         <CardContent className="p-4 space-y-3">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div className="space-y-1.5 md:col-span-1">
-              <Label className="text-xs text-slate-500">Search</Label>
+              <Label className="text-xs text-muted-foreground">Search</Label>
               <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                 <Input
                   placeholder="Student, job, company…"
                   value={searchInput}
@@ -151,7 +151,7 @@ export function Pipeline({ filterStudentId }: { filterStudentId?: string }) {
               </div>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs text-slate-500">Status</Label>
+              <Label className="text-xs text-muted-foreground">Status</Label>
               <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}>
                 <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -162,7 +162,7 @@ export function Pipeline({ filterStudentId }: { filterStudentId?: string }) {
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs text-slate-500">Company</Label>
+              <Label className="text-xs text-muted-foreground">Company</Label>
               <Select value={company || 'ALL'} onValueChange={(v) => setCompany(v === 'ALL' ? '' : v)}>
                 <SelectTrigger className="w-full"><SelectValue placeholder="All companies" /></SelectTrigger>
                 <SelectContent>
@@ -173,7 +173,7 @@ export function Pipeline({ filterStudentId }: { filterStudentId?: string }) {
             </div>
           </div>
           {isFetching && filtered.length > 0 && (
-            <div className="text-xs text-slate-500 flex items-center gap-1">
+            <div className="text-xs text-muted-foreground flex items-center gap-1">
               <Loader2 className="size-3 animate-spin" /> Refreshing…
             </div>
           )}
@@ -196,7 +196,7 @@ export function Pipeline({ filterStudentId }: { filterStudentId?: string }) {
                 <EmptyState
                   icon={Briefcase}
                   title="No applications"
-                  description={statusFilter !== 'ALL' || company || search ? 'Try adjusting filters' : 'Applications will appear here once students apply'}
+                  description={statusFilter !== 'ALL' || company || search ? 'Try adjusting your filters' : 'Applications will appear here once students apply'}
                 />
               ) : (
                 <Table>
@@ -215,22 +215,22 @@ export function Pipeline({ filterStudentId }: { filterStudentId?: string }) {
                       <TableRow
                         key={a.id}
                         className="cursor-pointer"
-                        onClick={() => navigate(`officer/applications/${a.id}`)}
+                        onClick={() => navigate('officer/applications', { id: a.id })}
                       >
                         <TableCell>
                           <div className="font-medium text-sm">{a.studentName}</div>
-                          <div className="text-xs text-slate-500 md:hidden">{a.companyName}</div>
+                          <div className="text-xs text-muted-foreground md:hidden">{a.companyName}</div>
                         </TableCell>
                         <TableCell className="text-sm">{a.jobTitle}</TableCell>
                         <TableCell className="hidden md:table-cell text-sm">{a.companyName}</TableCell>
                         <TableCell><StatusBadge status={a.status} /></TableCell>
                         <TableCell className="hidden lg:table-cell text-sm">
-                          <span className="flex items-center gap-1 text-slate-500">
+                          <span className="flex items-center gap-1 text-muted-foreground">
                             <Clock className="size-3" />
                             {formatDate(a.appliedAt)}
                           </span>
                         </TableCell>
-                        <TableCell><ArrowRight className="size-4 text-slate-400" /></TableCell>
+                        <TableCell><ArrowRight className="size-4 text-muted-foreground" /></TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -248,54 +248,57 @@ export function Pipeline({ filterStudentId }: { filterStudentId?: string }) {
               ))}
             </div>
           ) : filtered.length === 0 ? (
-            <Card><CardContent className="p-0"><EmptyState icon={Briefcase} title="No applications" description="Try adjusting filters" /></CardContent></Card>
+            <Card><CardContent className="p-0"><EmptyState icon={Briefcase} title="No applications" description="Try adjusting your filters" /></CardContent></Card>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-              {PIPELINE.map((col) => {
-                const items = byStatus.get(col.status) ?? []
-                return (
-                  <Card key={col.status} className="flex flex-col">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-sm font-semibold flex items-center justify-between">
-                        <span className="uppercase tracking-wider text-slate-600 dark:text-slate-400">
-                          {col.label}
-                        </span>
-                        <Badge variant="secondary" className="text-xs tabular-nums">
-                          {items.length}
-                        </Badge>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex-1 p-2">
-                      {items.length === 0 ? (
-                        <div className="text-xs text-slate-400 text-center py-6">No items</div>
-                      ) : (
-                        <ScrollArea className="max-h-96">
-                          <ul className="space-y-2">
-                            {items.map((a) => (
-                              <li
-                                key={a.id}
-                                className="rounded-md border p-3 hover:bg-slate-50 dark:hover:bg-slate-900 cursor-pointer"
-                                onClick={() => navigate(`officer/applications/${a.id}`)}
-                              >
-                                <div className="text-sm font-medium truncate">{a.studentName}</div>
-                                <div className="text-xs text-slate-500 truncate mt-0.5">{a.jobTitle}</div>
-                                <div className="text-xs text-slate-500 truncate">{a.companyName}</div>
-                                <div className="flex items-center justify-between mt-2 text-xs text-slate-400">
-                                  <span className="flex items-center gap-1">
-                                    <Clock className="size-3" />
-                                    {formatDate(a.appliedAt)}
-                                  </span>
-                                  {a.resume && <Badge variant="outline" className="text-xs">Resume</Badge>}
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
-                        </ScrollArea>
-                      )}
-                    </CardContent>
-                  </Card>
-                )
-              })}
+            // Horizontal scroll on narrow screens so the kanban stays usable on mobile
+            <div className="w-full overflow-x-auto scroll-area-thin pb-2">
+              <div className="flex gap-4 min-w-max">
+                {PIPELINE.map((col) => {
+                  const items = byStatus.get(col.status) ?? []
+                  return (
+                    <Card key={col.status} className="flex flex-col w-[260px] sm:w-[280px] shrink-0">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-sm font-semibold flex items-center justify-between">
+                          <span className="uppercase tracking-wider text-muted-foreground">
+                            {col.label}
+                          </span>
+                          <Badge variant="secondary" className="text-xs tabular-nums">
+                            {items.length}
+                          </Badge>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="flex-1 p-2">
+                        {items.length === 0 ? (
+                          <div className="text-xs text-muted-foreground text-center py-6">No items</div>
+                        ) : (
+                          <ScrollArea className="max-h-96 scroll-area-thin">
+                            <ul className="space-y-2">
+                              {items.map((a) => (
+                                <li
+                                  key={a.id}
+                                  className="rounded-md border p-3 hover:bg-muted/40 cursor-pointer"
+                                  onClick={() => navigate('officer/applications', { id: a.id })}
+                                >
+                                  <div className="text-sm font-medium truncate">{a.studentName}</div>
+                                  <div className="text-xs text-muted-foreground truncate mt-0.5">{a.jobTitle}</div>
+                                  <div className="text-xs text-muted-foreground truncate">{a.companyName}</div>
+                                  <div className="flex items-center justify-between mt-2 text-xs text-muted-foreground">
+                                    <span className="flex items-center gap-1">
+                                      <Clock className="size-3" />
+                                      {formatDate(a.appliedAt)}
+                                    </span>
+                                    {a.resume && <Badge variant="outline" className="text-xs">Resume</Badge>}
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                          </ScrollArea>
+                        )}
+                      </CardContent>
+                    </Card>
+                  )
+                })}
+              </div>
             </div>
           )}
         </TabsContent>

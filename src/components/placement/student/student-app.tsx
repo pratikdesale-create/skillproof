@@ -3,10 +3,10 @@
 import { useAppStore } from '@/store/app-store'
 import { AppShell, type NavItem } from '@/components/placement/shared/app-shell'
 import {
-  LayoutDashboard, User, ShieldCheck, Briefcase, Target, FileText, ListChecks,
+  LayoutDashboard, Briefcase, ShieldCheck, ClipboardList, FileText,
+  ListChecks, GraduationCap, Settings as SettingsIcon,
 } from 'lucide-react'
 import { Dashboard } from './dashboard'
-import { Profile } from './profile'
 import { SkillsEvidence } from './skills-evidence'
 import { Jobs } from './jobs'
 import { JobDetail } from './job-detail'
@@ -15,15 +15,26 @@ import { Resumes } from './resumes'
 import { ResumeDetail } from './resume-detail'
 import { Applications } from './applications'
 import { ApplicationDetail } from './application-detail'
+import { Assessments } from './assessments'
+import { CareerResources } from './career-resources'
+import { Settings } from './settings'
 
+// Grouped sidebar navigation:
+//   PLAN  — Overview, Find Jobs, My Skills & Evidence, Assessments
+//   BUILD — Resume Studio, My Applications
+//   GROW  — Career Resources, Settings
 const NAV_ITEMS: NavItem[] = [
-  { view: 'student/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { view: 'student/profile', label: 'Profile', icon: User },
-  { view: 'student/skills', label: 'Skills & Evidence', icon: ShieldCheck },
-  { view: 'student/jobs', label: 'Discover Jobs', icon: Briefcase },
-  { view: 'student/matches', label: 'My Fit Scores', icon: Target },
-  { view: 'student/resumes', label: 'Resume Builder', icon: FileText },
-  { view: 'student/applications', label: 'Applications', icon: ListChecks },
+  // PLAN
+  { view: 'student/dashboard', label: 'Overview', icon: LayoutDashboard, group: 'PLAN' },
+  { view: 'student/jobs', label: 'Find Jobs', icon: Briefcase, group: 'PLAN' },
+  { view: 'student/skills', label: 'My Skills & Evidence', icon: ShieldCheck, group: 'PLAN' },
+  { view: 'student/assessments', label: 'Assessments', icon: ClipboardList, group: 'PLAN' },
+  // BUILD
+  { view: 'student/resumes', label: 'Resume Studio', icon: FileText, group: 'BUILD' },
+  { view: 'student/applications', label: 'My Applications', icon: ListChecks, group: 'BUILD' },
+  // GROW
+  { view: 'student/career-resources', label: 'Career Resources', icon: GraduationCap, group: 'GROW' },
+  { view: 'student/settings', label: 'Settings', icon: SettingsIcon, group: 'GROW' },
 ]
 
 // Extract the trailing id from a view path like 'student/jobs/abc123' -> 'abc123'.
@@ -50,15 +61,20 @@ function StudentRouter({
   view: string
   idFromParams?: string
 }) {
+  // Top-level views
   if (view === 'student/dashboard') return <Dashboard />
-  if (view === 'student/profile') return <Profile />
   if (view === 'student/skills') return <SkillsEvidence />
   if (view === 'student/jobs') return <Jobs />
   if (view === 'student/matches') return <Matches />
   if (view === 'student/resumes') return <Resumes />
   if (view === 'student/applications') return <Applications />
+  if (view === 'student/assessments') return <Assessments />
+  if (view === 'student/career-resources') return <CareerResources />
+  if (view === 'student/settings') return <Settings />
 
-  // Detail views — id may be supplied in params.id or trailing path segment
+  // Detail views — id may be supplied in params.id or trailing path segment.
+  // Check detail routes AFTER list routes so 'student/jobs' and 'student/jobs/abc'
+  // both dispatch correctly.
   const jobId = idFromParams ?? getId(view, 'student/jobs') ?? null
   if (jobId) return <JobDetail id={jobId} />
 

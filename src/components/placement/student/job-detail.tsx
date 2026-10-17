@@ -4,22 +4,24 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api, apiGet, apiPost } from '@/lib/api-client'
 import { useAppStore } from '@/store/app-store'
-import { PageHeader, CardSkeleton, EmptyState, ErrorState, formatSalary, formatDate } from '@/components/placement/shared/ui'
-import { FitScoreBadge, CoverageBadge, StatusBadge } from '@/components/placement/shared/status-badge'
+import {
+  PageHeader, CardSkeleton, EmptyState, ErrorState,
+  SectionHeader, formatSalary, formatDate,
+} from '@/components/placement/shared/ui'
+import { FitScoreBadge, CoverageBadge } from '@/components/placement/shared/status-badge'
 import { SkillTag } from '@/components/placement/shared/skill-tag'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Progress } from '@/components/ui/progress'
 import {
   ArrowLeft, Building2, MapPin, Calendar, ExternalLink, FileText, Send,
   CheckCircle2, AlertTriangle, Target, Lightbulb, Layers, ShieldCheck,
+  Globe, Briefcase, ListChecks, ChevronDown, ChevronRight, Link2,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
-import type { AuthUser, StudentProfile, ClaimStatus } from '@/types'
+import type { AuthUser, StudentProfile } from '@/types'
 
 interface JobCompany { id: string; name: string; industry?: string | null; website?: string | null }
 interface JobRequirement {
@@ -114,6 +116,26 @@ interface MeResponse {
   profile: (StudentProfile & { id: string }) | null
 }
 
+// Parse free-form job description into a list of responsibilities / bullets.
+// Looks for bullet markers (-, •, *, numbered "1.") and newlines.
+function parseResponsibilities(description: string): string[] {
+  if (!description) return []
+  const lines = description
+    .split(/\r?\n/)
+    .map(l => l.trim())
+    .filter(Boolean)
+  const bullets: string[] = []
+  for (const line of lines) {
+    // Strip leading bullet chars + numbers
+    const cleaned = line.replace(/^(\s*[-•*]\s+|\s*\d+[\.\)]\s+)/, '').trim()
+    // Only keep short-ish standalone bullets (avoid narrative paragraphs)
+    if (cleaned && cleaned.length > 8 && cleaned.length < 240 && /^[-•*\d]/.test(line)) {
+      bullets.push(cleaned)
+    }
+  }
+  return bullets.slice(0, 12)
+}
+
 export function JobDetail({ id }: { id: string }) {
   const navigate = useAppStore(s => s.navigate)
   const qc = useQueryClient()
@@ -137,11 +159,10 @@ export function JobDetail({ id }: { id: string }) {
     staleTime: 60_000,
   })
 
-  // Mutations
   const generateResumeMutation = useMutation({
     mutationFn: () => apiPost<{ id: string }>('/api/resumes/generate', { jobId: id }),
     onSuccess: (resp) => {
-      toast.success('Resume generated')
+      toast.success('Resume generated for this role')
       qc.invalidateQueries({ queryKey: ['resumes'] })
       if (resp?.id) navigate(`student/resumes/${resp.id}`)
     },
@@ -184,20 +205,24 @@ export function JobDetail({ id }: { id: string }) {
   const match = matchQuery.data
   const requiredSkills = job.requirements.filter(r => r.isRequired)
   const preferredSkills = job.requirements.filter(r => !r.isRequired)
+  const responsibilities = parseResponsibilities(job.description)
 
   return (
     <div className="space-y-6">
-      <PageHeader title={job.title} description={`${job.company.name}${job.company.industry ? ` · ${job.company.industry}` : ''}`}>
+      <PageHeader
+        title={job.title}
+        description={`${job.company.name}${job.company.industry ? ` · ${job.company.industry}` : ''}`}
+      >
         <Button variant="outline" size="sm" onClick={() => navigate('student/jobs')}>
           <ArrowLeft className="size-4 mr-1" /> Back to jobs
         </Button>
       </PageHeader>
 
-      {/* Job header */}
+      {/* Job header / overview */}
       <Card>
         <CardContent className="p-6">
           <div className="flex flex-col lg:flex-row lg:items-start gap-6">
-            <div className="flex-1 min-w-0 space-y-3">
+            <div className="flex-1 min-w-0 space-y-4">
               <div className="flex flex-wrap gap-2">
                 {job.workArrangement && (
                   <Badge variant="outline" className="capitalize">{job.workArrangement}</Badge>
@@ -206,32 +231,30 @@ export function JobDetail({ id }: { id: string }) {
                   <Badge variant="outline" className="capitalize">{job.employmentType}</Badge>
                 )}
                 {job.location && (
-                  <Badge variant="outline" className="bg-slate-50 dark:bg-slate-900">
+                  <Badge variant="outline">
                     <MapPin className="size-3 mr-1" /> {job.location}
                   </Badge>
                 )}
                 <Badge variant="secondary" className="capitalize">{job.sourceType}</Badge>
                 {job.batchEligible && (
-                  <Badge variant="outline" className="bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-950 dark:text-violet-300 dark:border-violet-900">
-                    Batch {job.batchEligible}
-                  </Badge>
+                  <Badge variant="outline">Batch {job.batchEligible}</Badge>
                 )}
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
                 <div>
-                  <div className="text-xs uppercase tracking-wider text-slate-500">Salary</div>
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground">Salary</div>
                   <div className="font-medium">{formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency ?? 'INR')}</div>
                 </div>
                 <div>
-                  <div className="text-xs uppercase tracking-wider text-slate-500">Posted</div>
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground">Posted</div>
                   <div className="font-medium">{formatDate(job.postingDate)}</div>
                 </div>
                 <div>
-                  <div className="text-xs uppercase tracking-wider text-slate-500">Closing</div>
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground">Closing</div>
                   <div className="font-medium">{formatDate(job.closingDate)}</div>
                 </div>
                 <div>
-                  <div className="text-xs uppercase tracking-wider text-slate-500">Experience</div>
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground">Experience</div>
                   <div className="font-medium">
                     {job.minExperience ?? job.maxExperience
                       ? `${job.minExperience ?? 0}–${job.maxExperience ?? '?'} yrs`
@@ -240,12 +263,12 @@ export function JobDetail({ id }: { id: string }) {
                 </div>
               </div>
               {job.eligibilityCriteria && (
-                <p className="text-sm text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-900 rounded-md p-3">
-                  <span className="font-medium">Eligibility:</span> {job.eligibilityCriteria}
+                <p className="text-sm text-muted-foreground bg-muted/40 rounded-md p-3 border">
+                  <span className="font-medium text-foreground">Eligibility:</span> {job.eligibilityCriteria}
                 </p>
               )}
             </div>
-            <div className="flex flex-col sm:flex-row lg:flex-col gap-2 shrink-0">
+            <div className="flex flex-col sm:flex-row lg:flex-col gap-2 shrink-0 lg:w-48">
               <Button onClick={() => applyMutation.mutate()} disabled={applyMutation.isPending}>
                 <Send className="size-4 mr-2" />
                 {applyMutation.isPending ? 'Applying…' : 'Apply now'}
@@ -266,19 +289,63 @@ export function JobDetail({ id }: { id: string }) {
         </CardContent>
       </Card>
 
+      {/* Match summary panel — distinct, prominent */}
+      {matchQuery.isLoading ? (
+        <Card>
+          <CardContent className="p-6 space-y-3">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-16 w-24 mx-auto" />
+            <Skeleton className="h-3 w-full" />
+          </CardContent>
+        </Card>
+      ) : matchQuery.isError ? (
+        <Card>
+          <CardContent className="p-6">
+            <EmptyState
+              icon={Target}
+              title="Fit analysis unavailable"
+              description="Could not compute match for this role"
+            />
+          </CardContent>
+        </Card>
+      ) : match ? (
+        <MatchSummaryPanel match={match} />
+      ) : null}
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left: description + skills */}
+        {/* Left: description, responsibilities, skills, application instructions */}
         <div className="lg:col-span-2 space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Description</CardTitle>
+              <CardTitle className="text-base">Overview</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm whitespace-pre-wrap text-slate-700 dark:text-slate-300 leading-relaxed">
+              <p className="text-sm whitespace-pre-wrap text-foreground/90 leading-relaxed">
                 {job.description}
               </p>
             </CardContent>
           </Card>
+
+          {responsibilities.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <ListChecks className="size-4" /> Responsibilities
+                </CardTitle>
+                <CardDescription>What you'll do (parsed from job description)</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-1.5">
+                  {responsibilities.map((r, i) => (
+                    <li key={i} className="text-sm text-foreground/90 leading-relaxed pl-4 relative">
+                      <span className="absolute left-0 top-2 size-1 rounded-full bg-muted-foreground/60" />
+                      {r}
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          )}
 
           {requiredSkills.length > 0 && (
             <Card>
@@ -291,14 +358,9 @@ export function JobDetail({ id }: { id: string }) {
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
-                  {requiredSkills.slice(0, 20).map(s => (
+                  {requiredSkills.map(s => (
                     <SkillTag key={s.id} name={s.name} isRequired={s.isRequired} />
                   ))}
-                  {requiredSkills.length > 20 && (
-                    <Badge variant="secondary" className="text-xs">
-                      +{requiredSkills.length - 20} more
-                    </Badge>
-                  )}
                 </div>
               </CardContent>
             </Card>
@@ -315,137 +377,110 @@ export function JobDetail({ id }: { id: string }) {
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
-                  {preferredSkills.slice(0, 20).map(s => (
+                  {preferredSkills.map(s => (
                     <SkillTag key={s.id} name={s.name} />
                   ))}
-                  {preferredSkills.length > 20 && (
-                    <Badge variant="secondary" className="text-xs">
-                      +{preferredSkills.length - 20} more
-                    </Badge>
-                  )}
                 </div>
               </CardContent>
             </Card>
           )}
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base flex items-center gap-2">
+                <Briefcase className="size-4" /> Application instructions
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm">
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-muted-foreground">Apply via</span>
+                <span className="font-medium">Placement Hub (1-click apply)</span>
+              </div>
+              {job.applicationUrl && (
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-muted-foreground">External portal</span>
+                  <a
+                    href={job.applicationUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-primary inline-flex items-center gap-1 hover:underline"
+                  >
+                    <Link2 className="size-3" /> Open external
+                  </a>
+                </div>
+              )}
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-muted-foreground">Closing date</span>
+                <span className="font-medium">{formatDate(job.closingDate)}</span>
+              </div>
+              {job.batchEligible && (
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-muted-foreground">Eligible batches</span>
+                  <span className="font-medium">{job.batchEligible}</span>
+                </div>
+              )}
+              {job.eligibilityCriteria && (
+                <div className="pt-2 border-t">
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground mb-1">Criteria</div>
+                  <p className="text-foreground/90">{job.eligibilityCriteria}</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Right: fit analysis */}
+        {/* Right: company info + skill breakdown */}
         <div className="space-y-6">
-          {matchQuery.isLoading ? (
-            <Card>
-              <CardContent className="p-6 space-y-3">
-                <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-16 w-24 mx-auto" />
-                <Skeleton className="h-3 w-full" />
-                <Skeleton className="h-3 w-3/4" />
-              </CardContent>
-            </Card>
-          ) : matchQuery.isError ? (
-            <Card>
-              <CardContent className="p-6">
-                <EmptyState
-                  icon={Target}
-                  title="Fit analysis unavailable"
-                  description="Could not compute match for this role"
-                />
-              </CardContent>
-            </Card>
-          ) : match ? (
-            <FitAnalysis match={match} />
-          ) : null}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base flex items-center gap-2">
+                <Building2 className="size-4" /> Company
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm">
+              <div className="font-medium">{job.company.name}</div>
+              {job.company.industry && (
+                <div className="text-muted-foreground">{job.company.industry}</div>
+              )}
+              {job.company.website && (
+                <a
+                  href={job.company.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-primary hover:underline text-xs"
+                >
+                  <Globe className="size-3" /> Company website
+                </a>
+              )}
+            </CardContent>
+          </Card>
 
           {match && match.breakdown.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Skill-by-skill breakdown</CardTitle>
-                <CardDescription>How each required skill contributes</CardDescription>
-              </CardHeader>
-              <CardContent className="p-0">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="text-xs">Skill</TableHead>
-                      <TableHead className="text-xs text-right">Weight</TableHead>
-                      <TableHead className="text-xs">Match</TableHead>
-                      <TableHead className="text-xs">Status</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {match.breakdown.map((b) => (
-                      <TableRow key={b.skillId}>
-                        <TableCell className="text-xs py-2">
-                          <div className="font-medium">{b.displayName}</div>
-                          {b.isRequired && (
-                            <span className="text-rose-500 text-[10px]">Required</span>
-                          )}
-                          {b.bestEvidence && (
-                            <a
-                              href="#"
-                              onClick={(e) => { e.preventDefault(); }}
-                              className="text-[10px] text-slate-500 hover:underline"
-                              title={b.bestEvidence.title}
-                            >
-                              {b.bestEvidence.title}
-                            </a>
-                          )}
-                        </TableCell>
-                        <TableCell className="text-xs text-right tabular-nums">{b.weight}</TableCell>
-                        <TableCell className="py-2">
-                          <div className="flex items-center gap-2">
-                            <Progress value={b.matchValue * 100} className="h-1.5 w-16" />
-                            <span className="text-xs tabular-nums">{Math.round(b.matchValue * 100)}%</span>
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-xs">
-                          {b.matchValue >= 1 ? (
-                            <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                              <CheckCircle2 className="size-3" /> Verified
-                            </span>
-                          ) : b.matchValue > 0 ? (
-                            <span className="text-amber-600 dark:text-amber-400 flex items-center gap-1">
-                              <AlertTriangle className="size-3" /> Partial
-                            </span>
-                          ) : (
-                            <span className="text-rose-600 dark:text-rose-400 flex items-center gap-1">
-                              <AlertTriangle className="size-3" /> Missing
-                            </span>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
+            <SkillBreakdownCard match={match} />
           )}
         </div>
       </div>
 
-      {/* Matching + Missing skills sections */}
+      {/* Matching + Missing skills (kept, polished) */}
       {match && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card>
             <CardHeader>
               <CardTitle className="text-base flex items-center gap-2">
-                <CheckCircle2 className="size-4 text-emerald-600" /> Matching skills
+                <CheckCircle2 className="size-4 text-[var(--verified-foreground)]" /> Matching skills
                 <Badge variant="outline" className="text-xs">{match.matchingSkills.length}</Badge>
               </CardTitle>
-              <CardDescription>Skills you have evidence for</CardDescription>
+              <CardDescription>Skills you have verified evidence for</CardDescription>
             </CardHeader>
             <CardContent>
               {match.matchingSkills.length === 0 ? (
-                <p className="text-sm text-slate-500">None of the required skills are currently matched.</p>
+                <p className="text-sm text-muted-foreground">None of the required skills are currently matched.</p>
               ) : (
-                <ul className="space-y-2">
+                <div className="flex flex-wrap gap-2">
                   {match.matchingSkills.map((m) => (
-                    <li key={m.skillId} className="flex items-center justify-between gap-2 text-sm">
-                      <SkillTag name={m.name} isVerified />
-                      <Badge variant="outline" className="text-xs">
-                        {m.evidenceIds.length} evidence
-                      </Badge>
-                    </li>
+                    <SkillTag key={m.skillId} name={m.name} isVerified />
                   ))}
-                </ul>
+                </div>
               )}
             </CardContent>
           </Card>
@@ -453,41 +488,23 @@ export function JobDetail({ id }: { id: string }) {
           <Card>
             <CardHeader>
               <CardTitle className="text-base flex items-center gap-2">
-                <AlertTriangle className="size-4 text-rose-600" /> Missing skills
+                <AlertTriangle className="size-4 text-[var(--danger-foreground)]" /> Missing or insufficient skills
                 <Badge variant="outline" className="text-xs">{match.missingSkills.length}</Badge>
               </CardTitle>
               <CardDescription>Gaps you should close before applying</CardDescription>
             </CardHeader>
             <CardContent>
               {match.missingSkills.length === 0 ? (
-                <p className="text-sm text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 rounded p-3">
-                  <ShieldCheck className="size-4 inline mr-1" />
-                  No gaps — you cover every required and preferred skill!
-                </p>
+                <div className="text-sm text-[var(--verified-foreground)] bg-[var(--verified-muted)] border border-[var(--verified)]/30 rounded-md p-4">
+                  <ShieldCheck className="size-4 inline mr-2" />
+                  No gaps — you cover every required and preferred skill.
+                </div>
               ) : (
-                <ul className="space-y-2">
+                <div className="flex flex-wrap gap-2">
                   {match.missingSkills.map((m) => (
-                    <li
-                      key={m.skillId}
-                      className={cn(
-                        'flex items-center justify-between gap-2 text-sm rounded border px-3 py-2',
-                        m.isRequired
-                          ? 'border-rose-200 bg-rose-50 dark:bg-rose-950/40 dark:border-rose-900'
-                          : 'border-slate-200 bg-slate-50 dark:bg-slate-900'
-                      )}
-                    >
-                      <span className="font-medium">{m.name}</span>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <Badge variant="outline" className="text-xs">
-                          {m.isRequired ? 'Required' : 'Preferred'}
-                        </Badge>
-                        <Badge variant="outline" className="text-xs">
-                          {m.status.replace(/_/g, ' ').toLowerCase()}
-                        </Badge>
-                      </div>
-                    </li>
+                    <SkillTag key={m.skillId} name={m.name} isRequired={m.isRequired} />
                   ))}
-                </ul>
+                </div>
               )}
             </CardContent>
           </Card>
@@ -497,59 +514,148 @@ export function JobDetail({ id }: { id: string }) {
   )
 }
 
-function FitAnalysis({ match }: { match: MatchData }) {
+function MatchSummaryPanel({ match }: { match: MatchData }) {
+  const requiredMissing = match.missingSkills.filter(m => m.isRequired).length
+  // Deterministic recommended next steps text
+  const nextSteps: string[] = []
+  if (requiredMissing === 0) {
+    nextSteps.push('You meet every required skill — go ahead and apply.')
+  } else {
+    nextSteps.push(
+      `Close ${requiredMissing} missing required skill${requiredMissing === 1 ? '' : 's'} by submitting verified evidence.`,
+    )
+  }
+  if (match.preferredCoverage < 0.5) {
+    nextSteps.push('Add preferred skills (e.g. projects, certifications) to lift your fit score further.')
+  }
+  if (match.fitScore < 50) {
+    nextSteps.push('Generate a tailored resume for this role — your evidence-backed bullets will stand out.')
+  }
   return (
-    <Card>
+    <Card className="bg-primary/[0.03] ring-1 ring-primary/20">
       <CardHeader>
-        <CardTitle className="text-base flex items-center gap-2">
-          <Target className="size-4" /> Fit analysis
-        </CardTitle>
-        <CardDescription>Live computed match score</CardDescription>
+        <div className="flex items-center justify-between gap-3">
+          <CardTitle className="text-base flex items-center gap-2">
+            <Target className="size-4" /> Match summary
+          </CardTitle>
+          <FitScoreBadge score={match.fitScore} size="lg" />
+        </div>
+        <CardDescription>Live computed fit score for your verified skills</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Big fit score */}
-        <div className="flex flex-col items-center text-center py-4">
-          <div className={cn(
-            'text-5xl font-bold tabular-nums',
-            match.fitScore >= 75 ? 'text-emerald-600 dark:text-emerald-400'
-            : match.fitScore >= 50 ? 'text-amber-600 dark:text-amber-400'
-            : match.fitScore >= 25 ? 'text-orange-600 dark:text-orange-400'
-            : 'text-rose-600 dark:text-rose-400'
-          )}>
-            {match.fitScore.toFixed(1)}%
-          </div>
-          <div className="text-xs text-slate-500 mt-1">fit score</div>
-        </div>
         <div className="grid grid-cols-2 gap-3">
-          <div className="text-center">
-            <div className="text-xs uppercase tracking-wider text-slate-500 mb-1">Required coverage</div>
+          <div className="rounded-md border bg-card p-3 text-center">
+            <div className="text-xs uppercase tracking-wider text-muted-foreground mb-1">Required coverage</div>
             <CoverageBadge value={match.requiredCoverage} />
           </div>
-          <div className="text-center">
-            <div className="text-xs uppercase tracking-wider text-slate-500 mb-1">Preferred coverage</div>
-            <CoverageBadge value={match.preferredCoverage} />
+          <div className="rounded-md border bg-card p-3 text-center">
+            <div className="text-xs uppercase tracking-wider text-muted-foreground mb-1">Preferred coverage</div>
+            <CoverageBadge value={match.preferredCoverage} label="covered" />
           </div>
         </div>
+
         {match.factorsSummary && (
-          <div className="text-xs text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-900 rounded-md p-3">
+          <div className="text-xs text-muted-foreground bg-muted/40 rounded-md p-3 border">
             <Lightbulb className="size-3.5 inline mr-1" />
             {match.factorsSummary}
           </div>
         )}
-        {match.recommendation && (
-          <div className={cn(
-            'text-xs rounded-md p-3 border',
-            match.fitScore >= 50
-              ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-900 text-emerald-700 dark:text-emerald-300'
-              : 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-900 text-amber-700 dark:text-amber-300'
-          )}>
-            <span className="font-medium">Recommendation:</span> {match.recommendation}
+
+        {nextSteps.length > 0 && (
+          <div className="rounded-md border border-[var(--info)]/30 bg-[var(--info-muted)] p-3">
+            <div className="text-xs font-medium text-[var(--info-foreground)] mb-1.5 flex items-center gap-1.5">
+              <Lightbulb className="size-3.5" /> Recommended next steps
+            </div>
+            <ul className="space-y-1">
+              {nextSteps.map((s, i) => (
+                <li key={i} className="text-xs text-[var(--info-foreground)] pl-3 relative">
+                  <span className="absolute left-0">•</span>
+                  {s}
+                </li>
+              ))}
+            </ul>
           </div>
         )}
-        <div className="text-xs text-slate-400 pt-1 border-t flex items-center justify-between">
+
+        <div className="text-xs text-muted-foreground pt-2 border-t flex items-center justify-between">
           <span>Algorithm v{match.algorithmVersion}</span>
           {match.storedAt && <span>Last computed {formatDate(match.storedAt)}</span>}
         </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+function SkillBreakdownCard({ match }: { match: MatchData }) {
+  const [expanded, setExpanded] = useState<string | null>(null)
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-base">Skill-by-skill breakdown</CardTitle>
+        <CardDescription>Click a skill to see why it contributed</CardDescription>
+      </CardHeader>
+      <CardContent className="p-0">
+        <ul className="divide-y">
+          {match.breakdown.map((b) => {
+            const isOpen = expanded === b.skillId
+            const pct = Math.round(b.matchValue * 100)
+            return (
+              <li key={b.skillId} className="p-3">
+                <button
+                  className="w-full text-left"
+                  onClick={() => setExpanded(isOpen ? null : b.skillId)}
+                  aria-expanded={isOpen}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      {isOpen ? <ChevronDown className="size-3.5 text-muted-foreground shrink-0" /> : <ChevronRight className="size-3.5 text-muted-foreground shrink-0" />}
+                      <SkillTag name={b.displayName} isRequired={b.isRequired} isVerified={b.matchValue >= 1} />
+                      <span className="text-xs text-muted-foreground">w={b.weight}</span>
+                    </div>
+                    <span className={cn('text-xs font-semibold tabular-nums shrink-0',
+                      b.matchValue >= 1 ? 'text-[var(--verified-foreground)]'
+                      : b.matchValue > 0 ? 'text-[var(--pending-foreground)]'
+                      : 'text-[var(--danger-foreground)]'
+                    )}>
+                      {pct}%
+                    </span>
+                  </div>
+                </button>
+                {isOpen && (
+                  <div className="mt-3 pl-6 space-y-2 text-xs">
+                    <div className="text-muted-foreground">
+                      <span className="font-medium text-foreground">Why it contributed:</span>{' '}
+                      {b.matchValue >= 1
+                        ? 'Verified evidence supports this skill at full weight.'
+                        : b.matchValue > 0
+                        ? 'Pending evidence supports this skill at partial weight (0.25×).'
+                        : 'No supporting evidence found for this skill.'}
+                    </div>
+                    {b.bestEvidence ? (
+                      <div className="rounded-md border bg-muted/40 p-2">
+                        <div className="text-muted-foreground">Best evidence</div>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <FileText className="size-3.5 text-muted-foreground" />
+                          <span className="font-medium text-foreground">{b.bestEvidence.title}</span>
+                          <Badge variant="outline" className="text-xs">{b.bestEvidence.type}</Badge>
+                          <Badge variant="outline" className="text-xs">{b.bestEvidence.status.replace(/_/g, ' ').toLowerCase()}</Badge>
+                        </div>
+                        <div className="text-muted-foreground mt-1">
+                          Relevance: {Math.round(b.bestEvidence.relevance * 100)}% · {b.evidenceCount} evidence item{b.evidenceCount === 1 ? '' : 's'} linked
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="rounded-md border border-[var(--danger)]/30 bg-[var(--danger-muted)] p-2 text-[var(--danger-foreground)]">
+                        <AlertTriangle className="size-3.5 inline mr-1" />
+                        No linked evidence for this skill.
+                      </div>
+                    )}
+                  </div>
+                )}
+              </li>
+            )
+          })}
+        </ul>
       </CardContent>
     </Card>
   )

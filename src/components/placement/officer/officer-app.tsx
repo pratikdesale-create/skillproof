@@ -3,8 +3,9 @@
 import { useAppStore } from '@/store/app-store'
 import { AppShell, type NavItem } from '@/components/placement/shared/app-shell'
 import {
-  LayoutDashboard, Users, ShieldCheck, Briefcase, Copy, ListOrdered,
-  GitBranch, BarChart3, ScrollText, Database,
+  LayoutDashboard, BarChart3, Users, ShieldCheck, CalendarClock,
+  DollarSign, Briefcase, Copy, ListOrdered, GitBranch, ScrollText,
+  Database, Settings as SettingsIcon,
 } from 'lucide-react'
 import { Dashboard } from './dashboard'
 import { Students } from './students'
@@ -20,18 +21,33 @@ import { ApplicationDetail } from './application-detail'
 import { Analytics } from './analytics'
 import { Audit } from './audit'
 import { Sources } from './sources'
+import { Interviews } from './interviews'
+import { Offers } from './offers'
+import { Settings } from './settings'
 
+// Grouped sidebar navigation per spec section 7:
+//   OVERVIEW — Dashboard, Analytics
+//   PEOPLE   — Students, Evidence Reviews, Interviews, Offers
+//   JOBS     — Jobs, Duplicate Review, Match & Rank
+//   PIPELINE — Applications, Audit Log, Job Sources, Settings
 const NAV_ITEMS: NavItem[] = [
-  { view: 'officer/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { view: 'officer/students', label: 'Students', icon: Users },
-  { view: 'officer/evidence', label: 'Evidence Review', icon: ShieldCheck },
-  { view: 'officer/jobs', label: 'Job Management', icon: Briefcase },
-  { view: 'officer/duplicates', label: 'Duplicate Review', icon: Copy },
-  { view: 'officer/ranking', label: 'Batch Ranking', icon: ListOrdered },
-  { view: 'officer/applications', label: 'Application Pipeline', icon: GitBranch },
-  { view: 'officer/analytics', label: 'Analytics', icon: BarChart3 },
-  { view: 'officer/audit', label: 'Audit Log', icon: ScrollText },
-  { view: 'officer/sources', label: 'Job Sources', icon: Database },
+  // OVERVIEW
+  { view: 'officer/dashboard', label: 'Overview', icon: LayoutDashboard, group: 'OVERVIEW' },
+  { view: 'officer/analytics', label: 'Analytics', icon: BarChart3, group: 'OVERVIEW' },
+  // PEOPLE
+  { view: 'officer/students', label: 'Students', icon: Users, group: 'PEOPLE' },
+  { view: 'officer/evidence', label: 'Evidence Reviews', icon: ShieldCheck, group: 'PEOPLE' },
+  { view: 'officer/interviews', label: 'Interviews', icon: CalendarClock, group: 'PEOPLE' },
+  { view: 'officer/offers', label: 'Offers', icon: DollarSign, group: 'PEOPLE' },
+  // JOBS
+  { view: 'officer/jobs', label: 'Jobs', icon: Briefcase, group: 'JOBS' },
+  { view: 'officer/duplicates', label: 'Duplicate Review', icon: Copy, group: 'JOBS' },
+  { view: 'officer/ranking', label: 'Match & Rank', icon: ListOrdered, group: 'JOBS' },
+  // PIPELINE
+  { view: 'officer/applications', label: 'Applications', icon: GitBranch, group: 'PIPELINE' },
+  { view: 'officer/audit', label: 'Audit Log', icon: ScrollText, group: 'PIPELINE' },
+  { view: 'officer/sources', label: 'Job Sources', icon: Database, group: 'PIPELINE' },
+  { view: 'officer/settings', label: 'Settings', icon: SettingsIcon, group: 'PIPELINE' },
 ]
 
 // Extract the trailing id from a view path like 'officer/students/abc123' -> 'abc123'.
@@ -58,7 +74,23 @@ function OfficerRouter({
   view: string
   params: Record<string, string>
 }) {
-  // Detail views (check before list views to disambiguate paths)
+  // List views are checked first so 'officer/students' and 'officer/students/abc'
+  // both dispatch correctly.
+  if (view === 'officer/dashboard') return <Dashboard />
+  if (view === 'officer/analytics') return <Analytics />
+  if (view === 'officer/students') return <Students />
+  if (view === 'officer/evidence') return <EvidenceReview />
+  if (view === 'officer/interviews') return <Interviews />
+  if (view === 'officer/offers') return <Offers />
+  if (view === 'officer/jobs') return <JobsManagement />
+  if (view === 'officer/duplicates') return <Duplicates />
+  if (view === 'officer/ranking') return <Ranking initialJobId={params.jobId} />
+  if (view === 'officer/applications') return <Pipeline filterStudentId={params.studentId} />
+  if (view === 'officer/audit') return <Audit />
+  if (view === 'officer/sources') return <Sources />
+  if (view === 'officer/settings') return <Settings />
+
+  // Detail views — id may be supplied in params.<entity>Id or trailing path segment
   const studentId = params.studentId ?? params.id ?? getId(view, 'officer/students')
   if (studentId && view !== 'officer/students') return <StudentDetail id={studentId} />
 
@@ -70,18 +102,6 @@ function OfficerRouter({
 
   const applicationId = params.applicationId ?? params.id ?? getId(view, 'officer/applications')
   if (applicationId && view !== 'officer/applications') return <ApplicationDetail id={applicationId} />
-
-  // List views
-  if (view === 'officer/dashboard') return <Dashboard />
-  if (view === 'officer/students') return <Students />
-  if (view === 'officer/evidence') return <EvidenceReview />
-  if (view === 'officer/jobs') return <JobsManagement />
-  if (view === 'officer/duplicates') return <Duplicates />
-  if (view === 'officer/ranking') return <Ranking initialJobId={params.jobId} />
-  if (view === 'officer/applications') return <Pipeline filterStudentId={params.studentId} />
-  if (view === 'officer/analytics') return <Analytics />
-  if (view === 'officer/audit') return <Audit />
-  if (view === 'officer/sources') return <Sources />
 
   // Default fallback
   return <Dashboard />

@@ -4,19 +4,22 @@ import { useState, useEffect, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { useAppStore } from '@/store/app-store'
-import { PageHeader, CardSkeleton, EmptyState, ErrorState, formatSalary, formatDate } from '@/components/placement/shared/ui'
+import {
+  PageHeader, CardSkeleton, EmptyState, ErrorState,
+  formatSalary, formatDate,
+} from '@/components/placement/shared/ui'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select'
 import {
   Briefcase, MapPin, Search, Building2, Calendar, ArrowRight, Loader2, X,
 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 interface JobCompany { id: string; name: string; industry?: string | null }
 interface JobListItem {
@@ -48,6 +51,8 @@ interface JobsResponse {
 
 const PAGE_SIZE = 20
 
+type SortKey = 'postingDate' | 'closingDate' | 'titleAsc'
+
 export function Jobs() {
   const navigate = useAppStore(s => s.navigate)
 
@@ -57,18 +62,22 @@ export function Jobs() {
   const [batch, setBatch] = useState('')
   const [location, setLocation] = useState('')
   const [workArrangement, setWorkArrangement] = useState('')
+  const [employmentType, setEmploymentType] = useState('')
+  const [sort, setSort] = useState<SortKey>('postingDate')
   const [skip, setSkip] = useState(0)
 
-  // Debounce search input → search query
+  // Debounce search input → search query (300ms)
   useEffect(() => {
     const t = setTimeout(() => {
       setSearch(searchInput.trim())
       setSkip(0)
-    }, 350)
+    }, 300)
     return () => clearTimeout(t)
   }, [searchInput])
 
-  // Build URL
+  // Build URL — note: the /api/jobs endpoint supports search, batch, location,
+  // workArrangement, status, skip, take. employmentType filter is applied
+  // client-side (filter the returned page) because the API does not expose it.
   const url = useMemo(() => {
     const params = new URLSearchParams({ status: 'OPEN' })
     if (search) params.set('search', search)
@@ -87,7 +96,25 @@ export function Jobs() {
     staleTime: 30_000,
   })
 
-  const jobs = data?.data ?? []
+  // Apply client-side employmentType filter + sort to the returned page
+  const jobs = useMemo(() => {
+    const list = (data?.data ?? []).filter(j => !employmentType || j.employmentType === employmentType)
+    const sorted = [...list]
+    if (sort === 'closingDate') {
+      sorted.sort((a, b) => {
+        const ta = a.closingDate ? new Date(a.closingDate).getTime() : Infinity
+        const tb = b.closingDate ? new Date(b.closingDate).getTime() : Infinity
+        return ta - tb
+      })
+    } else if (sort === 'titleAsc') {
+      sorted.sort((a, b) => a.title.localeCompare(b.title))
+    } else {
+      // postingDate desc — API order, preserve as-is
+      sorted.sort((a, b) => new Date(b.postingDate).getTime() - new Date(a.postingDate).getTime())
+    }
+    return sorted
+  }, [data, employmentType, sort])
+
   const total = data?.total ?? 0
   const hasMore = skip + jobs.length < total
 
@@ -96,26 +123,28 @@ export function Jobs() {
     setBatch('')
     setLocation('')
     setWorkArrangement('')
+    setEmploymentType('')
+    setSort('postingDate')
     setSkip(0)
   }
 
-  const anyFilter = Boolean(search || batch || location || workArrangement)
+  const anyFilter = Boolean(search || batch || location || workArrangement || employmentType)
 
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Discover jobs"
+        title="Find Jobs"
         description={`${total} open role${total === 1 ? '' : 's'} matching your filters`}
       />
 
       {/* Filters */}
       <Card>
-        <CardContent className="p-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+        <CardContent className="p-4 space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             <div className="space-y-1.5">
-              <Label htmlFor="job-search" className="text-xs uppercase tracking-wider text-slate-500">Search</Label>
+              <Label htmlFor="job-search" className="text-xs uppercase tracking-wider text-muted-foreground">Search</Label>
               <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                 <Input
                   id="job-search"
                   value={searchInput}
@@ -126,16 +155,7 @@ export function Jobs() {
               </div>
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="job-batch" className="text-xs uppercase tracking-wider text-slate-500">Batch</Label>
-              <Input
-                id="job-batch"
-                value={batch}
-                onChange={(e) => { setBatch(e.target.value); setSkip(0) }}
-                placeholder="e.g. 2025"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="job-loc" className="text-xs uppercase tracking-wider text-slate-500">Location</Label>
+              <Label htmlFor="job-loc" className="text-xs uppercase tracking-wider text-muted-foreground">Location</Label>
               <Input
                 id="job-loc"
                 value={location}
@@ -144,9 +164,18 @@ export function Jobs() {
               />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="job-wa" className="text-xs uppercase tracking-wider text-slate-500">Work arrangement</Label>
+              <Label htmlFor="job-batch" className="text-xs uppercase tracking-wider text-muted-foreground">Eligibility (batch)</Label>
+              <Input
+                id="job-batch"
+                value={batch}
+                onChange={(e) => { setBatch(e.target.value); setSkip(0) }}
+                placeholder="e.g. 2025"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="job-wa" className="text-xs uppercase tracking-wider text-muted-foreground">Work arrangement</Label>
               <Select
-                value={workArrangement}
+                value={workArrangement || 'any'}
                 onValueChange={(v) => { setWorkArrangement(v === 'any' ? '' : v); setSkip(0) }}
               >
                 <SelectTrigger id="job-wa" className="w-full">
@@ -160,10 +189,43 @@ export function Jobs() {
                 </SelectContent>
               </Select>
             </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="job-et" className="text-xs uppercase tracking-wider text-muted-foreground">Job type</Label>
+              <Select
+                value={employmentType || 'any'}
+                onValueChange={(v) => { setEmploymentType(v === 'any' ? '' : v); setSkip(0) }}
+              >
+                <SelectTrigger id="job-et" className="w-full">
+                  <SelectValue placeholder="Any" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="any">Any</SelectItem>
+                  <SelectItem value="full-time">Full-time</SelectItem>
+                  <SelectItem value="internship">Internship</SelectItem>
+                  <SelectItem value="contract">Contract</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="job-sort" className="text-xs uppercase tracking-wider text-muted-foreground">Sort by</Label>
+              <Select
+                value={sort}
+                onValueChange={(v) => setSort(v as SortKey)}
+              >
+                <SelectTrigger id="job-sort" className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="postingDate">Posting date (newest)</SelectItem>
+                  <SelectItem value="closingDate">Closing soon</SelectItem>
+                  <SelectItem value="titleAsc">Title (A–Z)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
           {anyFilter && (
-            <div className="mt-3 flex items-center justify-end">
-              <Button variant="ghost" size="sm" onClick={clearFilters} className="text-slate-600 dark:text-slate-400">
+            <div className="flex items-center justify-end">
+              <Button variant="ghost" size="sm" onClick={clearFilters}>
                 <X className="size-3.5 mr-1" /> Clear filters
               </Button>
             </div>
@@ -173,7 +235,7 @@ export function Jobs() {
 
       {/* Results */}
       {isLoading && skip === 0 ? (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {[0, 1, 2, 3].map(i => <CardSkeleton key={i} />)}
         </div>
       ) : isError ? (
@@ -186,8 +248,8 @@ export function Jobs() {
           <CardContent className="p-0">
             <EmptyState
               icon={Briefcase}
-              title={anyFilter ? 'No jobs match your filters' : 'No open jobs right now'}
-              description={anyFilter ? 'Try adjusting or clearing filters' : 'Check back later — new roles are posted regularly'}
+              title="No jobs match your filters"
+              description="Try adjusting search or filters. New roles are posted regularly — check back soon."
               action={anyFilter ? (
                 <Button size="sm" onClick={clearFilters}>Clear filters</Button>
               ) : undefined}
@@ -196,7 +258,7 @@ export function Jobs() {
         </Card>
       ) : (
         <>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {jobs.map((job) => (
               <JobCard key={job.id} job={job} onView={() => navigate(`student/jobs/${job.id}`)} />
             ))}
@@ -233,7 +295,7 @@ function JobCard({ job, onView }: { job: JobListItem; onView: () => void }) {
           </Badge>
         </div>
       </CardHeader>
-      <CardContent className="flex-1 space-y-3">
+      <CardContent className="flex-1 flex flex-col gap-3">
         <div className="flex flex-wrap gap-2 text-xs">
           {job.workArrangement && (
             <Badge variant="outline" className="capitalize">{job.workArrangement}</Badge>
@@ -242,33 +304,31 @@ function JobCard({ job, onView }: { job: JobListItem; onView: () => void }) {
             <Badge variant="outline" className="capitalize">{job.employmentType}</Badge>
           )}
           {job.location && (
-            <Badge variant="outline" className="bg-slate-50 dark:bg-slate-900">
+            <Badge variant="outline">
               <MapPin className="size-3 mr-1" /> {job.location}
             </Badge>
           )}
           {job.batchEligible && (
-            <Badge variant="outline" className="bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-950 dark:text-violet-300 dark:border-violet-900">
-              Batch {job.batchEligible}
-            </Badge>
+            <Badge variant="outline">Batch {job.batchEligible}</Badge>
           )}
         </div>
         <div className="flex items-center justify-between text-sm">
           <div>
-            <div className="text-xs text-slate-500">Salary</div>
+            <div className="text-xs uppercase tracking-wider text-muted-foreground">Salary</div>
             <div className="font-medium">{salary}</div>
           </div>
           <div className="flex items-center gap-3 text-right">
             <div>
-              <div className="text-xs text-slate-500">Required</div>
+              <div className="text-xs uppercase tracking-wider text-muted-foreground">Required</div>
               <div className="font-medium tabular-nums">{job.requiredSkillCount}</div>
             </div>
             <div>
-              <div className="text-xs text-slate-500">Preferred</div>
+              <div className="text-xs uppercase tracking-wider text-muted-foreground">Preferred</div>
               <div className="font-medium tabular-nums">{job.preferredSkillCount}</div>
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-between text-xs text-slate-500 pt-2 border-t">
+        <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t">
           <span className="flex items-center gap-1">
             <Calendar className="size-3" /> Posted {formatDate(job.postingDate)}
           </span>
@@ -287,9 +347,9 @@ function JobCard({ job, onView }: { job: JobListItem; onView: () => void }) {
 export function JobsSkeleton() {
   return (
     <div className="space-y-6">
-      <PageHeader title="Discover jobs" description="Loading roles…" />
-      <Card><CardContent className="p-4"><Skeleton className="h-24 w-full" /></CardContent></Card>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <PageHeader title="Find Jobs" description="Loading roles…" />
+      <Card><CardContent className="p-4"><div className="h-24 w-full bg-muted/40 animate-pulse rounded" /></CardContent></Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {[0, 1, 2, 3].map(i => <CardSkeleton key={i} />)}
       </div>
     </div>

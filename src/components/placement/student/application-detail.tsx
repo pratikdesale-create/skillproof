@@ -3,22 +3,25 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPatch } from '@/lib/api-client'
 import { useAppStore } from '@/store/app-store'
-import { PageHeader, CardSkeleton, EmptyState, ErrorState, formatCurrency, formatDate, formatDateTime } from '@/components/placement/shared/ui'
+import {
+  PageHeader, CardSkeleton, EmptyState, ErrorState,
+  formatCurrency, formatDate, formatDateTime,
+} from '@/components/placement/shared/ui'
 import { StatusBadge } from '@/components/placement/shared/status-badge'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription,
   AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import {
-  ArrowLeft, Briefcase, MapPin, Building2, Calendar, Video, ExternalLink,
+  ArrowLeft, Briefcase, MapPin, Calendar, Video, ExternalLink,
   FileText, Clock, ArrowRight, DollarSign, History, XCircle,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
 import type { ApplicationEvent, ApplicationStatus, Interview, Offer } from '@/types'
 
 interface AppJob { id: string; title: string; company: { id: string; name: string } }
@@ -112,18 +115,18 @@ export function ApplicationDetail({ id }: { id: string }) {
         <CardContent className="p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-center gap-4">
             <div>
-              <div className="text-xs uppercase tracking-wider text-slate-500">Current status</div>
-              <div className="mt-1"><StatusBadge status={data.status} className="text-sm" /></div>
+              <div className="text-xs uppercase tracking-wider text-muted-foreground">Current status</div>
+              <div className="mt-1"><StatusBadge status={data.status} /></div>
             </div>
             <div className="border-l pl-4">
-              <div className="text-xs uppercase tracking-wider text-slate-500">Applied</div>
+              <div className="text-xs uppercase tracking-wider text-muted-foreground">Applied</div>
               <div className="text-sm font-medium mt-1">{formatDate(data.appliedAt)}</div>
             </div>
             {data.resume && (
               <div className="border-l pl-4">
-                <div className="text-xs uppercase tracking-wider text-slate-500">Resume</div>
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">Resume</div>
                 <button
-                  className="text-sm font-medium text-slate-700 dark:text-slate-300 underline mt-1 inline-flex items-center gap-1"
+                  className="text-sm font-medium text-foreground underline mt-1 inline-flex items-center gap-1"
                   onClick={() => navigate(`student/resumes/${data.resume!.id}`)}
                 >
                   <FileText className="size-3" /> {data.resume.title}
@@ -134,7 +137,7 @@ export function ApplicationDetail({ id }: { id: string }) {
           {!isTerminal(data.status) && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="outline" size="sm" className="text-rose-600 border-rose-200 hover:bg-rose-50 hover:text-rose-700 dark:border-rose-900 dark:hover:bg-rose-950">
+                <Button variant="outline" size="sm" className="text-[var(--danger-foreground)] border-[var(--danger)]/40 hover:bg-[var(--danger-muted)] hover:text-[var(--danger-foreground)]">
                   <XCircle className="size-4 mr-1" /> Withdraw
                 </Button>
               </AlertDialogTrigger>
@@ -151,7 +154,7 @@ export function ApplicationDetail({ id }: { id: string }) {
                   <AlertDialogAction
                     onClick={() => withdrawMutation.mutate()}
                     disabled={withdrawMutation.isPending}
-                    className="bg-rose-600 hover:bg-rose-700 text-white"
+                    className="bg-[var(--danger)] hover:bg-[var(--danger)]/90 text-[var(--danger-foreground)]"
                   >
                     {withdrawMutation.isPending ? 'Withdrawing…' : 'Withdraw application'}
                   </AlertDialogAction>
@@ -171,35 +174,35 @@ export function ApplicationDetail({ id }: { id: string }) {
           </CardHeader>
           <CardContent>
             {data.coverLetter ? (
-              <p className="text-sm whitespace-pre-wrap text-slate-700 dark:text-slate-300 leading-relaxed">
+              <p className="text-sm whitespace-pre-wrap text-foreground/90 leading-relaxed">
                 {data.coverLetter}
               </p>
             ) : (
-              <p className="text-sm text-slate-500 italic">
+              <p className="text-sm text-muted-foreground italic">
                 No cover letter was attached to this application.
               </p>
             )}
             {data.notes && (
-              <div className="mt-4 p-3 rounded-md bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 text-sm text-amber-800 dark:text-amber-300">
+              <div className="mt-4 p-3 rounded-md bg-[var(--pending-muted)] border border-[var(--pending)]/30 text-sm text-[var(--pending-foreground)]">
                 <span className="font-medium">Internal notes:</span> {data.notes}
               </div>
             )}
           </CardContent>
         </Card>
 
-        {/* Right: offer / interview summary */}
+        {/* Right: offer / interview summary / submitted resume */}
         <div className="space-y-6">
           {offer && (
-            <Card className="border-emerald-200 dark:border-emerald-900 bg-emerald-50/60 dark:bg-emerald-950/40">
+            <Card className="border-[var(--verified)]/30 bg-[var(--verified-muted)]">
               <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2 text-emerald-800 dark:text-emerald-300">
+                <CardTitle className="text-base flex items-center gap-2 text-[var(--verified-foreground)]">
                   <DollarSign className="size-4" /> Offer
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
                 {offer.amount != null && (
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-500">Compensation</span>
+                    <span className="text-muted-foreground">Compensation</span>
                     <span className="font-semibold tabular-nums">
                       {formatCurrency(offer.amount, offer.currency ?? 'INR')}
                     </span>
@@ -207,17 +210,17 @@ export function ApplicationDetail({ id }: { id: string }) {
                 )}
                 {offer.currency && (
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-500">Currency</span>
+                    <span className="text-muted-foreground">Currency</span>
                     <span className="font-medium">{offer.currency}</span>
                   </div>
                 )}
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-slate-500">Decision</span>
+                  <span className="text-muted-foreground">Decision</span>
                   <StatusBadge status={offer.decision} />
                 </div>
                 {offer.expiresAt && (
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-500">Expires</span>
+                    <span className="text-muted-foreground">Expires</span>
                     <span className="font-medium">{formatDate(offer.expiresAt)}</span>
                   </div>
                 )}
@@ -246,7 +249,7 @@ export function ApplicationDetail({ id }: { id: string }) {
                         {formatDateTime(iv.scheduledAt)}
                       </div>
                       {iv.location && (
-                        <div className="text-xs text-slate-500 flex items-center gap-1">
+                        <div className="text-xs text-muted-foreground flex items-center gap-1">
                           <MapPin className="size-3" /> {iv.location}
                         </div>
                       )}
@@ -255,14 +258,14 @@ export function ApplicationDetail({ id }: { id: string }) {
                           href={iv.meetingUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-xs text-slate-600 dark:text-slate-400 hover:underline inline-flex items-center gap-1"
+                          className="text-xs text-muted-foreground hover:text-foreground underline inline-flex items-center gap-1"
                         >
                           <Video className="size-3" /> Join meeting
                           <ExternalLink className="size-3" />
                         </a>
                       )}
                       {iv.notes && (
-                        <p className="text-xs text-slate-500 mt-1">{iv.notes}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{iv.notes}</p>
                       )}
                     </li>
                   ))}
@@ -286,7 +289,7 @@ export function ApplicationDetail({ id }: { id: string }) {
                   <span className="font-medium">{data.resume.title}</span>
                   <ArrowRight className="size-3" />
                 </button>
-                <p className="text-xs text-slate-500 mt-1">Version {data.resume.version}</p>
+                <p className="text-xs text-muted-foreground mt-1">Version {data.resume.version}</p>
               </CardContent>
             </Card>
           )}
@@ -303,23 +306,22 @@ export function ApplicationDetail({ id }: { id: string }) {
         </CardHeader>
         <CardContent>
           {timeline.length === 0 ? (
-            <p className="text-sm text-slate-500">No events recorded.</p>
+            <p className="text-sm text-muted-foreground">No events recorded.</p>
           ) : (
-            <ol className="relative border-l border-slate-200 dark:border-slate-800 ml-3 space-y-4">
+            <ol className="relative border-l border-border ml-3 space-y-4">
               {timeline.map((e, i) => (
                 <li key={e.id} className="pl-4 relative">
-                  <span className={`absolute -left-[7px] top-1.5 size-3 rounded-full border-2 border-white dark:border-slate-950 ${
-                    i === timeline.length - 1
-                      ? 'bg-slate-900 dark:bg-slate-100'
-                      : 'bg-slate-300 dark:bg-slate-700'
-                  }`} />
+                  <span className={cn(
+                    'absolute -left-[7px] top-1.5 size-3 rounded-full border-2 border-background',
+                    i === timeline.length - 1 ? 'bg-foreground' : 'bg-muted-foreground/50'
+                  )} />
                   <div className="flex flex-wrap items-center gap-2">
-                    {e.previousStatus && <StatusBadge status={e.previousStatus} />}
-                    {e.previousStatus && <ArrowRight className="size-3 text-slate-400" />}
-                    <StatusBadge status={e.newStatus} />
-                    <span className="text-xs text-slate-500 ml-auto">{formatDateTime(e.timestamp)}</span>
+                    {e.previousStatus && <StatusBadge status={e.previousStatus} size="sm" />}
+                    {e.previousStatus && <ArrowRight className="size-3 text-muted-foreground" />}
+                    <StatusBadge status={e.newStatus} size="sm" />
+                    <span className="text-xs text-muted-foreground ml-auto">{formatDateTime(e.timestamp)}</span>
                   </div>
-                  <div className="text-xs text-slate-500 mt-1">
+                  <div className="text-xs text-muted-foreground mt-1">
                     by {e.actor?.name ?? 'System'}
                     {e.reason ? ` — ${e.reason}` : ''}
                   </div>

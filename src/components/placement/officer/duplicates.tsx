@@ -22,6 +22,7 @@ import {
   Copy, ArrowRight, Loader2, Building2, MapPin, Calendar, GitMerge, XCircle,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
 
 interface DuplicateJobSummary {
   id: string
@@ -31,6 +32,7 @@ interface DuplicateJobSummary {
   location?: string | null
   postingDate: string
   status: string
+  description?: string | null
 }
 interface DuplicateJobItem {
   id: string
@@ -45,6 +47,13 @@ interface DuplicateJobItem {
 interface DuplicatesResponse { data: DuplicateJobItem[] }
 
 type StatusFilter = 'all' | 'possible' | 'confirmed'
+
+const DUP_STATUS_CLS: Record<string, string> = {
+  CONFIRMED: 'bg-[var(--danger-muted)] text-[var(--danger-foreground)] border-[var(--danger)]/30',
+  POSSIBLE: 'bg-[var(--pending-muted)] text-[var(--pending-foreground)] border-[var(--pending)]/30',
+  MERGED: 'bg-[var(--verified-muted)] text-[var(--verified-foreground)] border-[var(--verified)]/30',
+  REJECTED: 'bg-muted text-muted-foreground border-border',
+}
 
 export function Duplicates() {
   const navigate = useAppStore(s => s.navigate)
@@ -124,8 +133,8 @@ export function Duplicates() {
               title={all.length === 0 ? 'No duplicates detected' : 'No items match filter'}
               description={
                 all.length === 0
-                  ? 'Creating or editing jobs will auto-detect potential duplicates'
-                  : 'Try selecting a different status filter'
+                  ? 'Creating or editing jobs will auto-detect potential duplicates.'
+                  : 'Try selecting a different status filter.'
               }
             />
           </CardContent>
@@ -146,19 +155,14 @@ export function Duplicates() {
                 <CardHeader>
                   <CardTitle className="text-base flex items-center justify-between gap-3">
                     <span className="flex items-center gap-2">
-                      <Copy className="size-4 text-amber-600" />
+                      <Copy className="size-4 text-[var(--pending-foreground)]" />
                       Duplicate pair
                     </span>
                     <div className="flex items-center gap-2">
                       <Badge variant="outline" className="text-xs tabular-nums">
                         {(dup.similarity * 100).toFixed(0)}% similar
                       </Badge>
-                      <Badge variant="outline" className={
-                        dup.status === 'CONFIRMED' ? 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950 dark:text-rose-300' :
-                        dup.status === 'POSSIBLE' ? 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300' :
-                        dup.status === 'MERGED' ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300' :
-                        'bg-slate-50 text-slate-600 border-slate-200 dark:bg-slate-900 dark:text-slate-300'
-                      }>
+                      <Badge variant="outline" className={cn('text-xs', DUP_STATUS_CLS[dup.status] ?? '')}>
                         {dup.status}
                       </Badge>
                     </div>
@@ -172,11 +176,11 @@ export function Duplicates() {
                   {/* Reasons */}
                   {reasons.length > 0 && (
                     <div>
-                      <div className="text-xs uppercase tracking-wider text-slate-500 mb-2">Reasons</div>
+                      <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Reasons</div>
                       <ul className="flex flex-wrap gap-2">
                         {reasons.map((r, i) => (
                           <li key={i}>
-                            <Badge variant="outline" className="text-xs bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-900">
+                            <Badge variant="outline" className="text-xs bg-[var(--pending-muted)] text-[var(--pending-foreground)] border-[var(--pending)]/30">
                               {r}
                             </Badge>
                           </li>
@@ -187,8 +191,8 @@ export function Duplicates() {
 
                   {/* Side-by-side comparison */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <DuplicateJobCard job={dup.jobA} onClick={() => navigate(`officer/jobs/${dup.jobA.id}`)} />
-                    <DuplicateJobCard job={dup.jobB} onClick={() => navigate(`officer/jobs/${dup.jobB.id}`)} />
+                    <DuplicateJobCard job={dup.jobA} onClick={() => navigate('officer/jobs', { id: dup.jobA.id })} />
+                    <DuplicateJobCard job={dup.jobB} onClick={() => navigate('officer/jobs', { id: dup.jobB.id })} />
                   </div>
 
                   {/* Actions */}
@@ -207,7 +211,7 @@ export function Duplicates() {
                         <AlertDialogTrigger asChild>
                           <Button
                             size="sm"
-                            className="bg-rose-600 hover:bg-rose-700 text-white"
+                            className="bg-[var(--danger)] hover:bg-[var(--danger)]/90 text-[var(--danger-foreground)]"
                             disabled={mergeMutation.isPending || rejectMutation.isPending}
                           >
                             <GitMerge className="size-4 mr-1" />
@@ -228,7 +232,7 @@ export function Duplicates() {
                             <AlertDialogAction
                               onClick={() => mergeMutation.mutate(dup.id)}
                               disabled={mergeMutation.isPending}
-                              className="bg-rose-600 hover:bg-rose-700 text-white"
+                              className="bg-[var(--danger)] hover:bg-[var(--danger)]/90 text-[var(--danger-foreground)]"
                             >
                               {mergeMutation.isPending && mergeMutation.variables === dup.id ? 'Merging…' : 'Confirm merge'}
                             </AlertDialogAction>
@@ -256,27 +260,28 @@ function DuplicateJobCard({
   return (
     <button
       onClick={onClick}
-      className="text-left rounded-md border p-3 hover:bg-slate-50 dark:hover:bg-slate-900 w-full space-y-1"
+      className="text-left rounded-md border p-3 hover:bg-muted/40 w-full space-y-1.5"
     >
       <div className="flex items-start justify-between gap-2">
         <div className="font-medium text-sm">{job.title}</div>
-        <ArrowRight className="size-3 text-slate-400 shrink-0 mt-0.5" />
+        <ArrowRight className="size-3 text-muted-foreground shrink-0 mt-0.5" />
       </div>
-      <div className="text-xs text-slate-500 flex items-center gap-1">
+      <div className="text-xs text-muted-foreground flex items-center gap-1">
         <Building2 className="size-3" />
         {job.companyName}
       </div>
       {job.location && (
-        <div className="text-xs text-slate-500 flex items-center gap-1">
+        <div className="text-xs text-muted-foreground flex items-center gap-1">
           <MapPin className="size-3" /> {job.location}
         </div>
       )}
-      <div className="text-xs text-slate-400 flex items-center gap-1">
+      <div className="text-xs text-muted-foreground flex items-center gap-1">
         <Calendar className="size-3" /> Posted {formatDate(job.postingDate)}
       </div>
-      <Badge variant="outline" className="text-xs">
-        {job.status}
-      </Badge>
+      {job.description && (
+        <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{job.description}</p>
+      )}
+      <Badge variant="outline" className="text-xs">{job.status}</Badge>
     </button>
   )
 }
