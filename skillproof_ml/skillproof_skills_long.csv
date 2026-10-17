@@ -1,0 +1,403 @@
+student_id,canonical_skill_name,evidence_type,evidence_source,self_declared_level,assessment_score,verification_status
+DEMO-001,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-001,OOP,self_declared,core_skills_csv_column,,,unverified
+DEMO-001,REST APIs,self_declared,core_skills_csv_column,,,unverified
+DEMO-001,Git,self_declared,core_skills_csv_column,,,unverified
+DEMO-001,pytest,self_declared,core_skills_csv_column,,,unverified
+DEMO-002,React,self_declared,core_skills_csv_column,,,unverified
+DEMO-002,Node.js,self_declared,core_skills_csv_column,,,unverified
+DEMO-002,Express,self_declared,core_skills_csv_column,,,unverified
+DEMO-002,SQL,self_declared,core_skills_csv_column,,,unverified
+DEMO-002,Git,self_declared,core_skills_csv_column,,,unverified
+DEMO-003,SQL,self_declared,core_skills_csv_column,,,unverified
+DEMO-003,Excel,self_declared,core_skills_csv_column,,,unverified
+DEMO-003,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-003,pandas,self_declared,core_skills_csv_column,,,unverified
+DEMO-003,data visualization,self_declared,core_skills_csv_column,,,unverified
+DEMO-004,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-004,scikit-learn,self_declared,core_skills_csv_column,,,unverified
+DEMO-004,pandas,self_declared,core_skills_csv_column,,,unverified
+DEMO-004,model evaluation,self_declared,core_skills_csv_column,,,unverified
+DEMO-004,notebooks,self_declared,core_skills_csv_column,,,unverified
+DEMO-005,HTML,self_declared,core_skills_csv_column,,,unverified
+DEMO-005,CSS,self_declared,core_skills_csv_column,,,unverified
+DEMO-005,JavaScript,self_declared,core_skills_csv_column,,,unverified
+DEMO-005,responsive design,self_declared,core_skills_csv_column,,,unverified
+DEMO-005,accessibility,self_declared,core_skills_csv_column,,,unverified
+DEMO-006,Node.js,self_declared,core_skills_csv_column,,,unverified
+DEMO-006,Express,self_declared,core_skills_csv_column,,,unverified
+DEMO-006,SQL,self_declared,core_skills_csv_column,,,unverified
+DEMO-006,REST APIs,self_declared,core_skills_csv_column,,,unverified
+DEMO-006,validation,self_declared,core_skills_csv_column,,,unverified
+DEMO-007,Networking basics,self_declared,core_skills_csv_column,,,unverified
+DEMO-007,Linux,self_declared,core_skills_csv_column,,,unverified
+DEMO-007,log analysis,self_declared,core_skills_csv_column,,,unverified
+DEMO-007,threat awareness,self_declared,core_skills_csv_column,,,unverified
+DEMO-008,Linux,self_declared,core_skills_csv_column,,,unverified
+DEMO-008,Git,self_declared,core_skills_csv_column,,,unverified
+DEMO-008,CI/CD concepts,self_declared,core_skills_csv_column,,,unverified
+DEMO-008,Docker basics,self_declared,core_skills_csv_column,,,unverified
+DEMO-008,scripting,self_declared,core_skills_csv_column,,,unverified
+DEMO-009,Test design,self_declared,core_skills_csv_column,,,unverified
+DEMO-009,JavaScript,self_declared,core_skills_csv_column,,,unverified
+DEMO-009,API testing,self_declared,core_skills_csv_column,,,unverified
+DEMO-009,bug reporting,self_declared,core_skills_csv_column,,,unverified
+DEMO-010,Figma,self_declared,core_skills_csv_column,,,unverified
+DEMO-010,wireframing,self_declared,core_skills_csv_column,,,unverified
+DEMO-010,user flows,self_declared,core_skills_csv_column,,,unverified
+DEMO-010,prototyping,self_declared,core_skills_csv_column,,,unverified
+DEMO-010,usability notes,self_declared,core_skills_csv_column,,,unverified
+DEMO-011,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-011,Flask,self_declared,core_skills_csv_column,,,unverified
+DEMO-011,SQL,self_declared,core_skills_csv_column,,,unverified
+DEMO-011,JSON,self_declared,core_skills_csv_column,,,unverified
+DEMO-011,unit testing,self_declared,core_skills_csv_column,,,unverified
+DEMO-012,TypeScript,self_declared,core_skills_csv_column,,,unverified
+DEMO-012,React,self_declared,core_skills_csv_column,,,unverified
+DEMO-012,REST APIs,self_declared,core_skills_csv_column,,,unverified
+DEMO-012,CSS,self_declared,core_skills_csv_column,,,unverified
+DEMO-012,testing,self_declared,core_skills_csv_column,,,unverified
+DEMO-013,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-013,data cleaning,self_declared,core_skills_csv_column,,,unverified
+DEMO-013,descriptive statistics,self_declared,core_skills_csv_column,,,unverified
+DEMO-013,charts,self_declared,core_skills_csv_column,,,unverified
+DEMO-014,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-014,feature engineering,self_declared,core_skills_csv_column,,,unverified
+DEMO-014,classification,self_declared,core_skills_csv_column,,,unverified
+DEMO-014,visualization,self_declared,core_skills_csv_column,,,unverified
+DEMO-015,React,self_declared,core_skills_csv_column,,,unverified
+DEMO-015,CSS layout,self_declared,core_skills_csv_column,,,unverified
+DEMO-015,component design,self_declared,core_skills_csv_column,,,unverified
+DEMO-015,browser debugging,self_declared,core_skills_csv_column,,,unverified
+DEMO-016,Java,self_declared,core_skills_csv_column,,,unverified
+DEMO-016,SQL,self_declared,core_skills_csv_column,,,unverified
+DEMO-016,API design,self_declared,core_skills_csv_column,,,unverified
+DEMO-016,exception handling,self_declared,core_skills_csv_column,,,unverified
+DEMO-017,Python scripting,self_declared,core_skills_csv_column,,,unverified
+DEMO-017,access control concepts,self_declared,core_skills_csv_column,,,unverified
+DEMO-017,incident notes,self_declared,core_skills_csv_column,,,unverified
+DEMO-018,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-018,shell scripting,self_declared,core_skills_csv_column,,,unverified
+DEMO-018,monitoring concepts,self_declared,core_skills_csv_column,,,unverified
+DEMO-018,YAML,self_declared,core_skills_csv_column,,,unverified
+DEMO-019,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-019,pytest,self_declared,core_skills_csv_column,,,unverified
+DEMO-019,test cases,self_declared,core_skills_csv_column,,,unverified
+DEMO-019,regression testing,self_declared,core_skills_csv_column,,,unverified
+DEMO-020,Design systems,self_declared,core_skills_csv_column,,,unverified
+DEMO-020,responsive layouts,self_declared,core_skills_csv_column,,,unverified
+DEMO-020,accessibility,self_declared,core_skills_csv_column,,,unverified
+DEMO-020,research,self_declared,core_skills_csv_column,,,unverified
+DEMO-021,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-021,pandas,self_declared,core_skills_csv_column,,,unverified
+DEMO-021,automation,self_declared,core_skills_csv_column,,,unverified
+DEMO-021,APIs,self_declared,core_skills_csv_column,,,unverified
+DEMO-021,Git,self_declared,core_skills_csv_column,,,unverified
+DEMO-022,JavaScript,self_declared,core_skills_csv_column,,,unverified
+DEMO-022,Node.js,self_declared,core_skills_csv_column,,,unverified
+DEMO-022,SQLite,self_declared,core_skills_csv_column,,,unverified
+DEMO-022,responsive UI,self_declared,core_skills_csv_column,,,unverified
+DEMO-023,SQL joins,self_declared,core_skills_csv_column,,,unverified
+DEMO-023,dashboards,self_declared,core_skills_csv_column,,,unverified
+DEMO-023,data validation,self_declared,core_skills_csv_column,,,unverified
+DEMO-023,reporting,self_declared,core_skills_csv_column,,,unverified
+DEMO-024,NumPy,self_declared,core_skills_csv_column,,,unverified
+DEMO-024,pandas,self_declared,core_skills_csv_column,,,unverified
+DEMO-024,regression,self_declared,core_skills_csv_column,,,unverified
+DEMO-024,cross-validation concepts,self_declared,core_skills_csv_column,,,unverified
+DEMO-025,TypeScript,self_declared,core_skills_csv_column,,,unverified
+DEMO-025,React,self_declared,core_skills_csv_column,,,unverified
+DEMO-025,UI state,self_declared,core_skills_csv_column,,,unverified
+DEMO-025,form validation,self_declared,core_skills_csv_column,,,unverified
+DEMO-026,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-026,Flask,self_declared,core_skills_csv_column,,,unverified
+DEMO-026,database design,self_declared,core_skills_csv_column,,,unverified
+DEMO-026,testing,self_declared,core_skills_csv_column,,,unverified
+DEMO-027,Security fundamentals,self_declared,core_skills_csv_column,,,unverified
+DEMO-027,vulnerability triage,self_declared,core_skills_csv_column,,,unverified
+DEMO-027,documentation,self_declared,core_skills_csv_column,,,unverified
+DEMO-028,Containers,self_declared,core_skills_csv_column,,,unverified
+DEMO-028,version control,self_declared,core_skills_csv_column,,,unverified
+DEMO-028,build pipelines,self_declared,core_skills_csv_column,,,unverified
+DEMO-028,documentation,self_declared,core_skills_csv_column,,,unverified
+DEMO-029,Playwright concepts,self_declared,core_skills_csv_column,,,unverified
+DEMO-029,browser testing,self_declared,core_skills_csv_column,,,unverified
+DEMO-029,assertions,self_declared,core_skills_csv_column,,,unverified
+DEMO-029,Git,self_declared,core_skills_csv_column,,,unverified
+DEMO-030,Interaction design,self_declared,core_skills_csv_column,,,unverified
+DEMO-030,information architecture,self_declared,core_skills_csv_column,,,unverified
+DEMO-030,visual hierarchy,self_declared,core_skills_csv_column,,,unverified
+DEMO-031,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-031,Django basics,self_declared,core_skills_csv_column,,,unverified
+DEMO-031,data structures,self_declared,core_skills_csv_column,,,unverified
+DEMO-031,debugging,self_declared,core_skills_csv_column,,,unverified
+DEMO-032,React,self_declared,core_skills_csv_column,,,unverified
+DEMO-032,Express,self_declared,core_skills_csv_column,,,unverified
+DEMO-032,API integration,self_declared,core_skills_csv_column,,,unverified
+DEMO-032,form validation,self_declared,core_skills_csv_column,,,unverified
+DEMO-033,Excel,self_declared,core_skills_csv_column,,,unverified
+DEMO-033,Power Query concepts,self_declared,core_skills_csv_column,,,unverified
+DEMO-033,SQL,self_declared,core_skills_csv_column,,,unverified
+DEMO-033,storytelling,self_declared,core_skills_csv_column,,,unverified
+DEMO-034,Machine learning workflow,self_declared,core_skills_csv_column,,,unverified
+DEMO-034,metrics,self_declared,core_skills_csv_column,,,unverified
+DEMO-034,data preprocessing,self_declared,core_skills_csv_column,,,unverified
+DEMO-035,JavaScript,self_declared,core_skills_csv_column,,,unverified
+DEMO-035,responsive UI,self_declared,core_skills_csv_column,,,unverified
+DEMO-035,design systems,self_declared,core_skills_csv_column,,,unverified
+DEMO-035,Git,self_declared,core_skills_csv_column,,,unverified
+DEMO-036,Node.js,self_declared,core_skills_csv_column,,,unverified
+DEMO-036,authentication concepts,self_declared,core_skills_csv_column,,,unverified
+DEMO-036,logging,self_declared,core_skills_csv_column,,,unverified
+DEMO-036,Git,self_declared,core_skills_csv_column,,,unverified
+DEMO-037,Linux CLI,self_declared,core_skills_csv_column,,,unverified
+DEMO-037,network protocols,self_declared,core_skills_csv_column,,,unverified
+DEMO-037,log review,self_declared,core_skills_csv_column,,,unverified
+DEMO-037,risk assessment,self_declared,core_skills_csv_column,,,unverified
+DEMO-038,Cloud fundamentals,self_declared,core_skills_csv_column,,,unverified
+DEMO-038,deployment concepts,self_declared,core_skills_csv_column,,,unverified
+DEMO-038,troubleshooting,self_declared,core_skills_csv_column,,,unverified
+DEMO-039,Manual testing,self_declared,core_skills_csv_column,,,unverified
+DEMO-039,SQL validation,self_declared,core_skills_csv_column,,,unverified
+DEMO-039,defect lifecycle,self_declared,core_skills_csv_column,,,unverified
+DEMO-040,User research,self_declared,core_skills_csv_column,,,unverified
+DEMO-040,journey mapping,self_declared,core_skills_csv_column,,,unverified
+DEMO-040,component libraries,self_declared,core_skills_csv_column,,,unverified
+DEMO-040,prototyping,self_declared,core_skills_csv_column,,,unverified
+DEMO-041,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-041,scripting,self_declared,core_skills_csv_column,,,unverified
+DEMO-041,SQLite,self_declared,core_skills_csv_column,,,unverified
+DEMO-041,testing,self_declared,core_skills_csv_column,,,unverified
+DEMO-042,HTML,self_declared,core_skills_csv_column,,,unverified
+DEMO-042,CSS,self_declared,core_skills_csv_column,,,unverified
+DEMO-042,JavaScript,self_declared,core_skills_csv_column,,,unverified
+DEMO-042,backend integration,self_declared,core_skills_csv_column,,,unverified
+DEMO-043,pandas,self_declared,core_skills_csv_column,,,unverified
+DEMO-043,NumPy,self_declared,core_skills_csv_column,,,unverified
+DEMO-043,visualization,self_declared,core_skills_csv_column,,,unverified
+DEMO-043,exploratory analysis,self_declared,core_skills_csv_column,,,unverified
+DEMO-044,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-044,exploratory data analysis,self_declared,core_skills_csv_column,,,unverified
+DEMO-044,model documentation,self_declared,core_skills_csv_column,,,unverified
+DEMO-045,HTML,self_declared,core_skills_csv_column,,,unverified
+DEMO-045,CSS,self_declared,core_skills_csv_column,,,unverified
+DEMO-045,UI testing,self_declared,core_skills_csv_column,,,unverified
+DEMO-045,accessibility principles,self_declared,core_skills_csv_column,,,unverified
+DEMO-046,Java,self_declared,core_skills_csv_column,,,unverified
+DEMO-046,data structures,self_declared,core_skills_csv_column,,,unverified
+DEMO-046,API integration,self_declared,core_skills_csv_column,,,unverified
+DEMO-046,relational data,self_declared,core_skills_csv_column,,,unverified
+DEMO-047,Web security basics,self_declared,core_skills_csv_column,,,unverified
+DEMO-047,secure configuration,self_declared,core_skills_csv_column,,,unverified
+DEMO-047,monitoring,self_declared,core_skills_csv_column,,,unverified
+DEMO-048,Linux,self_declared,core_skills_csv_column,,,unverified
+DEMO-048,automation,self_declared,core_skills_csv_column,,,unverified
+DEMO-048,configuration basics,self_declared,core_skills_csv_column,,,unverified
+DEMO-048,observability,self_declared,core_skills_csv_column,,,unverified
+DEMO-049,Automation basics,self_declared,core_skills_csv_column,,,unverified
+DEMO-049,test data design,self_declared,core_skills_csv_column,,,unverified
+DEMO-049,documentation,self_declared,core_skills_csv_column,,,unverified
+DEMO-050,UX writing,self_declared,core_skills_csv_column,,,unverified
+DEMO-050,usability testing,self_declared,core_skills_csv_column,,,unverified
+DEMO-050,responsive interface design,self_declared,core_skills_csv_column,,,unverified
+DEMO-051,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-051,OOP,self_declared,core_skills_csv_column,,,unverified
+DEMO-051,REST APIs,self_declared,core_skills_csv_column,,,unverified
+DEMO-051,Git,self_declared,core_skills_csv_column,,,unverified
+DEMO-051,pytest,self_declared,core_skills_csv_column,,,unverified
+DEMO-052,React,self_declared,core_skills_csv_column,,,unverified
+DEMO-052,Node.js,self_declared,core_skills_csv_column,,,unverified
+DEMO-052,Express,self_declared,core_skills_csv_column,,,unverified
+DEMO-052,SQL,self_declared,core_skills_csv_column,,,unverified
+DEMO-052,Git,self_declared,core_skills_csv_column,,,unverified
+DEMO-053,SQL,self_declared,core_skills_csv_column,,,unverified
+DEMO-053,Excel,self_declared,core_skills_csv_column,,,unverified
+DEMO-053,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-053,pandas,self_declared,core_skills_csv_column,,,unverified
+DEMO-053,data visualization,self_declared,core_skills_csv_column,,,unverified
+DEMO-054,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-054,scikit-learn,self_declared,core_skills_csv_column,,,unverified
+DEMO-054,pandas,self_declared,core_skills_csv_column,,,unverified
+DEMO-054,model evaluation,self_declared,core_skills_csv_column,,,unverified
+DEMO-054,notebooks,self_declared,core_skills_csv_column,,,unverified
+DEMO-055,HTML,self_declared,core_skills_csv_column,,,unverified
+DEMO-055,CSS,self_declared,core_skills_csv_column,,,unverified
+DEMO-055,JavaScript,self_declared,core_skills_csv_column,,,unverified
+DEMO-055,responsive design,self_declared,core_skills_csv_column,,,unverified
+DEMO-055,accessibility,self_declared,core_skills_csv_column,,,unverified
+DEMO-056,Node.js,self_declared,core_skills_csv_column,,,unverified
+DEMO-056,Express,self_declared,core_skills_csv_column,,,unverified
+DEMO-056,SQL,self_declared,core_skills_csv_column,,,unverified
+DEMO-056,REST APIs,self_declared,core_skills_csv_column,,,unverified
+DEMO-056,validation,self_declared,core_skills_csv_column,,,unverified
+DEMO-057,Networking basics,self_declared,core_skills_csv_column,,,unverified
+DEMO-057,Linux,self_declared,core_skills_csv_column,,,unverified
+DEMO-057,log analysis,self_declared,core_skills_csv_column,,,unverified
+DEMO-057,threat awareness,self_declared,core_skills_csv_column,,,unverified
+DEMO-058,Linux,self_declared,core_skills_csv_column,,,unverified
+DEMO-058,Git,self_declared,core_skills_csv_column,,,unverified
+DEMO-058,CI/CD concepts,self_declared,core_skills_csv_column,,,unverified
+DEMO-058,Docker basics,self_declared,core_skills_csv_column,,,unverified
+DEMO-058,scripting,self_declared,core_skills_csv_column,,,unverified
+DEMO-059,Test design,self_declared,core_skills_csv_column,,,unverified
+DEMO-059,JavaScript,self_declared,core_skills_csv_column,,,unverified
+DEMO-059,API testing,self_declared,core_skills_csv_column,,,unverified
+DEMO-059,bug reporting,self_declared,core_skills_csv_column,,,unverified
+DEMO-060,Figma,self_declared,core_skills_csv_column,,,unverified
+DEMO-060,wireframing,self_declared,core_skills_csv_column,,,unverified
+DEMO-060,user flows,self_declared,core_skills_csv_column,,,unverified
+DEMO-060,prototyping,self_declared,core_skills_csv_column,,,unverified
+DEMO-060,usability notes,self_declared,core_skills_csv_column,,,unverified
+DEMO-061,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-061,Flask,self_declared,core_skills_csv_column,,,unverified
+DEMO-061,SQL,self_declared,core_skills_csv_column,,,unverified
+DEMO-061,JSON,self_declared,core_skills_csv_column,,,unverified
+DEMO-061,unit testing,self_declared,core_skills_csv_column,,,unverified
+DEMO-062,TypeScript,self_declared,core_skills_csv_column,,,unverified
+DEMO-062,React,self_declared,core_skills_csv_column,,,unverified
+DEMO-062,REST APIs,self_declared,core_skills_csv_column,,,unverified
+DEMO-062,CSS,self_declared,core_skills_csv_column,,,unverified
+DEMO-062,testing,self_declared,core_skills_csv_column,,,unverified
+DEMO-063,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-063,data cleaning,self_declared,core_skills_csv_column,,,unverified
+DEMO-063,descriptive statistics,self_declared,core_skills_csv_column,,,unverified
+DEMO-063,charts,self_declared,core_skills_csv_column,,,unverified
+DEMO-064,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-064,feature engineering,self_declared,core_skills_csv_column,,,unverified
+DEMO-064,classification,self_declared,core_skills_csv_column,,,unverified
+DEMO-064,visualization,self_declared,core_skills_csv_column,,,unverified
+DEMO-065,React,self_declared,core_skills_csv_column,,,unverified
+DEMO-065,CSS layout,self_declared,core_skills_csv_column,,,unverified
+DEMO-065,component design,self_declared,core_skills_csv_column,,,unverified
+DEMO-065,browser debugging,self_declared,core_skills_csv_column,,,unverified
+DEMO-066,Java,self_declared,core_skills_csv_column,,,unverified
+DEMO-066,SQL,self_declared,core_skills_csv_column,,,unverified
+DEMO-066,API design,self_declared,core_skills_csv_column,,,unverified
+DEMO-066,exception handling,self_declared,core_skills_csv_column,,,unverified
+DEMO-067,Python scripting,self_declared,core_skills_csv_column,,,unverified
+DEMO-067,access control concepts,self_declared,core_skills_csv_column,,,unverified
+DEMO-067,incident notes,self_declared,core_skills_csv_column,,,unverified
+DEMO-068,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-068,shell scripting,self_declared,core_skills_csv_column,,,unverified
+DEMO-068,monitoring concepts,self_declared,core_skills_csv_column,,,unverified
+DEMO-068,YAML,self_declared,core_skills_csv_column,,,unverified
+DEMO-069,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-069,pytest,self_declared,core_skills_csv_column,,,unverified
+DEMO-069,test cases,self_declared,core_skills_csv_column,,,unverified
+DEMO-069,regression testing,self_declared,core_skills_csv_column,,,unverified
+DEMO-070,Design systems,self_declared,core_skills_csv_column,,,unverified
+DEMO-070,responsive layouts,self_declared,core_skills_csv_column,,,unverified
+DEMO-070,accessibility,self_declared,core_skills_csv_column,,,unverified
+DEMO-070,research,self_declared,core_skills_csv_column,,,unverified
+DEMO-071,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-071,pandas,self_declared,core_skills_csv_column,,,unverified
+DEMO-071,automation,self_declared,core_skills_csv_column,,,unverified
+DEMO-071,APIs,self_declared,core_skills_csv_column,,,unverified
+DEMO-071,Git,self_declared,core_skills_csv_column,,,unverified
+DEMO-072,JavaScript,self_declared,core_skills_csv_column,,,unverified
+DEMO-072,Node.js,self_declared,core_skills_csv_column,,,unverified
+DEMO-072,SQLite,self_declared,core_skills_csv_column,,,unverified
+DEMO-072,responsive UI,self_declared,core_skills_csv_column,,,unverified
+DEMO-073,SQL joins,self_declared,core_skills_csv_column,,,unverified
+DEMO-073,dashboards,self_declared,core_skills_csv_column,,,unverified
+DEMO-073,data validation,self_declared,core_skills_csv_column,,,unverified
+DEMO-073,reporting,self_declared,core_skills_csv_column,,,unverified
+DEMO-074,NumPy,self_declared,core_skills_csv_column,,,unverified
+DEMO-074,pandas,self_declared,core_skills_csv_column,,,unverified
+DEMO-074,regression,self_declared,core_skills_csv_column,,,unverified
+DEMO-074,cross-validation concepts,self_declared,core_skills_csv_column,,,unverified
+DEMO-075,TypeScript,self_declared,core_skills_csv_column,,,unverified
+DEMO-075,React,self_declared,core_skills_csv_column,,,unverified
+DEMO-075,UI state,self_declared,core_skills_csv_column,,,unverified
+DEMO-075,form validation,self_declared,core_skills_csv_column,,,unverified
+DEMO-076,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-076,Flask,self_declared,core_skills_csv_column,,,unverified
+DEMO-076,database design,self_declared,core_skills_csv_column,,,unverified
+DEMO-076,testing,self_declared,core_skills_csv_column,,,unverified
+DEMO-077,Security fundamentals,self_declared,core_skills_csv_column,,,unverified
+DEMO-077,vulnerability triage,self_declared,core_skills_csv_column,,,unverified
+DEMO-077,documentation,self_declared,core_skills_csv_column,,,unverified
+DEMO-078,Containers,self_declared,core_skills_csv_column,,,unverified
+DEMO-078,version control,self_declared,core_skills_csv_column,,,unverified
+DEMO-078,build pipelines,self_declared,core_skills_csv_column,,,unverified
+DEMO-078,documentation,self_declared,core_skills_csv_column,,,unverified
+DEMO-079,Playwright concepts,self_declared,core_skills_csv_column,,,unverified
+DEMO-079,browser testing,self_declared,core_skills_csv_column,,,unverified
+DEMO-079,assertions,self_declared,core_skills_csv_column,,,unverified
+DEMO-079,Git,self_declared,core_skills_csv_column,,,unverified
+DEMO-080,Interaction design,self_declared,core_skills_csv_column,,,unverified
+DEMO-080,information architecture,self_declared,core_skills_csv_column,,,unverified
+DEMO-080,visual hierarchy,self_declared,core_skills_csv_column,,,unverified
+DEMO-081,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-081,Django basics,self_declared,core_skills_csv_column,,,unverified
+DEMO-081,data structures,self_declared,core_skills_csv_column,,,unverified
+DEMO-081,debugging,self_declared,core_skills_csv_column,,,unverified
+DEMO-082,React,self_declared,core_skills_csv_column,,,unverified
+DEMO-082,Express,self_declared,core_skills_csv_column,,,unverified
+DEMO-082,API integration,self_declared,core_skills_csv_column,,,unverified
+DEMO-082,form validation,self_declared,core_skills_csv_column,,,unverified
+DEMO-083,Excel,self_declared,core_skills_csv_column,,,unverified
+DEMO-083,Power Query concepts,self_declared,core_skills_csv_column,,,unverified
+DEMO-083,SQL,self_declared,core_skills_csv_column,,,unverified
+DEMO-083,storytelling,self_declared,core_skills_csv_column,,,unverified
+DEMO-084,Machine learning workflow,self_declared,core_skills_csv_column,,,unverified
+DEMO-084,metrics,self_declared,core_skills_csv_column,,,unverified
+DEMO-084,data preprocessing,self_declared,core_skills_csv_column,,,unverified
+DEMO-085,JavaScript,self_declared,core_skills_csv_column,,,unverified
+DEMO-085,responsive UI,self_declared,core_skills_csv_column,,,unverified
+DEMO-085,design systems,self_declared,core_skills_csv_column,,,unverified
+DEMO-085,Git,self_declared,core_skills_csv_column,,,unverified
+DEMO-086,Node.js,self_declared,core_skills_csv_column,,,unverified
+DEMO-086,authentication concepts,self_declared,core_skills_csv_column,,,unverified
+DEMO-086,logging,self_declared,core_skills_csv_column,,,unverified
+DEMO-086,Git,self_declared,core_skills_csv_column,,,unverified
+DEMO-087,Linux CLI,self_declared,core_skills_csv_column,,,unverified
+DEMO-087,network protocols,self_declared,core_skills_csv_column,,,unverified
+DEMO-087,log review,self_declared,core_skills_csv_column,,,unverified
+DEMO-087,risk assessment,self_declared,core_skills_csv_column,,,unverified
+DEMO-088,Cloud fundamentals,self_declared,core_skills_csv_column,,,unverified
+DEMO-088,deployment concepts,self_declared,core_skills_csv_column,,,unverified
+DEMO-088,troubleshooting,self_declared,core_skills_csv_column,,,unverified
+DEMO-089,Manual testing,self_declared,core_skills_csv_column,,,unverified
+DEMO-089,SQL validation,self_declared,core_skills_csv_column,,,unverified
+DEMO-089,defect lifecycle,self_declared,core_skills_csv_column,,,unverified
+DEMO-090,User research,self_declared,core_skills_csv_column,,,unverified
+DEMO-090,journey mapping,self_declared,core_skills_csv_column,,,unverified
+DEMO-090,component libraries,self_declared,core_skills_csv_column,,,unverified
+DEMO-090,prototyping,self_declared,core_skills_csv_column,,,unverified
+DEMO-091,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-091,scripting,self_declared,core_skills_csv_column,,,unverified
+DEMO-091,SQLite,self_declared,core_skills_csv_column,,,unverified
+DEMO-091,testing,self_declared,core_skills_csv_column,,,unverified
+DEMO-092,HTML,self_declared,core_skills_csv_column,,,unverified
+DEMO-092,CSS,self_declared,core_skills_csv_column,,,unverified
+DEMO-092,JavaScript,self_declared,core_skills_csv_column,,,unverified
+DEMO-092,backend integration,self_declared,core_skills_csv_column,,,unverified
+DEMO-093,pandas,self_declared,core_skills_csv_column,,,unverified
+DEMO-093,NumPy,self_declared,core_skills_csv_column,,,unverified
+DEMO-093,visualization,self_declared,core_skills_csv_column,,,unverified
+DEMO-093,exploratory analysis,self_declared,core_skills_csv_column,,,unverified
+DEMO-094,Python,self_declared,core_skills_csv_column,,,unverified
+DEMO-094,exploratory data analysis,self_declared,core_skills_csv_column,,,unverified
+DEMO-094,model documentation,self_declared,core_skills_csv_column,,,unverified
+DEMO-095,HTML,self_declared,core_skills_csv_column,,,unverified
+DEMO-095,CSS,self_declared,core_skills_csv_column,,,unverified
+DEMO-095,UI testing,self_declared,core_skills_csv_column,,,unverified
+DEMO-095,accessibility principles,self_declared,core_skills_csv_column,,,unverified
+DEMO-096,Java,self_declared,core_skills_csv_column,,,unverified
+DEMO-096,data structures,self_declared,core_skills_csv_column,,,unverified
+DEMO-096,API integration,self_declared,core_skills_csv_column,,,unverified
+DEMO-096,relational data,self_declared,core_skills_csv_column,,,unverified
+DEMO-097,Web security basics,self_declared,core_skills_csv_column,,,unverified
+DEMO-097,secure configuration,self_declared,core_skills_csv_column,,,unverified
+DEMO-097,monitoring,self_declared,core_skills_csv_column,,,unverified
+DEMO-098,Linux,self_declared,core_skills_csv_column,,,unverified
+DEMO-098,automation,self_declared,core_skills_csv_column,,,unverified
+DEMO-098,configuration basics,self_declared,core_skills_csv_column,,,unverified
+DEMO-098,observability,self_declared,core_skills_csv_column,,,unverified
+DEMO-099,Automation basics,self_declared,core_skills_csv_column,,,unverified
+DEMO-099,test data design,self_declared,core_skills_csv_column,,,unverified
+DEMO-099,documentation,self_declared,core_skills_csv_column,,,unverified
+DEMO-100,UX writing,self_declared,core_skills_csv_column,,,unverified
+DEMO-100,usability testing,self_declared,core_skills_csv_column,,,unverified
+DEMO-100,responsive interface design,self_declared,core_skills_csv_column,,,unverified

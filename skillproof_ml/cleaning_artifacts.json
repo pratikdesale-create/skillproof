@@ -1,0 +1,328 @@
+{
+  "source_file": "/home/z/my-project/upload/Skillseto_100_Fictional_Candidates.csv",
+  "steps": [
+    {
+      "step": "load",
+      "row_count": 100,
+      "column_count": 19
+    },
+    {
+      "step": "validate_uniqueness",
+      "duplicate_candidate_ids": 0,
+      "row_count": 100
+    },
+    {
+      "step": "build_student_master",
+      "row_count": 100,
+      "columns": [
+        "student_id",
+        "target_role",
+        "education",
+        "institution",
+        "graduation_year",
+        "professional_summary",
+        "core_skills_raw",
+        "project_title",
+        "project_summary",
+        "experience_internship",
+        "certification_training",
+        "assessment_result_raw",
+        "assessment_score",
+        "assessment_role",
+        "faculty_review_status",
+        "industry_feedback",
+        "record_origin",
+        "is_synthetic",
+        "data_quality_status"
+      ]
+    },
+    {
+      "step": "build_skills_long",
+      "row_count": 402,
+      "unique_skill_count": 132
+    },
+    {
+      "step": "build_projects",
+      "row_count": 100
+    },
+    {
+      "step": "build_certifications",
+      "row_count": 100
+    },
+    {
+      "step": "build_jobs",
+      "row_count": 10
+    },
+    {
+      "step": "feature_engineering",
+      "feature_row_count": 1000,
+      "feature_columns": [
+        "student_id",
+        "target_role",
+        "evaluated_role",
+        "is_target_role_match",
+        "total_skills_declared",
+        "evidence_backed_skill_count",
+        "required_skill_count",
+        "required_covered_count",
+        "required_missing_count",
+        "required_coverage",
+        "preferred_skill_count",
+        "preferred_covered_count",
+        "preferred_coverage",
+        "assessment_score",
+        "baseline_match_score",
+        "missing_required_skills",
+        "covered_required_skills"
+      ]
+    },
+    {
+      "step": "baseline_predictions",
+      "row_count": 1000,
+      "top_3_per_role": [
+        {
+          "evaluated_role": "Backend Developer",
+          "student_id": "DEMO-001",
+          "baseline_match_score": 60.0,
+          "required_coverage": 0.75,
+          "rank_within_role": 1
+        },
+        {
+          "evaluated_role": "Backend Developer",
+          "student_id": "DEMO-051",
+          "baseline_match_score": 60.0,
+          "required_coverage": 0.75,
+          "rank_within_role": 2
+        },
+        {
+          "evaluated_role": "Backend Developer",
+          "student_id": "DEMO-002",
+          "baseline_match_score": 45.0,
+          "required_coverage": 0.5,
+          "rank_within_role": 3
+        },
+        {
+          "evaluated_role": "Cloud / DevOps Intern",
+          "student_id": "DEMO-008",
+          "baseline_match_score": 40.0,
+          "required_coverage": 0.5,
+          "rank_within_role": 1
+        },
+        {
+          "evaluated_role": "Cloud / DevOps Intern",
+          "student_id": "DEMO-058",
+          "baseline_match_score": 40.0,
+          "required_coverage": 0.5,
+          "rank_within_role": 2
+        },
+        {
+          "evaluated_role": "Cloud / DevOps Intern",
+          "student_id": "DEMO-038",
+          "baseline_match_score": 20.0,
+          "required_coverage": 0.25,
+          "rank_within_role": 3
+        },
+        {
+          "evaluated_role": "Cybersecurity Analyst",
+          "student_id": "DEMO-007",
+          "baseline_match_score": 20.0,
+          "required_coverage": 0.25,
+          "rank_within_role": 1
+        },
+        {
+          "evaluated_role": "Cybersecurity Analyst",
+          "student_id": "DEMO-027",
+          "baseline_match_score": 20.0,
+          "required_coverage": 0.25,
+          "rank_within_role": 2
+        },
+        {
+          "evaluated_role": "Cybersecurity Analyst",
+          "student_id": "DEMO-057",
+          "baseline_match_score": 20.0,
+          "required_coverage": 0.25,
+          "rank_within_role": 3
+        },
+        {
+          "evaluated_role": "Data Analyst",
+          "student_id": "DEMO-003",
+          "baseline_match_score": 60.0,
+          "required_coverage": 0.75,
+          "rank_within_role": 1
+        },
+        {
+          "evaluated_role": "Data Analyst",
+          "student_id": "DEMO-053",
+          "baseline_match_score": 60.0,
+          "required_coverage": 0.75,
+          "rank_within_role": 2
+        },
+        {
+          "evaluated_role": "Data Analyst",
+          "student_id": "DEMO-011",
+          "baseline_match_score": 40.0,
+          "required_coverage": 0.5,
+          "rank_within_role": 3
+        },
+        {
+          "evaluated_role": "Frontend Developer",
+          "student_id": "DEMO-005",
+          "baseline_match_score": 60.0,
+          "required_coverage": 0.75,
+          "rank_within_role": 1
+        },
+        {
+          "evaluated_role": "Frontend Developer",
+          "student_id": "DEMO-042",
+          "baseline_match_score": 60.0,
+          "required_coverage": 0.75,
+          "rank_within_role": 2
+        },
+        {
+          "evaluated_role": "Frontend Developer",
+          "student_id": "DEMO-055",
+          "baseline_match_score": 60.0,
+          "required_coverage": 0.75,
+          "rank_within_role": 3
+        },
+        {
+          "evaluated_role": "Full-Stack Developer",
+          "student_id": "DEMO-002",
+          "baseline_match_score": 83.33,
+          "required_coverage": 1.0,
+          "rank_within_role": 1
+        },
+        {
+          "evaluated_role": "Full-Stack Developer",
+          "student_id": "DEMO-052",
+          "baseline_match_score": 83.33,
+          "required_coverage": 1.0,
+          "rank_within_role": 2
+        },
+        {
+          "evaluated_role": "Full-Stack Developer",
+          "student_id": "DEMO-006",
+          "baseline_match_score": 54.17,
+          "required_coverage": 0.6,
+          "rank_within_role": 3
+        },
+        {
+          "evaluated_role": "Machine Learning Intern",
+          "student_id": "DEMO-001",
+          "baseline_match_score": 20.0,
+          "required_coverage": 0.25,
+          "rank_within_role": 1
+        },
+        {
+          "evaluated_role": "Machine Learning Intern",
+          "student_id": "DEMO-003",
+          "baseline_match_score": 20.0,
+          "required_coverage": 0.25,
+          "rank_within_role": 2
+        },
+        {
+          "evaluated_role": "Machine Learning Intern",
+          "student_id": "DEMO-004",
+          "baseline_match_score": 20.0,
+          "required_coverage": 0.25,
+          "rank_within_role": 3
+        },
+        {
+          "evaluated_role": "Python Developer",
+          "student_id": "DEMO-001",
+          "baseline_match_score": 85.0,
+          "required_coverage": 1.0,
+          "rank_within_role": 1
+        },
+        {
+          "evaluated_role": "Python Developer",
+          "student_id": "DEMO-051",
+          "baseline_match_score": 85.0,
+          "required_coverage": 1.0,
+          "rank_within_role": 2
+        },
+        {
+          "evaluated_role": "Python Developer",
+          "student_id": "DEMO-021",
+          "baseline_match_score": 40.0,
+          "required_coverage": 0.5,
+          "rank_within_role": 3
+        },
+        {
+          "evaluated_role": "QA Automation Engineer",
+          "student_id": "DEMO-001",
+          "baseline_match_score": 30.0,
+          "required_coverage": 0.25,
+          "rank_within_role": 1
+        },
+        {
+          "evaluated_role": "QA Automation Engineer",
+          "student_id": "DEMO-051",
+          "baseline_match_score": 30.0,
+          "required_coverage": 0.25,
+          "rank_within_role": 2
+        },
+        {
+          "evaluated_role": "QA Automation Engineer",
+          "student_id": "DEMO-019",
+          "baseline_match_score": 25.0,
+          "required_coverage": 0.25,
+          "rank_within_role": 3
+        },
+        {
+          "evaluated_role": "UI/UX Designer",
+          "student_id": "DEMO-010",
+          "baseline_match_score": 20.0,
+          "required_coverage": 0.25,
+          "rank_within_role": 1
+        },
+        {
+          "evaluated_role": "UI/UX Designer",
+          "student_id": "DEMO-020",
+          "baseline_match_score": 20.0,
+          "required_coverage": 0.25,
+          "rank_within_role": 2
+        },
+        {
+          "evaluated_role": "UI/UX Designer",
+          "student_id": "DEMO-030",
+          "baseline_match_score": 20.0,
+          "required_coverage": 0.25,
+          "rank_within_role": 3
+        }
+      ]
+    },
+    {
+      "step": "student_model_table",
+      "row_count": 100
+    }
+  ],
+  "final_counts": {
+    "students_master": 100,
+    "skills_long": 402,
+    "projects": 100,
+    "certifications": 100,
+    "jobs": 10,
+    "features_student_x_role": 1000,
+    "baseline_predictions": 1000,
+    "student_model_table": 100
+  },
+  "target_role_distribution": {
+    "Python Developer": 10,
+    "Full-Stack Developer": 10,
+    "Data Analyst": 10,
+    "Machine Learning Intern": 10,
+    "Frontend Developer": 10,
+    "Backend Developer": 10,
+    "Cybersecurity Analyst": 10,
+    "Cloud / DevOps Intern": 10,
+    "QA Automation Engineer": 10,
+    "UI/UX Designer": 10
+  },
+  "faculty_review_status_distribution": {
+    "Pending review (demo)": 25,
+    "Verified by faculty (demo record)": 25,
+    "Changes requested (demo)": 25,
+    "Not submitted for review (demo)": 25
+  }
+}

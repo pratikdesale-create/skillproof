@@ -1,0 +1,346 @@
+{
+  "source_file": "/home/z/my-project/upload/Skillseto_100_Fictional_Candidates.csv",
+  "file_exists": true,
+  "file_size_bytes": 109538,
+  "row_count": 100,
+  "column_count": 19,
+  "columns": [
+    "Candidate ID",
+    "Full Name",
+    "Email (demo)",
+    "Phone (placeholder)",
+    "Target Role",
+    "Education",
+    "Institution (fictional)",
+    "Graduation Year",
+    "Professional Summary",
+    "Core Skills",
+    "Project Title",
+    "Project Summary",
+    "Experience / Internship",
+    "Certification / Training",
+    "Assessment Result (demo)",
+    "Faculty Review Status (demo)",
+    "Industry Feedback (demo)",
+    "Suggested Resume Filename",
+    "Data Notice"
+  ],
+  "column_profiles": [
+    {
+      "name": "Candidate ID",
+      "dtype": "object",
+      "non_null_count": 100,
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "unique_count": 100,
+      "sample_values": [
+        "DEMO-001",
+        "DEMO-002",
+        "DEMO-003"
+      ]
+    },
+    {
+      "name": "Full Name",
+      "dtype": "object",
+      "non_null_count": 100,
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "unique_count": 100,
+      "sample_values": [
+        "Aarav Sharma",
+        "Aanya Kulkarni",
+        "Vihaan Patel"
+      ]
+    },
+    {
+      "name": "Email (demo)",
+      "dtype": "object",
+      "non_null_count": 100,
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "unique_count": 100,
+      "sample_values": [
+        "student001@example.com",
+        "student002@example.com",
+        "student003@example.com"
+      ]
+    },
+    {
+      "name": "Phone (placeholder)",
+      "dtype": "object",
+      "non_null_count": 100,
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "unique_count": 100,
+      "sample_values": [
+        "DEMO-PHONE-0001",
+        "DEMO-PHONE-0002",
+        "DEMO-PHONE-0003"
+      ]
+    },
+    {
+      "name": "Target Role",
+      "dtype": "object",
+      "non_null_count": 100,
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "unique_count": 10,
+      "sample_values": [
+        "Python Developer",
+        "Full-Stack Developer",
+        "Data Analyst"
+      ]
+    },
+    {
+      "name": "Education",
+      "dtype": "object",
+      "non_null_count": 100,
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "unique_count": 10,
+      "sample_values": [
+        "B.Tech \u2014 Computer Science and Engineering",
+        "B.E. \u2014 Information Technology",
+        "B.Tech \u2014 Artificial Intelligence and Data Science"
+      ]
+    },
+    {
+      "name": "Institution (fictional)",
+      "dtype": "object",
+      "non_null_count": 100,
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "unique_count": 10,
+      "sample_values": [
+        "Example Institute of Technology",
+        "Northstar Institute of Technology",
+        "Horizon Institute of Digital Studies"
+      ]
+    },
+    {
+      "name": "Graduation Year",
+      "dtype": "int64",
+      "non_null_count": 100,
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "unique_count": 3,
+      "sample_values": [
+        "2025",
+        "2026",
+        "2027"
+      ]
+    },
+    {
+      "name": "Professional Summary",
+      "dtype": "object",
+      "non_null_count": 100,
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "unique_count": 39,
+      "sample_values": [
+        "Entry-level candidate focused on applying practical coursework to real engineering problems. Targeting a Python Developer role, with a focus on python and practical project delivery.",
+        "Motivated student who enjoys turning structured problems into maintainable software solutions. Targeting a Full-Stack Developer role, with a focus on react and practical project delivery.",
+        "Early-career technologist building a portfolio through hands-on projects and continuous learning. Targeting a Data Analyst role, with a focus on sql and practical project delivery."
+      ]
+    },
+    {
+      "name": "Core Skills",
+      "dtype": "object",
+      "non_null_count": 100,
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "unique_count": 50,
+      "sample_values": [
+        "Python, OOP, REST APIs, Git, pytest",
+        "React, Node.js, Express, SQL, Git",
+        "SQL, Excel, Python, pandas, data visualization"
+      ]
+    },
+    {
+      "name": "Project Title",
+      "dtype": "object",
+      "non_null_count": 100,
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "unique_count": 100,
+      "sample_values": [
+        "Campus Helpdesk Ticket API",
+        "Student Club Portal",
+        "Retail Sales Trend Report"
+      ]
+    },
+    {
+      "name": "Project Summary",
+      "dtype": "object",
+      "non_null_count": 100,
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "unique_count": 100,
+      "sample_values": [
+        "Developed campus helpdesk ticket api in Python, emphasizing modular functions, input validation, readable error handling, and reusable output. Prepared sample data and documented setup steps so another student could reproduce the workflow.",
+        "Designed and implemented student club portal as a full-stack prototype, connecting responsive UI components to API operations and structured records. Added common validation and clear loading, empty, and error states.",
+        "Prepared synthetic records for retail sales trend report, cleaned inconsistent values, explored key patterns, and produced charts or summaries for decision support. Documented assumptions and limitations so the analysis is not mistaken for live business data."
+      ]
+    },
+    {
+      "name": "Experience / Internship",
+      "dtype": "object",
+      "non_null_count": 100,
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "unique_count": 10,
+      "sample_values": [
+        "Academic projects only; no formal internship listed.",
+        "Sample internship: Junior Project Trainee at DemoTech Labs (fictional); assisted with documentation and feature testing.",
+        "Sample internship: Software Intern at ExampleWorks Studio (fictional); contributed to a supervised prototype."
+      ]
+    },
+    {
+      "name": "Certification / Training",
+      "dtype": "object",
+      "non_null_count": 100,
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "unique_count": 50,
+      "sample_values": [
+        "Python Programming Foundations \u2014 Foundations Course (sample)",
+        "Full-Stack Web Development Basics \u2014 Project-Based Learning Module (sample)",
+        "SQL Fundamentals \u2014 Skills Lab Completion (sample)"
+      ]
+    },
+    {
+      "name": "Assessment Result (demo)",
+      "dtype": "object",
+      "non_null_count": 100,
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "unique_count": 100,
+      "sample_values": [
+        "Python Developer practice assessment: 69/100 (synthetic demo result; not a real credential)",
+        "Full-Stack Developer practice assessment: 76/100 (synthetic demo result; not a real credential)",
+        "Data Analyst practice assessment: 83/100 (synthetic demo result; not a real credential)"
+      ]
+    },
+    {
+      "name": "Faculty Review Status (demo)",
+      "dtype": "object",
+      "non_null_count": 100,
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "unique_count": 4,
+      "sample_values": [
+        "Pending review (demo)",
+        "Verified by faculty (demo record)",
+        "Changes requested (demo)"
+      ]
+    },
+    {
+      "name": "Industry Feedback (demo)",
+      "dtype": "object",
+      "non_null_count": 100,
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "unique_count": 5,
+      "sample_values": [
+        "Sample evaluator note: communicates project scope clearly; strengthen testing evidence.",
+        "Sample evaluator note: good problem decomposition; document design trade-offs.",
+        "Sample evaluator note: promising implementation; add clearer setup instructions."
+      ]
+    },
+    {
+      "name": "Suggested Resume Filename",
+      "dtype": "object",
+      "non_null_count": 100,
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "unique_count": 100,
+      "sample_values": [
+        "DEMO-001_Aarav_Sharma_resume.txt",
+        "DEMO-002_Aanya_Kulkarni_resume.txt",
+        "DEMO-003_Vihaan_Patel_resume.txt"
+      ]
+    },
+    {
+      "name": "Data Notice",
+      "dtype": "object",
+      "non_null_count": 100,
+      "missing_count": 0,
+      "missing_pct": 0.0,
+      "unique_count": 1,
+      "sample_values": [
+        "SYNTHETIC DEMO DATA \u2014 NOT A REAL PERSON",
+        "SYNTHETIC DEMO DATA \u2014 NOT A REAL PERSON",
+        "SYNTHETIC DEMO DATA \u2014 NOT A REAL PERSON"
+      ]
+    }
+  ],
+  "duplicates": {
+    "full_row_duplicates": 0,
+    "duplicate_candidate_ids": 0
+  },
+  "data_notice_values": {
+    "SYNTHETIC DEMO DATA \u2014 NOT A REAL PERSON": 100
+  },
+  "faculty_review_status_values": {
+    "Pending review (demo)": 25,
+    "Verified by faculty (demo record)": 25,
+    "Changes requested (demo)": 25,
+    "Not submitted for review (demo)": 25
+  },
+  "target_role_distribution": {
+    "Python Developer": 10,
+    "Full-Stack Developer": 10,
+    "Data Analyst": 10,
+    "Machine Learning Intern": 10,
+    "Frontend Developer": 10,
+    "Backend Developer": 10,
+    "Cybersecurity Analyst": 10,
+    "Cloud / DevOps Intern": 10,
+    "QA Automation Engineer": 10,
+    "UI/UX Designer": 10
+  },
+  "graduation_year_distribution": {
+    "2025": 34,
+    "2026": 33,
+    "2027": 33
+  },
+  "assessment_sample_values": [
+    "Python Developer practice assessment: 69/100 (synthetic demo result; not a real credential)",
+    "Full-Stack Developer practice assessment: 76/100 (synthetic demo result; not a real credential)",
+    "Data Analyst practice assessment: 83/100 (synthetic demo result; not a real credential)"
+  ],
+  "assessment_score_parsed_count": 100,
+  "assessment_score_stats": {
+    "min": 62.0,
+    "max": 98.0,
+    "mean": 80.28
+  },
+  "core_skills": {
+    "total_token_count": 402,
+    "unique_skill_count": 132,
+    "sample_unique_skills": [
+      "API design",
+      "API integration",
+      "API testing",
+      "APIs",
+      "Automation basics",
+      "CI/CD concepts",
+      "CSS",
+      "CSS layout",
+      "Cloud fundamentals",
+      "Containers",
+      "Design systems",
+      "Django basics",
+      "Docker basics",
+      "Excel",
+      "Express",
+      "Figma",
+      "Flask",
+      "Git",
+      "HTML",
+      "Interaction design"
+    ]
+  },
+  "candidate_label_columns": [],
+  "supervised_label_available": false
+}

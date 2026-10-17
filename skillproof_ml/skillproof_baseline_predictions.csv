@@ -1,0 +1,1001 @@
+student_id,target_role,evaluated_role,is_target_role_match,total_skills_declared,evidence_backed_skill_count,required_skill_count,required_covered_count,required_missing_count,required_coverage,preferred_skill_count,preferred_covered_count,preferred_coverage,assessment_score,baseline_match_score,missing_required_skills,covered_required_skills,rank_within_role
+DEMO-001,Python Developer,Backend Developer,False,5,0,4,3,1,0.75,4,0,0.0,69,60.0,SQL,"Git, Python, REST APIs",1
+DEMO-051,Python Developer,Backend Developer,False,5,0,4,3,1,0.75,4,0,0.0,86,60.0,SQL,"Git, Python, REST APIs",2
+DEMO-002,Full-Stack Developer,Backend Developer,False,5,5,4,2,2,0.5,4,1,0.25,76,45.0,"Python, REST APIs","Git, SQL",3
+DEMO-006,Backend Developer,Backend Developer,True,5,5,4,2,2,0.5,4,1,0.25,67,45.0,"Git, Python","REST APIs, SQL",4
+DEMO-052,Full-Stack Developer,Backend Developer,False,5,0,4,2,2,0.5,4,1,0.25,93,45.0,"Python, REST APIs","Git, SQL",5
+DEMO-056,Backend Developer,Backend Developer,True,5,0,4,2,2,0.5,4,1,0.25,84,45.0,"Git, Python","REST APIs, SQL",6
+DEMO-003,Data Analyst,Backend Developer,False,5,0,4,2,2,0.5,4,0,0.0,83,40.0,"Git, REST APIs","Python, SQL",7
+DEMO-011,Python Developer,Backend Developer,False,5,0,4,2,2,0.5,4,0,0.0,65,40.0,"Git, REST APIs","Python, SQL",8
+DEMO-021,Python Developer,Backend Developer,False,5,0,4,2,2,0.5,4,0,0.0,98,40.0,"REST APIs, SQL","Git, Python",9
+DEMO-053,Data Analyst,Backend Developer,False,5,0,4,2,2,0.5,4,0,0.0,63,40.0,"Git, REST APIs","Python, SQL",10
+DEMO-061,Python Developer,Backend Developer,False,5,0,4,2,2,0.5,4,0,0.0,82,40.0,"Git, REST APIs","Python, SQL",11
+DEMO-071,Python Developer,Backend Developer,False,5,0,4,2,2,0.5,4,0,0.0,78,40.0,"REST APIs, SQL","Git, Python",12
+DEMO-008,Cloud / DevOps Intern,Backend Developer,False,5,0,4,1,3,0.25,4,1,0.25,81,25.0,"Python, REST APIs, SQL",Git,13
+DEMO-031,Python Developer,Backend Developer,False,4,0,4,1,3,0.25,4,1,0.25,94,25.0,"Git, REST APIs, SQL",Python,14
+DEMO-036,Backend Developer,Backend Developer,True,4,0,4,1,3,0.25,4,1,0.25,92,25.0,"Python, REST APIs, SQL",Git,15
+DEMO-058,Cloud / DevOps Intern,Backend Developer,False,5,5,4,1,3,0.25,4,1,0.25,98,25.0,"Python, REST APIs, SQL",Git,16
+DEMO-081,Python Developer,Backend Developer,False,4,0,4,1,3,0.25,4,1,0.25,74,25.0,"Git, REST APIs, SQL",Python,17
+DEMO-086,Backend Developer,Backend Developer,True,4,4,4,1,3,0.25,4,1,0.25,72,25.0,"Python, REST APIs, SQL",Git,18
+DEMO-004,Machine Learning Intern,Backend Developer,False,5,0,4,1,3,0.25,4,0,0.0,90,20.0,"Git, REST APIs, SQL",Python,19
+DEMO-012,Full-Stack Developer,Backend Developer,False,5,0,4,1,3,0.25,4,0,0.0,72,20.0,"Git, Python, SQL",REST APIs,20
+DEMO-013,Data Analyst,Backend Developer,False,4,0,4,1,3,0.25,4,0,0.0,79,20.0,"Git, REST APIs, SQL",Python,21
+DEMO-014,Machine Learning Intern,Backend Developer,False,4,4,4,1,3,0.25,4,0,0.0,86,20.0,"Git, REST APIs, SQL",Python,22
+DEMO-016,Backend Developer,Backend Developer,True,4,0,4,1,3,0.25,4,0,0.0,63,20.0,"Git, Python, REST APIs",SQL,23
+DEMO-018,Cloud / DevOps Intern,Backend Developer,False,4,4,4,1,3,0.25,4,0,0.0,77,20.0,"Git, REST APIs, SQL",Python,24
+DEMO-019,QA Automation Engineer,Backend Developer,False,4,0,4,1,3,0.25,4,0,0.0,84,20.0,"Git, REST APIs, SQL",Python,25
+DEMO-026,Backend Developer,Backend Developer,True,4,4,4,1,3,0.25,4,0,0.0,96,20.0,"Git, REST APIs, SQL",Python,26
+DEMO-029,QA Automation Engineer,Backend Developer,False,4,0,4,1,3,0.25,4,0,0.0,80,20.0,"Python, REST APIs, SQL",Git,27
+DEMO-033,Data Analyst,Backend Developer,False,4,0,4,1,3,0.25,4,0,0.0,71,20.0,"Git, Python, REST APIs",SQL,28
+DEMO-035,Frontend Developer,Backend Developer,False,4,0,4,1,3,0.25,4,0,0.0,85,20.0,"Python, REST APIs, SQL",Git,29
+DEMO-041,Python Developer,Backend Developer,False,4,0,4,1,3,0.25,4,0,0.0,90,20.0,"Git, REST APIs, SQL",Python,30
+DEMO-044,Machine Learning Intern,Backend Developer,False,3,0,4,1,3,0.25,4,0,0.0,74,20.0,"Git, REST APIs, SQL",Python,31
+DEMO-054,Machine Learning Intern,Backend Developer,False,5,5,4,1,3,0.25,4,0,0.0,70,20.0,"Git, REST APIs, SQL",Python,32
+DEMO-062,Full-Stack Developer,Backend Developer,False,5,5,4,1,3,0.25,4,0,0.0,89,20.0,"Git, Python, SQL",REST APIs,33
+DEMO-063,Data Analyst,Backend Developer,False,4,0,4,1,3,0.25,4,0,0.0,96,20.0,"Git, REST APIs, SQL",Python,34
+DEMO-064,Machine Learning Intern,Backend Developer,False,4,0,4,1,3,0.25,4,0,0.0,66,20.0,"Git, REST APIs, SQL",Python,35
+DEMO-066,Backend Developer,Backend Developer,True,4,4,4,1,3,0.25,4,0,0.0,80,20.0,"Git, Python, REST APIs",SQL,36
+DEMO-068,Cloud / DevOps Intern,Backend Developer,False,4,0,4,1,3,0.25,4,0,0.0,94,20.0,"Git, REST APIs, SQL",Python,37
+DEMO-069,QA Automation Engineer,Backend Developer,False,4,0,4,1,3,0.25,4,0,0.0,64,20.0,"Git, REST APIs, SQL",Python,38
+DEMO-076,Backend Developer,Backend Developer,True,4,0,4,1,3,0.25,4,0,0.0,76,20.0,"Git, REST APIs, SQL",Python,39
+DEMO-079,QA Automation Engineer,Backend Developer,False,4,0,4,1,3,0.25,4,0,0.0,97,20.0,"Python, REST APIs, SQL",Git,40
+DEMO-083,Data Analyst,Backend Developer,False,4,0,4,1,3,0.25,4,0,0.0,88,20.0,"Git, Python, REST APIs",SQL,41
+DEMO-085,Frontend Developer,Backend Developer,False,4,0,4,1,3,0.25,4,0,0.0,65,20.0,"Python, REST APIs, SQL",Git,42
+DEMO-091,Python Developer,Backend Developer,False,4,0,4,1,3,0.25,4,0,0.0,70,20.0,"Git, REST APIs, SQL",Python,43
+DEMO-094,Machine Learning Intern,Backend Developer,False,3,3,4,1,3,0.25,4,0,0.0,91,20.0,"Git, REST APIs, SQL",Python,44
+DEMO-022,Full-Stack Developer,Backend Developer,False,4,4,4,0,4,0.0,4,1,0.25,68,5.0,"Git, Python, REST APIs, SQL",,45
+DEMO-072,Full-Stack Developer,Backend Developer,False,4,0,4,0,4,0.0,4,1,0.25,85,5.0,"Git, Python, REST APIs, SQL",,46
+DEMO-005,Frontend Developer,Backend Developer,False,5,0,4,0,4,0.0,4,0,0.0,97,0.0,"Git, Python, REST APIs, SQL",,47
+DEMO-007,Cybersecurity Analyst,Backend Developer,False,4,0,4,0,4,0.0,4,0,0.0,74,0.0,"Git, Python, REST APIs, SQL",,48
+DEMO-009,QA Automation Engineer,Backend Developer,False,4,0,4,0,4,0.0,4,0,0.0,88,0.0,"Git, Python, REST APIs, SQL",,49
+DEMO-010,UI/UX Designer,Backend Developer,False,5,5,4,0,4,0.0,4,0,0.0,95,0.0,"Git, Python, REST APIs, SQL",,50
+DEMO-015,Frontend Developer,Backend Developer,False,4,0,4,0,4,0.0,4,0,0.0,93,0.0,"Git, Python, REST APIs, SQL",,51
+DEMO-017,Cybersecurity Analyst,Backend Developer,False,3,0,4,0,4,0.0,4,0,0.0,70,0.0,"Git, Python, REST APIs, SQL",,52
+DEMO-020,UI/UX Designer,Backend Developer,False,4,0,4,0,4,0.0,4,0,0.0,91,0.0,"Git, Python, REST APIs, SQL",,53
+DEMO-023,Data Analyst,Backend Developer,False,4,0,4,0,4,0.0,4,0,0.0,75,0.0,"Git, Python, REST APIs, SQL",,54
+DEMO-024,Machine Learning Intern,Backend Developer,False,4,0,4,0,4,0.0,4,0,0.0,82,0.0,"Git, Python, REST APIs, SQL",,55
+DEMO-025,Frontend Developer,Backend Developer,False,4,0,4,0,4,0.0,4,0,0.0,89,0.0,"Git, Python, REST APIs, SQL",,56
+DEMO-027,Cybersecurity Analyst,Backend Developer,False,3,0,4,0,4,0.0,4,0,0.0,66,0.0,"Git, Python, REST APIs, SQL",,57
+DEMO-028,Cloud / DevOps Intern,Backend Developer,False,4,0,4,0,4,0.0,4,0,0.0,73,0.0,"Git, Python, REST APIs, SQL",,58
+DEMO-030,UI/UX Designer,Backend Developer,False,3,3,4,0,4,0.0,4,0,0.0,87,0.0,"Git, Python, REST APIs, SQL",,59
+DEMO-032,Full-Stack Developer,Backend Developer,False,4,0,4,0,4,0.0,4,0,0.0,64,0.0,"Git, Python, REST APIs, SQL",,60
+DEMO-034,Machine Learning Intern,Backend Developer,False,3,3,4,0,4,0.0,4,0,0.0,78,0.0,"Git, Python, REST APIs, SQL",,61
+DEMO-037,Cybersecurity Analyst,Backend Developer,False,4,0,4,0,4,0.0,4,0,0.0,62,0.0,"Git, Python, REST APIs, SQL",,62
+DEMO-038,Cloud / DevOps Intern,Backend Developer,False,3,3,4,0,4,0.0,4,0,0.0,69,0.0,"Git, Python, REST APIs, SQL",,63
+DEMO-039,QA Automation Engineer,Backend Developer,False,3,0,4,0,4,0.0,4,0,0.0,76,0.0,"Git, Python, REST APIs, SQL",,64
+DEMO-040,UI/UX Designer,Backend Developer,False,4,0,4,0,4,0.0,4,0,0.0,83,0.0,"Git, Python, REST APIs, SQL",,65
+DEMO-042,Full-Stack Developer,Backend Developer,False,4,4,4,0,4,0.0,4,0,0.0,97,0.0,"Git, Python, REST APIs, SQL",,66
+DEMO-043,Data Analyst,Backend Developer,False,4,0,4,0,4,0.0,4,0,0.0,67,0.0,"Git, Python, REST APIs, SQL",,67
+DEMO-045,Frontend Developer,Backend Developer,False,4,0,4,0,4,0.0,4,0,0.0,81,0.0,"Git, Python, REST APIs, SQL",,68
+DEMO-046,Backend Developer,Backend Developer,True,4,4,4,0,4,0.0,4,0,0.0,88,0.0,"Git, Python, REST APIs, SQL",,69
+DEMO-047,Cybersecurity Analyst,Backend Developer,False,3,0,4,0,4,0.0,4,0,0.0,95,0.0,"Git, Python, REST APIs, SQL",,70
+DEMO-048,Cloud / DevOps Intern,Backend Developer,False,4,0,4,0,4,0.0,4,0,0.0,65,0.0,"Git, Python, REST APIs, SQL",,71
+DEMO-049,QA Automation Engineer,Backend Developer,False,3,0,4,0,4,0.0,4,0,0.0,72,0.0,"Git, Python, REST APIs, SQL",,72
+DEMO-050,UI/UX Designer,Backend Developer,False,3,3,4,0,4,0.0,4,0,0.0,79,0.0,"Git, Python, REST APIs, SQL",,73
+DEMO-055,Frontend Developer,Backend Developer,False,5,0,4,0,4,0.0,4,0,0.0,77,0.0,"Git, Python, REST APIs, SQL",,74
+DEMO-057,Cybersecurity Analyst,Backend Developer,False,4,0,4,0,4,0.0,4,0,0.0,91,0.0,"Git, Python, REST APIs, SQL",,75
+DEMO-059,QA Automation Engineer,Backend Developer,False,4,0,4,0,4,0.0,4,0,0.0,68,0.0,"Git, Python, REST APIs, SQL",,76
+DEMO-060,UI/UX Designer,Backend Developer,False,5,0,4,0,4,0.0,4,0,0.0,75,0.0,"Git, Python, REST APIs, SQL",,77
+DEMO-065,Frontend Developer,Backend Developer,False,4,0,4,0,4,0.0,4,0,0.0,73,0.0,"Git, Python, REST APIs, SQL",,78
+DEMO-067,Cybersecurity Analyst,Backend Developer,False,3,0,4,0,4,0.0,4,0,0.0,87,0.0,"Git, Python, REST APIs, SQL",,79
+DEMO-070,UI/UX Designer,Backend Developer,False,4,4,4,0,4,0.0,4,0,0.0,71,0.0,"Git, Python, REST APIs, SQL",,80
+DEMO-073,Data Analyst,Backend Developer,False,4,0,4,0,4,0.0,4,0,0.0,92,0.0,"Git, Python, REST APIs, SQL",,81
+DEMO-074,Machine Learning Intern,Backend Developer,False,4,4,4,0,4,0.0,4,0,0.0,62,0.0,"Git, Python, REST APIs, SQL",,82
+DEMO-075,Frontend Developer,Backend Developer,False,4,0,4,0,4,0.0,4,0,0.0,69,0.0,"Git, Python, REST APIs, SQL",,83
+DEMO-077,Cybersecurity Analyst,Backend Developer,False,3,0,4,0,4,0.0,4,0,0.0,83,0.0,"Git, Python, REST APIs, SQL",,84
+DEMO-078,Cloud / DevOps Intern,Backend Developer,False,4,4,4,0,4,0.0,4,0,0.0,90,0.0,"Git, Python, REST APIs, SQL",,85
+DEMO-080,UI/UX Designer,Backend Developer,False,3,0,4,0,4,0.0,4,0,0.0,67,0.0,"Git, Python, REST APIs, SQL",,86
+DEMO-082,Full-Stack Developer,Backend Developer,False,4,4,4,0,4,0.0,4,0,0.0,81,0.0,"Git, Python, REST APIs, SQL",,87
+DEMO-084,Machine Learning Intern,Backend Developer,False,3,0,4,0,4,0.0,4,0,0.0,95,0.0,"Git, Python, REST APIs, SQL",,88
+DEMO-087,Cybersecurity Analyst,Backend Developer,False,4,0,4,0,4,0.0,4,0,0.0,79,0.0,"Git, Python, REST APIs, SQL",,89
+DEMO-088,Cloud / DevOps Intern,Backend Developer,False,3,0,4,0,4,0.0,4,0,0.0,86,0.0,"Git, Python, REST APIs, SQL",,90
+DEMO-089,QA Automation Engineer,Backend Developer,False,3,0,4,0,4,0.0,4,0,0.0,93,0.0,"Git, Python, REST APIs, SQL",,91
+DEMO-090,UI/UX Designer,Backend Developer,False,4,4,4,0,4,0.0,4,0,0.0,63,0.0,"Git, Python, REST APIs, SQL",,92
+DEMO-092,Full-Stack Developer,Backend Developer,False,4,0,4,0,4,0.0,4,0,0.0,77,0.0,"Git, Python, REST APIs, SQL",,93
+DEMO-093,Data Analyst,Backend Developer,False,4,0,4,0,4,0.0,4,0,0.0,84,0.0,"Git, Python, REST APIs, SQL",,94
+DEMO-095,Frontend Developer,Backend Developer,False,4,0,4,0,4,0.0,4,0,0.0,98,0.0,"Git, Python, REST APIs, SQL",,95
+DEMO-096,Backend Developer,Backend Developer,True,4,0,4,0,4,0.0,4,0,0.0,68,0.0,"Git, Python, REST APIs, SQL",,96
+DEMO-097,Cybersecurity Analyst,Backend Developer,False,3,0,4,0,4,0.0,4,0,0.0,75,0.0,"Git, Python, REST APIs, SQL",,97
+DEMO-098,Cloud / DevOps Intern,Backend Developer,False,4,4,4,0,4,0.0,4,0,0.0,82,0.0,"Git, Python, REST APIs, SQL",,98
+DEMO-099,QA Automation Engineer,Backend Developer,False,3,0,4,0,4,0.0,4,0,0.0,89,0.0,"Git, Python, REST APIs, SQL",,99
+DEMO-100,UI/UX Designer,Backend Developer,False,3,0,4,0,4,0.0,4,0,0.0,96,0.0,"Git, Python, REST APIs, SQL",,100
+DEMO-008,Cloud / DevOps Intern,Cloud / DevOps Intern,True,5,0,4,2,2,0.5,4,0,0.0,81,40.0,"Cloud fundamentals, Linux basics","CI/CD concepts, Docker basics",1
+DEMO-058,Cloud / DevOps Intern,Cloud / DevOps Intern,True,5,5,4,2,2,0.5,4,0,0.0,98,40.0,"Cloud fundamentals, Linux basics","CI/CD concepts, Docker basics",2
+DEMO-038,Cloud / DevOps Intern,Cloud / DevOps Intern,True,3,3,4,1,3,0.25,4,0,0.0,69,20.0,"CI/CD concepts, Docker basics, Linux basics",Cloud fundamentals,3
+DEMO-088,Cloud / DevOps Intern,Cloud / DevOps Intern,True,3,0,4,1,3,0.25,4,0,0.0,86,20.0,"CI/CD concepts, Docker basics, Linux basics",Cloud fundamentals,4
+DEMO-001,Python Developer,Cloud / DevOps Intern,False,5,0,4,0,4,0.0,4,1,0.25,69,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,5
+DEMO-003,Data Analyst,Cloud / DevOps Intern,False,5,0,4,0,4,0.0,4,1,0.25,83,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,6
+DEMO-004,Machine Learning Intern,Cloud / DevOps Intern,False,5,0,4,0,4,0.0,4,1,0.25,90,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,7
+DEMO-011,Python Developer,Cloud / DevOps Intern,False,5,0,4,0,4,0.0,4,1,0.25,65,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,8
+DEMO-013,Data Analyst,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,1,0.25,79,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,9
+DEMO-014,Machine Learning Intern,Cloud / DevOps Intern,False,4,4,4,0,4,0.0,4,1,0.25,86,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,10
+DEMO-018,Cloud / DevOps Intern,Cloud / DevOps Intern,True,4,4,4,0,4,0.0,4,1,0.25,77,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,11
+DEMO-019,QA Automation Engineer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,1,0.25,84,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,12
+DEMO-021,Python Developer,Cloud / DevOps Intern,False,5,0,4,0,4,0.0,4,1,0.25,98,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,13
+DEMO-026,Backend Developer,Cloud / DevOps Intern,False,4,4,4,0,4,0.0,4,1,0.25,96,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,14
+DEMO-031,Python Developer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,1,0.25,94,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,15
+DEMO-041,Python Developer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,1,0.25,90,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,16
+DEMO-044,Machine Learning Intern,Cloud / DevOps Intern,False,3,0,4,0,4,0.0,4,1,0.25,74,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,17
+DEMO-051,Python Developer,Cloud / DevOps Intern,False,5,0,4,0,4,0.0,4,1,0.25,86,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,18
+DEMO-053,Data Analyst,Cloud / DevOps Intern,False,5,0,4,0,4,0.0,4,1,0.25,63,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,19
+DEMO-054,Machine Learning Intern,Cloud / DevOps Intern,False,5,5,4,0,4,0.0,4,1,0.25,70,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,20
+DEMO-061,Python Developer,Cloud / DevOps Intern,False,5,0,4,0,4,0.0,4,1,0.25,82,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,21
+DEMO-063,Data Analyst,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,1,0.25,96,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,22
+DEMO-064,Machine Learning Intern,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,1,0.25,66,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,23
+DEMO-068,Cloud / DevOps Intern,Cloud / DevOps Intern,True,4,0,4,0,4,0.0,4,1,0.25,94,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,24
+DEMO-069,QA Automation Engineer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,1,0.25,64,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,25
+DEMO-071,Python Developer,Cloud / DevOps Intern,False,5,0,4,0,4,0.0,4,1,0.25,78,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,26
+DEMO-076,Backend Developer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,1,0.25,76,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,27
+DEMO-081,Python Developer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,1,0.25,74,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,28
+DEMO-091,Python Developer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,1,0.25,70,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,29
+DEMO-094,Machine Learning Intern,Cloud / DevOps Intern,False,3,3,4,0,4,0.0,4,1,0.25,91,5.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,30
+DEMO-002,Full-Stack Developer,Cloud / DevOps Intern,False,5,5,4,0,4,0.0,4,0,0.0,76,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,31
+DEMO-005,Frontend Developer,Cloud / DevOps Intern,False,5,0,4,0,4,0.0,4,0,0.0,97,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,32
+DEMO-006,Backend Developer,Cloud / DevOps Intern,False,5,5,4,0,4,0.0,4,0,0.0,67,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,33
+DEMO-007,Cybersecurity Analyst,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,74,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,34
+DEMO-009,QA Automation Engineer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,88,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,35
+DEMO-010,UI/UX Designer,Cloud / DevOps Intern,False,5,5,4,0,4,0.0,4,0,0.0,95,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,36
+DEMO-012,Full-Stack Developer,Cloud / DevOps Intern,False,5,0,4,0,4,0.0,4,0,0.0,72,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,37
+DEMO-015,Frontend Developer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,93,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,38
+DEMO-016,Backend Developer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,63,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,39
+DEMO-017,Cybersecurity Analyst,Cloud / DevOps Intern,False,3,0,4,0,4,0.0,4,0,0.0,70,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,40
+DEMO-020,UI/UX Designer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,91,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,41
+DEMO-022,Full-Stack Developer,Cloud / DevOps Intern,False,4,4,4,0,4,0.0,4,0,0.0,68,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,42
+DEMO-023,Data Analyst,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,75,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,43
+DEMO-024,Machine Learning Intern,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,82,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,44
+DEMO-025,Frontend Developer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,89,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,45
+DEMO-027,Cybersecurity Analyst,Cloud / DevOps Intern,False,3,0,4,0,4,0.0,4,0,0.0,66,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,46
+DEMO-028,Cloud / DevOps Intern,Cloud / DevOps Intern,True,4,0,4,0,4,0.0,4,0,0.0,73,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,47
+DEMO-029,QA Automation Engineer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,80,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,48
+DEMO-030,UI/UX Designer,Cloud / DevOps Intern,False,3,3,4,0,4,0.0,4,0,0.0,87,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,49
+DEMO-032,Full-Stack Developer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,64,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,50
+DEMO-033,Data Analyst,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,71,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,51
+DEMO-034,Machine Learning Intern,Cloud / DevOps Intern,False,3,3,4,0,4,0.0,4,0,0.0,78,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,52
+DEMO-035,Frontend Developer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,85,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,53
+DEMO-036,Backend Developer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,92,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,54
+DEMO-037,Cybersecurity Analyst,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,62,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,55
+DEMO-039,QA Automation Engineer,Cloud / DevOps Intern,False,3,0,4,0,4,0.0,4,0,0.0,76,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,56
+DEMO-040,UI/UX Designer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,83,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,57
+DEMO-042,Full-Stack Developer,Cloud / DevOps Intern,False,4,4,4,0,4,0.0,4,0,0.0,97,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,58
+DEMO-043,Data Analyst,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,67,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,59
+DEMO-045,Frontend Developer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,81,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,60
+DEMO-046,Backend Developer,Cloud / DevOps Intern,False,4,4,4,0,4,0.0,4,0,0.0,88,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,61
+DEMO-047,Cybersecurity Analyst,Cloud / DevOps Intern,False,3,0,4,0,4,0.0,4,0,0.0,95,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,62
+DEMO-048,Cloud / DevOps Intern,Cloud / DevOps Intern,True,4,0,4,0,4,0.0,4,0,0.0,65,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,63
+DEMO-049,QA Automation Engineer,Cloud / DevOps Intern,False,3,0,4,0,4,0.0,4,0,0.0,72,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,64
+DEMO-050,UI/UX Designer,Cloud / DevOps Intern,False,3,3,4,0,4,0.0,4,0,0.0,79,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,65
+DEMO-052,Full-Stack Developer,Cloud / DevOps Intern,False,5,0,4,0,4,0.0,4,0,0.0,93,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,66
+DEMO-055,Frontend Developer,Cloud / DevOps Intern,False,5,0,4,0,4,0.0,4,0,0.0,77,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,67
+DEMO-056,Backend Developer,Cloud / DevOps Intern,False,5,0,4,0,4,0.0,4,0,0.0,84,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,68
+DEMO-057,Cybersecurity Analyst,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,91,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,69
+DEMO-059,QA Automation Engineer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,68,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,70
+DEMO-060,UI/UX Designer,Cloud / DevOps Intern,False,5,0,4,0,4,0.0,4,0,0.0,75,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,71
+DEMO-062,Full-Stack Developer,Cloud / DevOps Intern,False,5,5,4,0,4,0.0,4,0,0.0,89,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,72
+DEMO-065,Frontend Developer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,73,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,73
+DEMO-066,Backend Developer,Cloud / DevOps Intern,False,4,4,4,0,4,0.0,4,0,0.0,80,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,74
+DEMO-067,Cybersecurity Analyst,Cloud / DevOps Intern,False,3,0,4,0,4,0.0,4,0,0.0,87,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,75
+DEMO-070,UI/UX Designer,Cloud / DevOps Intern,False,4,4,4,0,4,0.0,4,0,0.0,71,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,76
+DEMO-072,Full-Stack Developer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,85,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,77
+DEMO-073,Data Analyst,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,92,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,78
+DEMO-074,Machine Learning Intern,Cloud / DevOps Intern,False,4,4,4,0,4,0.0,4,0,0.0,62,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,79
+DEMO-075,Frontend Developer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,69,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,80
+DEMO-077,Cybersecurity Analyst,Cloud / DevOps Intern,False,3,0,4,0,4,0.0,4,0,0.0,83,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,81
+DEMO-078,Cloud / DevOps Intern,Cloud / DevOps Intern,True,4,4,4,0,4,0.0,4,0,0.0,90,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,82
+DEMO-079,QA Automation Engineer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,97,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,83
+DEMO-080,UI/UX Designer,Cloud / DevOps Intern,False,3,0,4,0,4,0.0,4,0,0.0,67,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,84
+DEMO-082,Full-Stack Developer,Cloud / DevOps Intern,False,4,4,4,0,4,0.0,4,0,0.0,81,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,85
+DEMO-083,Data Analyst,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,88,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,86
+DEMO-084,Machine Learning Intern,Cloud / DevOps Intern,False,3,0,4,0,4,0.0,4,0,0.0,95,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,87
+DEMO-085,Frontend Developer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,65,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,88
+DEMO-086,Backend Developer,Cloud / DevOps Intern,False,4,4,4,0,4,0.0,4,0,0.0,72,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,89
+DEMO-087,Cybersecurity Analyst,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,79,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,90
+DEMO-089,QA Automation Engineer,Cloud / DevOps Intern,False,3,0,4,0,4,0.0,4,0,0.0,93,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,91
+DEMO-090,UI/UX Designer,Cloud / DevOps Intern,False,4,4,4,0,4,0.0,4,0,0.0,63,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,92
+DEMO-092,Full-Stack Developer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,77,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,93
+DEMO-093,Data Analyst,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,84,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,94
+DEMO-095,Frontend Developer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,98,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,95
+DEMO-096,Backend Developer,Cloud / DevOps Intern,False,4,0,4,0,4,0.0,4,0,0.0,68,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,96
+DEMO-097,Cybersecurity Analyst,Cloud / DevOps Intern,False,3,0,4,0,4,0.0,4,0,0.0,75,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,97
+DEMO-098,Cloud / DevOps Intern,Cloud / DevOps Intern,True,4,4,4,0,4,0.0,4,0,0.0,82,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,98
+DEMO-099,QA Automation Engineer,Cloud / DevOps Intern,False,3,0,4,0,4,0.0,4,0,0.0,89,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,99
+DEMO-100,UI/UX Designer,Cloud / DevOps Intern,False,3,0,4,0,4,0.0,4,0,0.0,96,0.0,"CI/CD concepts, Cloud fundamentals, Docker basics, Linux basics",,100
+DEMO-007,Cybersecurity Analyst,Cybersecurity Analyst,True,4,0,4,1,3,0.25,4,0,0.0,74,20.0,"Cryptography basics, Linux basics, Security fundamentals",Networking basics,1
+DEMO-027,Cybersecurity Analyst,Cybersecurity Analyst,True,3,0,4,1,3,0.25,4,0,0.0,66,20.0,"Cryptography basics, Linux basics, Networking basics",Security fundamentals,2
+DEMO-057,Cybersecurity Analyst,Cybersecurity Analyst,True,4,0,4,1,3,0.25,4,0,0.0,91,20.0,"Cryptography basics, Linux basics, Security fundamentals",Networking basics,3
+DEMO-077,Cybersecurity Analyst,Cybersecurity Analyst,True,3,0,4,1,3,0.25,4,0,0.0,83,20.0,"Cryptography basics, Linux basics, Networking basics",Security fundamentals,4
+DEMO-001,Python Developer,Cybersecurity Analyst,False,5,0,4,0,4,0.0,4,1,0.25,69,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,5
+DEMO-003,Data Analyst,Cybersecurity Analyst,False,5,0,4,0,4,0.0,4,1,0.25,83,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,6
+DEMO-004,Machine Learning Intern,Cybersecurity Analyst,False,5,0,4,0,4,0.0,4,1,0.25,90,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,7
+DEMO-011,Python Developer,Cybersecurity Analyst,False,5,0,4,0,4,0.0,4,1,0.25,65,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,8
+DEMO-013,Data Analyst,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,1,0.25,79,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,9
+DEMO-014,Machine Learning Intern,Cybersecurity Analyst,False,4,4,4,0,4,0.0,4,1,0.25,86,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,10
+DEMO-018,Cloud / DevOps Intern,Cybersecurity Analyst,False,4,4,4,0,4,0.0,4,1,0.25,77,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,11
+DEMO-019,QA Automation Engineer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,1,0.25,84,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,12
+DEMO-021,Python Developer,Cybersecurity Analyst,False,5,0,4,0,4,0.0,4,1,0.25,98,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,13
+DEMO-026,Backend Developer,Cybersecurity Analyst,False,4,4,4,0,4,0.0,4,1,0.25,96,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,14
+DEMO-031,Python Developer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,1,0.25,94,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,15
+DEMO-041,Python Developer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,1,0.25,90,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,16
+DEMO-044,Machine Learning Intern,Cybersecurity Analyst,False,3,0,4,0,4,0.0,4,1,0.25,74,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,17
+DEMO-051,Python Developer,Cybersecurity Analyst,False,5,0,4,0,4,0.0,4,1,0.25,86,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,18
+DEMO-053,Data Analyst,Cybersecurity Analyst,False,5,0,4,0,4,0.0,4,1,0.25,63,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,19
+DEMO-054,Machine Learning Intern,Cybersecurity Analyst,False,5,5,4,0,4,0.0,4,1,0.25,70,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,20
+DEMO-061,Python Developer,Cybersecurity Analyst,False,5,0,4,0,4,0.0,4,1,0.25,82,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,21
+DEMO-063,Data Analyst,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,1,0.25,96,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,22
+DEMO-064,Machine Learning Intern,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,1,0.25,66,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,23
+DEMO-068,Cloud / DevOps Intern,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,1,0.25,94,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,24
+DEMO-069,QA Automation Engineer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,1,0.25,64,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,25
+DEMO-071,Python Developer,Cybersecurity Analyst,False,5,0,4,0,4,0.0,4,1,0.25,78,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,26
+DEMO-076,Backend Developer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,1,0.25,76,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,27
+DEMO-081,Python Developer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,1,0.25,74,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,28
+DEMO-091,Python Developer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,1,0.25,70,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,29
+DEMO-094,Machine Learning Intern,Cybersecurity Analyst,False,3,3,4,0,4,0.0,4,1,0.25,91,5.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,30
+DEMO-002,Full-Stack Developer,Cybersecurity Analyst,False,5,5,4,0,4,0.0,4,0,0.0,76,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,31
+DEMO-005,Frontend Developer,Cybersecurity Analyst,False,5,0,4,0,4,0.0,4,0,0.0,97,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,32
+DEMO-006,Backend Developer,Cybersecurity Analyst,False,5,5,4,0,4,0.0,4,0,0.0,67,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,33
+DEMO-008,Cloud / DevOps Intern,Cybersecurity Analyst,False,5,0,4,0,4,0.0,4,0,0.0,81,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,34
+DEMO-009,QA Automation Engineer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,88,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,35
+DEMO-010,UI/UX Designer,Cybersecurity Analyst,False,5,5,4,0,4,0.0,4,0,0.0,95,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,36
+DEMO-012,Full-Stack Developer,Cybersecurity Analyst,False,5,0,4,0,4,0.0,4,0,0.0,72,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,37
+DEMO-015,Frontend Developer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,93,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,38
+DEMO-016,Backend Developer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,63,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,39
+DEMO-017,Cybersecurity Analyst,Cybersecurity Analyst,True,3,0,4,0,4,0.0,4,0,0.0,70,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,40
+DEMO-020,UI/UX Designer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,91,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,41
+DEMO-022,Full-Stack Developer,Cybersecurity Analyst,False,4,4,4,0,4,0.0,4,0,0.0,68,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,42
+DEMO-023,Data Analyst,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,75,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,43
+DEMO-024,Machine Learning Intern,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,82,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,44
+DEMO-025,Frontend Developer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,89,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,45
+DEMO-028,Cloud / DevOps Intern,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,73,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,46
+DEMO-029,QA Automation Engineer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,80,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,47
+DEMO-030,UI/UX Designer,Cybersecurity Analyst,False,3,3,4,0,4,0.0,4,0,0.0,87,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,48
+DEMO-032,Full-Stack Developer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,64,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,49
+DEMO-033,Data Analyst,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,71,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,50
+DEMO-034,Machine Learning Intern,Cybersecurity Analyst,False,3,3,4,0,4,0.0,4,0,0.0,78,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,51
+DEMO-035,Frontend Developer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,85,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,52
+DEMO-036,Backend Developer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,92,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,53
+DEMO-037,Cybersecurity Analyst,Cybersecurity Analyst,True,4,0,4,0,4,0.0,4,0,0.0,62,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,54
+DEMO-038,Cloud / DevOps Intern,Cybersecurity Analyst,False,3,3,4,0,4,0.0,4,0,0.0,69,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,55
+DEMO-039,QA Automation Engineer,Cybersecurity Analyst,False,3,0,4,0,4,0.0,4,0,0.0,76,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,56
+DEMO-040,UI/UX Designer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,83,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,57
+DEMO-042,Full-Stack Developer,Cybersecurity Analyst,False,4,4,4,0,4,0.0,4,0,0.0,97,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,58
+DEMO-043,Data Analyst,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,67,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,59
+DEMO-045,Frontend Developer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,81,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,60
+DEMO-046,Backend Developer,Cybersecurity Analyst,False,4,4,4,0,4,0.0,4,0,0.0,88,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,61
+DEMO-047,Cybersecurity Analyst,Cybersecurity Analyst,True,3,0,4,0,4,0.0,4,0,0.0,95,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,62
+DEMO-048,Cloud / DevOps Intern,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,65,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,63
+DEMO-049,QA Automation Engineer,Cybersecurity Analyst,False,3,0,4,0,4,0.0,4,0,0.0,72,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,64
+DEMO-050,UI/UX Designer,Cybersecurity Analyst,False,3,3,4,0,4,0.0,4,0,0.0,79,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,65
+DEMO-052,Full-Stack Developer,Cybersecurity Analyst,False,5,0,4,0,4,0.0,4,0,0.0,93,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,66
+DEMO-055,Frontend Developer,Cybersecurity Analyst,False,5,0,4,0,4,0.0,4,0,0.0,77,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,67
+DEMO-056,Backend Developer,Cybersecurity Analyst,False,5,0,4,0,4,0.0,4,0,0.0,84,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,68
+DEMO-058,Cloud / DevOps Intern,Cybersecurity Analyst,False,5,5,4,0,4,0.0,4,0,0.0,98,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,69
+DEMO-059,QA Automation Engineer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,68,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,70
+DEMO-060,UI/UX Designer,Cybersecurity Analyst,False,5,0,4,0,4,0.0,4,0,0.0,75,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,71
+DEMO-062,Full-Stack Developer,Cybersecurity Analyst,False,5,5,4,0,4,0.0,4,0,0.0,89,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,72
+DEMO-065,Frontend Developer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,73,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,73
+DEMO-066,Backend Developer,Cybersecurity Analyst,False,4,4,4,0,4,0.0,4,0,0.0,80,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,74
+DEMO-067,Cybersecurity Analyst,Cybersecurity Analyst,True,3,0,4,0,4,0.0,4,0,0.0,87,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,75
+DEMO-070,UI/UX Designer,Cybersecurity Analyst,False,4,4,4,0,4,0.0,4,0,0.0,71,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,76
+DEMO-072,Full-Stack Developer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,85,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,77
+DEMO-073,Data Analyst,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,92,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,78
+DEMO-074,Machine Learning Intern,Cybersecurity Analyst,False,4,4,4,0,4,0.0,4,0,0.0,62,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,79
+DEMO-075,Frontend Developer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,69,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,80
+DEMO-078,Cloud / DevOps Intern,Cybersecurity Analyst,False,4,4,4,0,4,0.0,4,0,0.0,90,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,81
+DEMO-079,QA Automation Engineer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,97,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,82
+DEMO-080,UI/UX Designer,Cybersecurity Analyst,False,3,0,4,0,4,0.0,4,0,0.0,67,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,83
+DEMO-082,Full-Stack Developer,Cybersecurity Analyst,False,4,4,4,0,4,0.0,4,0,0.0,81,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,84
+DEMO-083,Data Analyst,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,88,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,85
+DEMO-084,Machine Learning Intern,Cybersecurity Analyst,False,3,0,4,0,4,0.0,4,0,0.0,95,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,86
+DEMO-085,Frontend Developer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,65,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,87
+DEMO-086,Backend Developer,Cybersecurity Analyst,False,4,4,4,0,4,0.0,4,0,0.0,72,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,88
+DEMO-087,Cybersecurity Analyst,Cybersecurity Analyst,True,4,0,4,0,4,0.0,4,0,0.0,79,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,89
+DEMO-088,Cloud / DevOps Intern,Cybersecurity Analyst,False,3,0,4,0,4,0.0,4,0,0.0,86,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,90
+DEMO-089,QA Automation Engineer,Cybersecurity Analyst,False,3,0,4,0,4,0.0,4,0,0.0,93,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,91
+DEMO-090,UI/UX Designer,Cybersecurity Analyst,False,4,4,4,0,4,0.0,4,0,0.0,63,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,92
+DEMO-092,Full-Stack Developer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,77,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,93
+DEMO-093,Data Analyst,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,84,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,94
+DEMO-095,Frontend Developer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,98,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,95
+DEMO-096,Backend Developer,Cybersecurity Analyst,False,4,0,4,0,4,0.0,4,0,0.0,68,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,96
+DEMO-097,Cybersecurity Analyst,Cybersecurity Analyst,True,3,0,4,0,4,0.0,4,0,0.0,75,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,97
+DEMO-098,Cloud / DevOps Intern,Cybersecurity Analyst,False,4,4,4,0,4,0.0,4,0,0.0,82,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,98
+DEMO-099,QA Automation Engineer,Cybersecurity Analyst,False,3,0,4,0,4,0.0,4,0,0.0,89,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,99
+DEMO-100,UI/UX Designer,Cybersecurity Analyst,False,3,0,4,0,4,0.0,4,0,0.0,96,0.0,"Cryptography basics, Linux basics, Networking basics, Security fundamentals",,100
+DEMO-003,Data Analyst,Data Analyst,True,5,0,4,3,1,0.75,4,0,0.0,83,60.0,Statistics,"Excel, Python, SQL",1
+DEMO-053,Data Analyst,Data Analyst,True,5,0,4,3,1,0.75,4,0,0.0,63,60.0,Statistics,"Excel, Python, SQL",2
+DEMO-011,Python Developer,Data Analyst,False,5,0,4,2,2,0.5,4,0,0.0,65,40.0,"Excel, Statistics","Python, SQL",3
+DEMO-033,Data Analyst,Data Analyst,True,4,0,4,2,2,0.5,4,0,0.0,71,40.0,"Python, Statistics","Excel, SQL",4
+DEMO-061,Python Developer,Data Analyst,False,5,0,4,2,2,0.5,4,0,0.0,82,40.0,"Excel, Statistics","Python, SQL",5
+DEMO-083,Data Analyst,Data Analyst,True,4,0,4,2,2,0.5,4,0,0.0,88,40.0,"Python, Statistics","Excel, SQL",6
+DEMO-001,Python Developer,Data Analyst,False,5,0,4,1,3,0.25,4,0,0.0,69,20.0,"Excel, SQL, Statistics",Python,7
+DEMO-002,Full-Stack Developer,Data Analyst,False,5,5,4,1,3,0.25,4,0,0.0,76,20.0,"Excel, Python, Statistics",SQL,8
+DEMO-004,Machine Learning Intern,Data Analyst,False,5,0,4,1,3,0.25,4,0,0.0,90,20.0,"Excel, SQL, Statistics",Python,9
+DEMO-006,Backend Developer,Data Analyst,False,5,5,4,1,3,0.25,4,0,0.0,67,20.0,"Excel, Python, Statistics",SQL,10
+DEMO-013,Data Analyst,Data Analyst,True,4,0,4,1,3,0.25,4,0,0.0,79,20.0,"Excel, SQL, Statistics",Python,11
+DEMO-014,Machine Learning Intern,Data Analyst,False,4,4,4,1,3,0.25,4,0,0.0,86,20.0,"Excel, SQL, Statistics",Python,12
+DEMO-016,Backend Developer,Data Analyst,False,4,0,4,1,3,0.25,4,0,0.0,63,20.0,"Excel, Python, Statistics",SQL,13
+DEMO-018,Cloud / DevOps Intern,Data Analyst,False,4,4,4,1,3,0.25,4,0,0.0,77,20.0,"Excel, SQL, Statistics",Python,14
+DEMO-019,QA Automation Engineer,Data Analyst,False,4,0,4,1,3,0.25,4,0,0.0,84,20.0,"Excel, SQL, Statistics",Python,15
+DEMO-021,Python Developer,Data Analyst,False,5,0,4,1,3,0.25,4,0,0.0,98,20.0,"Excel, SQL, Statistics",Python,16
+DEMO-026,Backend Developer,Data Analyst,False,4,4,4,1,3,0.25,4,0,0.0,96,20.0,"Excel, SQL, Statistics",Python,17
+DEMO-031,Python Developer,Data Analyst,False,4,0,4,1,3,0.25,4,0,0.0,94,20.0,"Excel, SQL, Statistics",Python,18
+DEMO-041,Python Developer,Data Analyst,False,4,0,4,1,3,0.25,4,0,0.0,90,20.0,"Excel, SQL, Statistics",Python,19
+DEMO-044,Machine Learning Intern,Data Analyst,False,3,0,4,1,3,0.25,4,0,0.0,74,20.0,"Excel, SQL, Statistics",Python,20
+DEMO-051,Python Developer,Data Analyst,False,5,0,4,1,3,0.25,4,0,0.0,86,20.0,"Excel, SQL, Statistics",Python,21
+DEMO-052,Full-Stack Developer,Data Analyst,False,5,0,4,1,3,0.25,4,0,0.0,93,20.0,"Excel, Python, Statistics",SQL,22
+DEMO-054,Machine Learning Intern,Data Analyst,False,5,5,4,1,3,0.25,4,0,0.0,70,20.0,"Excel, SQL, Statistics",Python,23
+DEMO-056,Backend Developer,Data Analyst,False,5,0,4,1,3,0.25,4,0,0.0,84,20.0,"Excel, Python, Statistics",SQL,24
+DEMO-063,Data Analyst,Data Analyst,True,4,0,4,1,3,0.25,4,0,0.0,96,20.0,"Excel, SQL, Statistics",Python,25
+DEMO-064,Machine Learning Intern,Data Analyst,False,4,0,4,1,3,0.25,4,0,0.0,66,20.0,"Excel, SQL, Statistics",Python,26
+DEMO-066,Backend Developer,Data Analyst,False,4,4,4,1,3,0.25,4,0,0.0,80,20.0,"Excel, Python, Statistics",SQL,27
+DEMO-068,Cloud / DevOps Intern,Data Analyst,False,4,0,4,1,3,0.25,4,0,0.0,94,20.0,"Excel, SQL, Statistics",Python,28
+DEMO-069,QA Automation Engineer,Data Analyst,False,4,0,4,1,3,0.25,4,0,0.0,64,20.0,"Excel, SQL, Statistics",Python,29
+DEMO-071,Python Developer,Data Analyst,False,5,0,4,1,3,0.25,4,0,0.0,78,20.0,"Excel, SQL, Statistics",Python,30
+DEMO-076,Backend Developer,Data Analyst,False,4,0,4,1,3,0.25,4,0,0.0,76,20.0,"Excel, SQL, Statistics",Python,31
+DEMO-081,Python Developer,Data Analyst,False,4,0,4,1,3,0.25,4,0,0.0,74,20.0,"Excel, SQL, Statistics",Python,32
+DEMO-091,Python Developer,Data Analyst,False,4,0,4,1,3,0.25,4,0,0.0,70,20.0,"Excel, SQL, Statistics",Python,33
+DEMO-094,Machine Learning Intern,Data Analyst,False,3,3,4,1,3,0.25,4,0,0.0,91,20.0,"Excel, SQL, Statistics",Python,34
+DEMO-005,Frontend Developer,Data Analyst,False,5,0,4,0,4,0.0,4,0,0.0,97,0.0,"Excel, Python, SQL, Statistics",,35
+DEMO-007,Cybersecurity Analyst,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,74,0.0,"Excel, Python, SQL, Statistics",,36
+DEMO-008,Cloud / DevOps Intern,Data Analyst,False,5,0,4,0,4,0.0,4,0,0.0,81,0.0,"Excel, Python, SQL, Statistics",,37
+DEMO-009,QA Automation Engineer,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,88,0.0,"Excel, Python, SQL, Statistics",,38
+DEMO-010,UI/UX Designer,Data Analyst,False,5,5,4,0,4,0.0,4,0,0.0,95,0.0,"Excel, Python, SQL, Statistics",,39
+DEMO-012,Full-Stack Developer,Data Analyst,False,5,0,4,0,4,0.0,4,0,0.0,72,0.0,"Excel, Python, SQL, Statistics",,40
+DEMO-015,Frontend Developer,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,93,0.0,"Excel, Python, SQL, Statistics",,41
+DEMO-017,Cybersecurity Analyst,Data Analyst,False,3,0,4,0,4,0.0,4,0,0.0,70,0.0,"Excel, Python, SQL, Statistics",,42
+DEMO-020,UI/UX Designer,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,91,0.0,"Excel, Python, SQL, Statistics",,43
+DEMO-022,Full-Stack Developer,Data Analyst,False,4,4,4,0,4,0.0,4,0,0.0,68,0.0,"Excel, Python, SQL, Statistics",,44
+DEMO-023,Data Analyst,Data Analyst,True,4,0,4,0,4,0.0,4,0,0.0,75,0.0,"Excel, Python, SQL, Statistics",,45
+DEMO-024,Machine Learning Intern,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,82,0.0,"Excel, Python, SQL, Statistics",,46
+DEMO-025,Frontend Developer,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,89,0.0,"Excel, Python, SQL, Statistics",,47
+DEMO-027,Cybersecurity Analyst,Data Analyst,False,3,0,4,0,4,0.0,4,0,0.0,66,0.0,"Excel, Python, SQL, Statistics",,48
+DEMO-028,Cloud / DevOps Intern,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,73,0.0,"Excel, Python, SQL, Statistics",,49
+DEMO-029,QA Automation Engineer,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,80,0.0,"Excel, Python, SQL, Statistics",,50
+DEMO-030,UI/UX Designer,Data Analyst,False,3,3,4,0,4,0.0,4,0,0.0,87,0.0,"Excel, Python, SQL, Statistics",,51
+DEMO-032,Full-Stack Developer,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,64,0.0,"Excel, Python, SQL, Statistics",,52
+DEMO-034,Machine Learning Intern,Data Analyst,False,3,3,4,0,4,0.0,4,0,0.0,78,0.0,"Excel, Python, SQL, Statistics",,53
+DEMO-035,Frontend Developer,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,85,0.0,"Excel, Python, SQL, Statistics",,54
+DEMO-036,Backend Developer,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,92,0.0,"Excel, Python, SQL, Statistics",,55
+DEMO-037,Cybersecurity Analyst,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,62,0.0,"Excel, Python, SQL, Statistics",,56
+DEMO-038,Cloud / DevOps Intern,Data Analyst,False,3,3,4,0,4,0.0,4,0,0.0,69,0.0,"Excel, Python, SQL, Statistics",,57
+DEMO-039,QA Automation Engineer,Data Analyst,False,3,0,4,0,4,0.0,4,0,0.0,76,0.0,"Excel, Python, SQL, Statistics",,58
+DEMO-040,UI/UX Designer,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,83,0.0,"Excel, Python, SQL, Statistics",,59
+DEMO-042,Full-Stack Developer,Data Analyst,False,4,4,4,0,4,0.0,4,0,0.0,97,0.0,"Excel, Python, SQL, Statistics",,60
+DEMO-043,Data Analyst,Data Analyst,True,4,0,4,0,4,0.0,4,0,0.0,67,0.0,"Excel, Python, SQL, Statistics",,61
+DEMO-045,Frontend Developer,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,81,0.0,"Excel, Python, SQL, Statistics",,62
+DEMO-046,Backend Developer,Data Analyst,False,4,4,4,0,4,0.0,4,0,0.0,88,0.0,"Excel, Python, SQL, Statistics",,63
+DEMO-047,Cybersecurity Analyst,Data Analyst,False,3,0,4,0,4,0.0,4,0,0.0,95,0.0,"Excel, Python, SQL, Statistics",,64
+DEMO-048,Cloud / DevOps Intern,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,65,0.0,"Excel, Python, SQL, Statistics",,65
+DEMO-049,QA Automation Engineer,Data Analyst,False,3,0,4,0,4,0.0,4,0,0.0,72,0.0,"Excel, Python, SQL, Statistics",,66
+DEMO-050,UI/UX Designer,Data Analyst,False,3,3,4,0,4,0.0,4,0,0.0,79,0.0,"Excel, Python, SQL, Statistics",,67
+DEMO-055,Frontend Developer,Data Analyst,False,5,0,4,0,4,0.0,4,0,0.0,77,0.0,"Excel, Python, SQL, Statistics",,68
+DEMO-057,Cybersecurity Analyst,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,91,0.0,"Excel, Python, SQL, Statistics",,69
+DEMO-058,Cloud / DevOps Intern,Data Analyst,False,5,5,4,0,4,0.0,4,0,0.0,98,0.0,"Excel, Python, SQL, Statistics",,70
+DEMO-059,QA Automation Engineer,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,68,0.0,"Excel, Python, SQL, Statistics",,71
+DEMO-060,UI/UX Designer,Data Analyst,False,5,0,4,0,4,0.0,4,0,0.0,75,0.0,"Excel, Python, SQL, Statistics",,72
+DEMO-062,Full-Stack Developer,Data Analyst,False,5,5,4,0,4,0.0,4,0,0.0,89,0.0,"Excel, Python, SQL, Statistics",,73
+DEMO-065,Frontend Developer,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,73,0.0,"Excel, Python, SQL, Statistics",,74
+DEMO-067,Cybersecurity Analyst,Data Analyst,False,3,0,4,0,4,0.0,4,0,0.0,87,0.0,"Excel, Python, SQL, Statistics",,75
+DEMO-070,UI/UX Designer,Data Analyst,False,4,4,4,0,4,0.0,4,0,0.0,71,0.0,"Excel, Python, SQL, Statistics",,76
+DEMO-072,Full-Stack Developer,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,85,0.0,"Excel, Python, SQL, Statistics",,77
+DEMO-073,Data Analyst,Data Analyst,True,4,0,4,0,4,0.0,4,0,0.0,92,0.0,"Excel, Python, SQL, Statistics",,78
+DEMO-074,Machine Learning Intern,Data Analyst,False,4,4,4,0,4,0.0,4,0,0.0,62,0.0,"Excel, Python, SQL, Statistics",,79
+DEMO-075,Frontend Developer,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,69,0.0,"Excel, Python, SQL, Statistics",,80
+DEMO-077,Cybersecurity Analyst,Data Analyst,False,3,0,4,0,4,0.0,4,0,0.0,83,0.0,"Excel, Python, SQL, Statistics",,81
+DEMO-078,Cloud / DevOps Intern,Data Analyst,False,4,4,4,0,4,0.0,4,0,0.0,90,0.0,"Excel, Python, SQL, Statistics",,82
+DEMO-079,QA Automation Engineer,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,97,0.0,"Excel, Python, SQL, Statistics",,83
+DEMO-080,UI/UX Designer,Data Analyst,False,3,0,4,0,4,0.0,4,0,0.0,67,0.0,"Excel, Python, SQL, Statistics",,84
+DEMO-082,Full-Stack Developer,Data Analyst,False,4,4,4,0,4,0.0,4,0,0.0,81,0.0,"Excel, Python, SQL, Statistics",,85
+DEMO-084,Machine Learning Intern,Data Analyst,False,3,0,4,0,4,0.0,4,0,0.0,95,0.0,"Excel, Python, SQL, Statistics",,86
+DEMO-085,Frontend Developer,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,65,0.0,"Excel, Python, SQL, Statistics",,87
+DEMO-086,Backend Developer,Data Analyst,False,4,4,4,0,4,0.0,4,0,0.0,72,0.0,"Excel, Python, SQL, Statistics",,88
+DEMO-087,Cybersecurity Analyst,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,79,0.0,"Excel, Python, SQL, Statistics",,89
+DEMO-088,Cloud / DevOps Intern,Data Analyst,False,3,0,4,0,4,0.0,4,0,0.0,86,0.0,"Excel, Python, SQL, Statistics",,90
+DEMO-089,QA Automation Engineer,Data Analyst,False,3,0,4,0,4,0.0,4,0,0.0,93,0.0,"Excel, Python, SQL, Statistics",,91
+DEMO-090,UI/UX Designer,Data Analyst,False,4,4,4,0,4,0.0,4,0,0.0,63,0.0,"Excel, Python, SQL, Statistics",,92
+DEMO-092,Full-Stack Developer,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,77,0.0,"Excel, Python, SQL, Statistics",,93
+DEMO-093,Data Analyst,Data Analyst,True,4,0,4,0,4,0.0,4,0,0.0,84,0.0,"Excel, Python, SQL, Statistics",,94
+DEMO-095,Frontend Developer,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,98,0.0,"Excel, Python, SQL, Statistics",,95
+DEMO-096,Backend Developer,Data Analyst,False,4,0,4,0,4,0.0,4,0,0.0,68,0.0,"Excel, Python, SQL, Statistics",,96
+DEMO-097,Cybersecurity Analyst,Data Analyst,False,3,0,4,0,4,0.0,4,0,0.0,75,0.0,"Excel, Python, SQL, Statistics",,97
+DEMO-098,Cloud / DevOps Intern,Data Analyst,False,4,4,4,0,4,0.0,4,0,0.0,82,0.0,"Excel, Python, SQL, Statistics",,98
+DEMO-099,QA Automation Engineer,Data Analyst,False,3,0,4,0,4,0.0,4,0,0.0,89,0.0,"Excel, Python, SQL, Statistics",,99
+DEMO-100,UI/UX Designer,Data Analyst,False,3,0,4,0,4,0.0,4,0,0.0,96,0.0,"Excel, Python, SQL, Statistics",,100
+DEMO-005,Frontend Developer,Frontend Developer,True,5,0,4,3,1,0.75,4,0,0.0,97,60.0,React,"CSS, HTML, JavaScript",1
+DEMO-042,Full-Stack Developer,Frontend Developer,False,4,4,4,3,1,0.75,4,0,0.0,97,60.0,React,"CSS, HTML, JavaScript",2
+DEMO-055,Frontend Developer,Frontend Developer,True,5,0,4,3,1,0.75,4,0,0.0,77,60.0,React,"CSS, HTML, JavaScript",3
+DEMO-092,Full-Stack Developer,Frontend Developer,False,4,0,4,3,1,0.75,4,0,0.0,77,60.0,React,"CSS, HTML, JavaScript",4
+DEMO-012,Full-Stack Developer,Frontend Developer,False,5,0,4,2,2,0.5,4,1,0.25,72,45.0,"HTML, JavaScript","CSS, React",5
+DEMO-062,Full-Stack Developer,Frontend Developer,False,5,5,4,2,2,0.5,4,1,0.25,89,45.0,"HTML, JavaScript","CSS, React",6
+DEMO-045,Frontend Developer,Frontend Developer,True,4,0,4,2,2,0.5,4,0,0.0,81,40.0,"JavaScript, React","CSS, HTML",7
+DEMO-095,Frontend Developer,Frontend Developer,True,4,0,4,2,2,0.5,4,0,0.0,98,40.0,"JavaScript, React","CSS, HTML",8
+DEMO-002,Full-Stack Developer,Frontend Developer,False,5,5,4,1,3,0.25,4,1,0.25,76,25.0,"CSS, HTML, JavaScript",React,9
+DEMO-025,Frontend Developer,Frontend Developer,True,4,0,4,1,3,0.25,4,1,0.25,89,25.0,"CSS, HTML, JavaScript",React,10
+DEMO-035,Frontend Developer,Frontend Developer,True,4,0,4,1,3,0.25,4,1,0.25,85,25.0,"CSS, HTML, React",JavaScript,11
+DEMO-052,Full-Stack Developer,Frontend Developer,False,5,0,4,1,3,0.25,4,1,0.25,93,25.0,"CSS, HTML, JavaScript",React,12
+DEMO-075,Frontend Developer,Frontend Developer,True,4,0,4,1,3,0.25,4,1,0.25,69,25.0,"CSS, HTML, JavaScript",React,13
+DEMO-085,Frontend Developer,Frontend Developer,True,4,0,4,1,3,0.25,4,1,0.25,65,25.0,"CSS, HTML, React",JavaScript,14
+DEMO-009,QA Automation Engineer,Frontend Developer,False,4,0,4,1,3,0.25,4,0,0.0,88,20.0,"CSS, HTML, React",JavaScript,15
+DEMO-015,Frontend Developer,Frontend Developer,True,4,0,4,1,3,0.25,4,0,0.0,93,20.0,"CSS, HTML, JavaScript",React,16
+DEMO-022,Full-Stack Developer,Frontend Developer,False,4,4,4,1,3,0.25,4,0,0.0,68,20.0,"CSS, HTML, React",JavaScript,17
+DEMO-032,Full-Stack Developer,Frontend Developer,False,4,0,4,1,3,0.25,4,0,0.0,64,20.0,"CSS, HTML, JavaScript",React,18
+DEMO-059,QA Automation Engineer,Frontend Developer,False,4,0,4,1,3,0.25,4,0,0.0,68,20.0,"CSS, HTML, React",JavaScript,19
+DEMO-065,Frontend Developer,Frontend Developer,True,4,0,4,1,3,0.25,4,0,0.0,73,20.0,"CSS, HTML, JavaScript",React,20
+DEMO-072,Full-Stack Developer,Frontend Developer,False,4,0,4,1,3,0.25,4,0,0.0,85,20.0,"CSS, HTML, React",JavaScript,21
+DEMO-082,Full-Stack Developer,Frontend Developer,False,4,4,4,1,3,0.25,4,0,0.0,81,20.0,"CSS, HTML, JavaScript",React,22
+DEMO-001,Python Developer,Frontend Developer,False,5,0,4,0,4,0.0,4,1,0.25,69,5.0,"CSS, HTML, JavaScript, React",,23
+DEMO-008,Cloud / DevOps Intern,Frontend Developer,False,5,0,4,0,4,0.0,4,1,0.25,81,5.0,"CSS, HTML, JavaScript, React",,24
+DEMO-021,Python Developer,Frontend Developer,False,5,0,4,0,4,0.0,4,1,0.25,98,5.0,"CSS, HTML, JavaScript, React",,25
+DEMO-029,QA Automation Engineer,Frontend Developer,False,4,0,4,0,4,0.0,4,1,0.25,80,5.0,"CSS, HTML, JavaScript, React",,26
+DEMO-036,Backend Developer,Frontend Developer,False,4,0,4,0,4,0.0,4,1,0.25,92,5.0,"CSS, HTML, JavaScript, React",,27
+DEMO-051,Python Developer,Frontend Developer,False,5,0,4,0,4,0.0,4,1,0.25,86,5.0,"CSS, HTML, JavaScript, React",,28
+DEMO-058,Cloud / DevOps Intern,Frontend Developer,False,5,5,4,0,4,0.0,4,1,0.25,98,5.0,"CSS, HTML, JavaScript, React",,29
+DEMO-071,Python Developer,Frontend Developer,False,5,0,4,0,4,0.0,4,1,0.25,78,5.0,"CSS, HTML, JavaScript, React",,30
+DEMO-079,QA Automation Engineer,Frontend Developer,False,4,0,4,0,4,0.0,4,1,0.25,97,5.0,"CSS, HTML, JavaScript, React",,31
+DEMO-086,Backend Developer,Frontend Developer,False,4,4,4,0,4,0.0,4,1,0.25,72,5.0,"CSS, HTML, JavaScript, React",,32
+DEMO-003,Data Analyst,Frontend Developer,False,5,0,4,0,4,0.0,4,0,0.0,83,0.0,"CSS, HTML, JavaScript, React",,33
+DEMO-004,Machine Learning Intern,Frontend Developer,False,5,0,4,0,4,0.0,4,0,0.0,90,0.0,"CSS, HTML, JavaScript, React",,34
+DEMO-006,Backend Developer,Frontend Developer,False,5,5,4,0,4,0.0,4,0,0.0,67,0.0,"CSS, HTML, JavaScript, React",,35
+DEMO-007,Cybersecurity Analyst,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,74,0.0,"CSS, HTML, JavaScript, React",,36
+DEMO-010,UI/UX Designer,Frontend Developer,False,5,5,4,0,4,0.0,4,0,0.0,95,0.0,"CSS, HTML, JavaScript, React",,37
+DEMO-011,Python Developer,Frontend Developer,False,5,0,4,0,4,0.0,4,0,0.0,65,0.0,"CSS, HTML, JavaScript, React",,38
+DEMO-013,Data Analyst,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,79,0.0,"CSS, HTML, JavaScript, React",,39
+DEMO-014,Machine Learning Intern,Frontend Developer,False,4,4,4,0,4,0.0,4,0,0.0,86,0.0,"CSS, HTML, JavaScript, React",,40
+DEMO-016,Backend Developer,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,63,0.0,"CSS, HTML, JavaScript, React",,41
+DEMO-017,Cybersecurity Analyst,Frontend Developer,False,3,0,4,0,4,0.0,4,0,0.0,70,0.0,"CSS, HTML, JavaScript, React",,42
+DEMO-018,Cloud / DevOps Intern,Frontend Developer,False,4,4,4,0,4,0.0,4,0,0.0,77,0.0,"CSS, HTML, JavaScript, React",,43
+DEMO-019,QA Automation Engineer,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,84,0.0,"CSS, HTML, JavaScript, React",,44
+DEMO-020,UI/UX Designer,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,91,0.0,"CSS, HTML, JavaScript, React",,45
+DEMO-023,Data Analyst,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,75,0.0,"CSS, HTML, JavaScript, React",,46
+DEMO-024,Machine Learning Intern,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,82,0.0,"CSS, HTML, JavaScript, React",,47
+DEMO-026,Backend Developer,Frontend Developer,False,4,4,4,0,4,0.0,4,0,0.0,96,0.0,"CSS, HTML, JavaScript, React",,48
+DEMO-027,Cybersecurity Analyst,Frontend Developer,False,3,0,4,0,4,0.0,4,0,0.0,66,0.0,"CSS, HTML, JavaScript, React",,49
+DEMO-028,Cloud / DevOps Intern,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,73,0.0,"CSS, HTML, JavaScript, React",,50
+DEMO-030,UI/UX Designer,Frontend Developer,False,3,3,4,0,4,0.0,4,0,0.0,87,0.0,"CSS, HTML, JavaScript, React",,51
+DEMO-031,Python Developer,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,94,0.0,"CSS, HTML, JavaScript, React",,52
+DEMO-033,Data Analyst,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,71,0.0,"CSS, HTML, JavaScript, React",,53
+DEMO-034,Machine Learning Intern,Frontend Developer,False,3,3,4,0,4,0.0,4,0,0.0,78,0.0,"CSS, HTML, JavaScript, React",,54
+DEMO-037,Cybersecurity Analyst,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,62,0.0,"CSS, HTML, JavaScript, React",,55
+DEMO-038,Cloud / DevOps Intern,Frontend Developer,False,3,3,4,0,4,0.0,4,0,0.0,69,0.0,"CSS, HTML, JavaScript, React",,56
+DEMO-039,QA Automation Engineer,Frontend Developer,False,3,0,4,0,4,0.0,4,0,0.0,76,0.0,"CSS, HTML, JavaScript, React",,57
+DEMO-040,UI/UX Designer,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,83,0.0,"CSS, HTML, JavaScript, React",,58
+DEMO-041,Python Developer,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,90,0.0,"CSS, HTML, JavaScript, React",,59
+DEMO-043,Data Analyst,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,67,0.0,"CSS, HTML, JavaScript, React",,60
+DEMO-044,Machine Learning Intern,Frontend Developer,False,3,0,4,0,4,0.0,4,0,0.0,74,0.0,"CSS, HTML, JavaScript, React",,61
+DEMO-046,Backend Developer,Frontend Developer,False,4,4,4,0,4,0.0,4,0,0.0,88,0.0,"CSS, HTML, JavaScript, React",,62
+DEMO-047,Cybersecurity Analyst,Frontend Developer,False,3,0,4,0,4,0.0,4,0,0.0,95,0.0,"CSS, HTML, JavaScript, React",,63
+DEMO-048,Cloud / DevOps Intern,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,65,0.0,"CSS, HTML, JavaScript, React",,64
+DEMO-049,QA Automation Engineer,Frontend Developer,False,3,0,4,0,4,0.0,4,0,0.0,72,0.0,"CSS, HTML, JavaScript, React",,65
+DEMO-050,UI/UX Designer,Frontend Developer,False,3,3,4,0,4,0.0,4,0,0.0,79,0.0,"CSS, HTML, JavaScript, React",,66
+DEMO-053,Data Analyst,Frontend Developer,False,5,0,4,0,4,0.0,4,0,0.0,63,0.0,"CSS, HTML, JavaScript, React",,67
+DEMO-054,Machine Learning Intern,Frontend Developer,False,5,5,4,0,4,0.0,4,0,0.0,70,0.0,"CSS, HTML, JavaScript, React",,68
+DEMO-056,Backend Developer,Frontend Developer,False,5,0,4,0,4,0.0,4,0,0.0,84,0.0,"CSS, HTML, JavaScript, React",,69
+DEMO-057,Cybersecurity Analyst,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,91,0.0,"CSS, HTML, JavaScript, React",,70
+DEMO-060,UI/UX Designer,Frontend Developer,False,5,0,4,0,4,0.0,4,0,0.0,75,0.0,"CSS, HTML, JavaScript, React",,71
+DEMO-061,Python Developer,Frontend Developer,False,5,0,4,0,4,0.0,4,0,0.0,82,0.0,"CSS, HTML, JavaScript, React",,72
+DEMO-063,Data Analyst,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,96,0.0,"CSS, HTML, JavaScript, React",,73
+DEMO-064,Machine Learning Intern,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,66,0.0,"CSS, HTML, JavaScript, React",,74
+DEMO-066,Backend Developer,Frontend Developer,False,4,4,4,0,4,0.0,4,0,0.0,80,0.0,"CSS, HTML, JavaScript, React",,75
+DEMO-067,Cybersecurity Analyst,Frontend Developer,False,3,0,4,0,4,0.0,4,0,0.0,87,0.0,"CSS, HTML, JavaScript, React",,76
+DEMO-068,Cloud / DevOps Intern,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,94,0.0,"CSS, HTML, JavaScript, React",,77
+DEMO-069,QA Automation Engineer,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,64,0.0,"CSS, HTML, JavaScript, React",,78
+DEMO-070,UI/UX Designer,Frontend Developer,False,4,4,4,0,4,0.0,4,0,0.0,71,0.0,"CSS, HTML, JavaScript, React",,79
+DEMO-073,Data Analyst,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,92,0.0,"CSS, HTML, JavaScript, React",,80
+DEMO-074,Machine Learning Intern,Frontend Developer,False,4,4,4,0,4,0.0,4,0,0.0,62,0.0,"CSS, HTML, JavaScript, React",,81
+DEMO-076,Backend Developer,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,76,0.0,"CSS, HTML, JavaScript, React",,82
+DEMO-077,Cybersecurity Analyst,Frontend Developer,False,3,0,4,0,4,0.0,4,0,0.0,83,0.0,"CSS, HTML, JavaScript, React",,83
+DEMO-078,Cloud / DevOps Intern,Frontend Developer,False,4,4,4,0,4,0.0,4,0,0.0,90,0.0,"CSS, HTML, JavaScript, React",,84
+DEMO-080,UI/UX Designer,Frontend Developer,False,3,0,4,0,4,0.0,4,0,0.0,67,0.0,"CSS, HTML, JavaScript, React",,85
+DEMO-081,Python Developer,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,74,0.0,"CSS, HTML, JavaScript, React",,86
+DEMO-083,Data Analyst,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,88,0.0,"CSS, HTML, JavaScript, React",,87
+DEMO-084,Machine Learning Intern,Frontend Developer,False,3,0,4,0,4,0.0,4,0,0.0,95,0.0,"CSS, HTML, JavaScript, React",,88
+DEMO-087,Cybersecurity Analyst,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,79,0.0,"CSS, HTML, JavaScript, React",,89
+DEMO-088,Cloud / DevOps Intern,Frontend Developer,False,3,0,4,0,4,0.0,4,0,0.0,86,0.0,"CSS, HTML, JavaScript, React",,90
+DEMO-089,QA Automation Engineer,Frontend Developer,False,3,0,4,0,4,0.0,4,0,0.0,93,0.0,"CSS, HTML, JavaScript, React",,91
+DEMO-090,UI/UX Designer,Frontend Developer,False,4,4,4,0,4,0.0,4,0,0.0,63,0.0,"CSS, HTML, JavaScript, React",,92
+DEMO-091,Python Developer,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,70,0.0,"CSS, HTML, JavaScript, React",,93
+DEMO-093,Data Analyst,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,84,0.0,"CSS, HTML, JavaScript, React",,94
+DEMO-094,Machine Learning Intern,Frontend Developer,False,3,3,4,0,4,0.0,4,0,0.0,91,0.0,"CSS, HTML, JavaScript, React",,95
+DEMO-096,Backend Developer,Frontend Developer,False,4,0,4,0,4,0.0,4,0,0.0,68,0.0,"CSS, HTML, JavaScript, React",,96
+DEMO-097,Cybersecurity Analyst,Frontend Developer,False,3,0,4,0,4,0.0,4,0,0.0,75,0.0,"CSS, HTML, JavaScript, React",,97
+DEMO-098,Cloud / DevOps Intern,Frontend Developer,False,4,4,4,0,4,0.0,4,0,0.0,82,0.0,"CSS, HTML, JavaScript, React",,98
+DEMO-099,QA Automation Engineer,Frontend Developer,False,3,0,4,0,4,0.0,4,0,0.0,89,0.0,"CSS, HTML, JavaScript, React",,99
+DEMO-100,UI/UX Designer,Frontend Developer,False,3,0,4,0,4,0.0,4,0,0.0,96,0.0,"CSS, HTML, JavaScript, React",,100
+DEMO-002,Full-Stack Developer,Full-Stack Developer,True,5,5,5,5,0,1.0,4,0,0.0,76,83.33,,"Express, Git, Node.js, React, SQL",1
+DEMO-052,Full-Stack Developer,Full-Stack Developer,True,5,0,5,5,0,1.0,4,0,0.0,93,83.33,,"Express, Git, Node.js, React, SQL",2
+DEMO-006,Backend Developer,Full-Stack Developer,False,5,5,5,3,2,0.6,4,1,0.25,67,54.17,"Git, React","Express, Node.js, SQL",3
+DEMO-056,Backend Developer,Full-Stack Developer,False,5,0,5,3,2,0.6,4,1,0.25,84,54.17,"Git, React","Express, Node.js, SQL",4
+DEMO-032,Full-Stack Developer,Full-Stack Developer,True,4,0,5,2,3,0.4,4,1,0.25,64,37.5,"Git, Node.js, SQL","Express, React",5
+DEMO-082,Full-Stack Developer,Full-Stack Developer,True,4,4,5,2,3,0.4,4,1,0.25,81,37.5,"Git, Node.js, SQL","Express, React",6
+DEMO-036,Backend Developer,Full-Stack Developer,False,4,0,5,2,3,0.4,4,0,0.0,92,33.33,"Express, React, SQL","Git, Node.js",7
+DEMO-086,Backend Developer,Full-Stack Developer,False,4,4,5,2,3,0.4,4,0,0.0,72,33.33,"Express, React, SQL","Git, Node.js",8
+DEMO-012,Full-Stack Developer,Full-Stack Developer,True,5,0,5,1,4,0.2,4,2,0.5,72,25.0,"Express, Git, Node.js, SQL",React,9
+DEMO-062,Full-Stack Developer,Full-Stack Developer,True,5,5,5,1,4,0.2,4,2,0.5,89,25.0,"Express, Git, Node.js, SQL",React,10
+DEMO-001,Python Developer,Full-Stack Developer,False,5,0,5,1,4,0.2,4,1,0.25,69,20.83,"Express, Node.js, React, SQL",Git,11
+DEMO-051,Python Developer,Full-Stack Developer,False,5,0,5,1,4,0.2,4,1,0.25,86,20.83,"Express, Node.js, React, SQL",Git,12
+DEMO-003,Data Analyst,Full-Stack Developer,False,5,0,5,1,4,0.2,4,0,0.0,83,16.67,"Express, Git, Node.js, React",SQL,13
+DEMO-008,Cloud / DevOps Intern,Full-Stack Developer,False,5,0,5,1,4,0.2,4,0,0.0,81,16.67,"Express, Node.js, React, SQL",Git,14
+DEMO-011,Python Developer,Full-Stack Developer,False,5,0,5,1,4,0.2,4,0,0.0,65,16.67,"Express, Git, Node.js, React",SQL,15
+DEMO-015,Frontend Developer,Full-Stack Developer,False,4,0,5,1,4,0.2,4,0,0.0,93,16.67,"Express, Git, Node.js, SQL",React,16
+DEMO-016,Backend Developer,Full-Stack Developer,False,4,0,5,1,4,0.2,4,0,0.0,63,16.67,"Express, Git, Node.js, React",SQL,17
+DEMO-021,Python Developer,Full-Stack Developer,False,5,0,5,1,4,0.2,4,0,0.0,98,16.67,"Express, Node.js, React, SQL",Git,18
+DEMO-022,Full-Stack Developer,Full-Stack Developer,True,4,4,5,1,4,0.2,4,0,0.0,68,16.67,"Express, Git, React, SQL",Node.js,19
+DEMO-025,Frontend Developer,Full-Stack Developer,False,4,0,5,1,4,0.2,4,0,0.0,89,16.67,"Express, Git, Node.js, SQL",React,20
+DEMO-029,QA Automation Engineer,Full-Stack Developer,False,4,0,5,1,4,0.2,4,0,0.0,80,16.67,"Express, Node.js, React, SQL",Git,21
+DEMO-033,Data Analyst,Full-Stack Developer,False,4,0,5,1,4,0.2,4,0,0.0,71,16.67,"Express, Git, Node.js, React",SQL,22
+DEMO-035,Frontend Developer,Full-Stack Developer,False,4,0,5,1,4,0.2,4,0,0.0,85,16.67,"Express, Node.js, React, SQL",Git,23
+DEMO-053,Data Analyst,Full-Stack Developer,False,5,0,5,1,4,0.2,4,0,0.0,63,16.67,"Express, Git, Node.js, React",SQL,24
+DEMO-058,Cloud / DevOps Intern,Full-Stack Developer,False,5,5,5,1,4,0.2,4,0,0.0,98,16.67,"Express, Node.js, React, SQL",Git,25
+DEMO-061,Python Developer,Full-Stack Developer,False,5,0,5,1,4,0.2,4,0,0.0,82,16.67,"Express, Git, Node.js, React",SQL,26
+DEMO-065,Frontend Developer,Full-Stack Developer,False,4,0,5,1,4,0.2,4,0,0.0,73,16.67,"Express, Git, Node.js, SQL",React,27
+DEMO-066,Backend Developer,Full-Stack Developer,False,4,4,5,1,4,0.2,4,0,0.0,80,16.67,"Express, Git, Node.js, React",SQL,28
+DEMO-071,Python Developer,Full-Stack Developer,False,5,0,5,1,4,0.2,4,0,0.0,78,16.67,"Express, Node.js, React, SQL",Git,29
+DEMO-072,Full-Stack Developer,Full-Stack Developer,True,4,0,5,1,4,0.2,4,0,0.0,85,16.67,"Express, Git, React, SQL",Node.js,30
+DEMO-075,Frontend Developer,Full-Stack Developer,False,4,0,5,1,4,0.2,4,0,0.0,69,16.67,"Express, Git, Node.js, SQL",React,31
+DEMO-079,QA Automation Engineer,Full-Stack Developer,False,4,0,5,1,4,0.2,4,0,0.0,97,16.67,"Express, Node.js, React, SQL",Git,32
+DEMO-083,Data Analyst,Full-Stack Developer,False,4,0,5,1,4,0.2,4,0,0.0,88,16.67,"Express, Git, Node.js, React",SQL,33
+DEMO-085,Frontend Developer,Full-Stack Developer,False,4,0,5,1,4,0.2,4,0,0.0,65,16.67,"Express, Node.js, React, SQL",Git,34
+DEMO-005,Frontend Developer,Full-Stack Developer,False,5,0,5,0,5,0.0,4,2,0.5,97,8.33,"Express, Git, Node.js, React, SQL",,35
+DEMO-042,Full-Stack Developer,Full-Stack Developer,True,4,4,5,0,5,0.0,4,2,0.5,97,8.33,"Express, Git, Node.js, React, SQL",,36
+DEMO-045,Frontend Developer,Full-Stack Developer,False,4,0,5,0,5,0.0,4,2,0.5,81,8.33,"Express, Git, Node.js, React, SQL",,37
+DEMO-055,Frontend Developer,Full-Stack Developer,False,5,0,5,0,5,0.0,4,2,0.5,77,8.33,"Express, Git, Node.js, React, SQL",,38
+DEMO-092,Full-Stack Developer,Full-Stack Developer,True,4,0,5,0,5,0.0,4,2,0.5,77,8.33,"Express, Git, Node.js, React, SQL",,39
+DEMO-095,Frontend Developer,Full-Stack Developer,False,4,0,5,0,5,0.0,4,2,0.5,98,8.33,"Express, Git, Node.js, React, SQL",,40
+DEMO-046,Backend Developer,Full-Stack Developer,False,4,4,5,0,5,0.0,4,1,0.25,88,4.17,"Express, Git, Node.js, React, SQL",,41
+DEMO-096,Backend Developer,Full-Stack Developer,False,4,0,5,0,5,0.0,4,1,0.25,68,4.17,"Express, Git, Node.js, React, SQL",,42
+DEMO-004,Machine Learning Intern,Full-Stack Developer,False,5,0,5,0,5,0.0,4,0,0.0,90,0.0,"Express, Git, Node.js, React, SQL",,43
+DEMO-007,Cybersecurity Analyst,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,74,0.0,"Express, Git, Node.js, React, SQL",,44
+DEMO-009,QA Automation Engineer,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,88,0.0,"Express, Git, Node.js, React, SQL",,45
+DEMO-010,UI/UX Designer,Full-Stack Developer,False,5,5,5,0,5,0.0,4,0,0.0,95,0.0,"Express, Git, Node.js, React, SQL",,46
+DEMO-013,Data Analyst,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,79,0.0,"Express, Git, Node.js, React, SQL",,47
+DEMO-014,Machine Learning Intern,Full-Stack Developer,False,4,4,5,0,5,0.0,4,0,0.0,86,0.0,"Express, Git, Node.js, React, SQL",,48
+DEMO-017,Cybersecurity Analyst,Full-Stack Developer,False,3,0,5,0,5,0.0,4,0,0.0,70,0.0,"Express, Git, Node.js, React, SQL",,49
+DEMO-018,Cloud / DevOps Intern,Full-Stack Developer,False,4,4,5,0,5,0.0,4,0,0.0,77,0.0,"Express, Git, Node.js, React, SQL",,50
+DEMO-019,QA Automation Engineer,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,84,0.0,"Express, Git, Node.js, React, SQL",,51
+DEMO-020,UI/UX Designer,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,91,0.0,"Express, Git, Node.js, React, SQL",,52
+DEMO-023,Data Analyst,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,75,0.0,"Express, Git, Node.js, React, SQL",,53
+DEMO-024,Machine Learning Intern,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,82,0.0,"Express, Git, Node.js, React, SQL",,54
+DEMO-026,Backend Developer,Full-Stack Developer,False,4,4,5,0,5,0.0,4,0,0.0,96,0.0,"Express, Git, Node.js, React, SQL",,55
+DEMO-027,Cybersecurity Analyst,Full-Stack Developer,False,3,0,5,0,5,0.0,4,0,0.0,66,0.0,"Express, Git, Node.js, React, SQL",,56
+DEMO-028,Cloud / DevOps Intern,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,73,0.0,"Express, Git, Node.js, React, SQL",,57
+DEMO-030,UI/UX Designer,Full-Stack Developer,False,3,3,5,0,5,0.0,4,0,0.0,87,0.0,"Express, Git, Node.js, React, SQL",,58
+DEMO-031,Python Developer,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,94,0.0,"Express, Git, Node.js, React, SQL",,59
+DEMO-034,Machine Learning Intern,Full-Stack Developer,False,3,3,5,0,5,0.0,4,0,0.0,78,0.0,"Express, Git, Node.js, React, SQL",,60
+DEMO-037,Cybersecurity Analyst,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,62,0.0,"Express, Git, Node.js, React, SQL",,61
+DEMO-038,Cloud / DevOps Intern,Full-Stack Developer,False,3,3,5,0,5,0.0,4,0,0.0,69,0.0,"Express, Git, Node.js, React, SQL",,62
+DEMO-039,QA Automation Engineer,Full-Stack Developer,False,3,0,5,0,5,0.0,4,0,0.0,76,0.0,"Express, Git, Node.js, React, SQL",,63
+DEMO-040,UI/UX Designer,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,83,0.0,"Express, Git, Node.js, React, SQL",,64
+DEMO-041,Python Developer,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,90,0.0,"Express, Git, Node.js, React, SQL",,65
+DEMO-043,Data Analyst,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,67,0.0,"Express, Git, Node.js, React, SQL",,66
+DEMO-044,Machine Learning Intern,Full-Stack Developer,False,3,0,5,0,5,0.0,4,0,0.0,74,0.0,"Express, Git, Node.js, React, SQL",,67
+DEMO-047,Cybersecurity Analyst,Full-Stack Developer,False,3,0,5,0,5,0.0,4,0,0.0,95,0.0,"Express, Git, Node.js, React, SQL",,68
+DEMO-048,Cloud / DevOps Intern,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,65,0.0,"Express, Git, Node.js, React, SQL",,69
+DEMO-049,QA Automation Engineer,Full-Stack Developer,False,3,0,5,0,5,0.0,4,0,0.0,72,0.0,"Express, Git, Node.js, React, SQL",,70
+DEMO-050,UI/UX Designer,Full-Stack Developer,False,3,3,5,0,5,0.0,4,0,0.0,79,0.0,"Express, Git, Node.js, React, SQL",,71
+DEMO-054,Machine Learning Intern,Full-Stack Developer,False,5,5,5,0,5,0.0,4,0,0.0,70,0.0,"Express, Git, Node.js, React, SQL",,72
+DEMO-057,Cybersecurity Analyst,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,91,0.0,"Express, Git, Node.js, React, SQL",,73
+DEMO-059,QA Automation Engineer,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,68,0.0,"Express, Git, Node.js, React, SQL",,74
+DEMO-060,UI/UX Designer,Full-Stack Developer,False,5,0,5,0,5,0.0,4,0,0.0,75,0.0,"Express, Git, Node.js, React, SQL",,75
+DEMO-063,Data Analyst,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,96,0.0,"Express, Git, Node.js, React, SQL",,76
+DEMO-064,Machine Learning Intern,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,66,0.0,"Express, Git, Node.js, React, SQL",,77
+DEMO-067,Cybersecurity Analyst,Full-Stack Developer,False,3,0,5,0,5,0.0,4,0,0.0,87,0.0,"Express, Git, Node.js, React, SQL",,78
+DEMO-068,Cloud / DevOps Intern,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,94,0.0,"Express, Git, Node.js, React, SQL",,79
+DEMO-069,QA Automation Engineer,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,64,0.0,"Express, Git, Node.js, React, SQL",,80
+DEMO-070,UI/UX Designer,Full-Stack Developer,False,4,4,5,0,5,0.0,4,0,0.0,71,0.0,"Express, Git, Node.js, React, SQL",,81
+DEMO-073,Data Analyst,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,92,0.0,"Express, Git, Node.js, React, SQL",,82
+DEMO-074,Machine Learning Intern,Full-Stack Developer,False,4,4,5,0,5,0.0,4,0,0.0,62,0.0,"Express, Git, Node.js, React, SQL",,83
+DEMO-076,Backend Developer,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,76,0.0,"Express, Git, Node.js, React, SQL",,84
+DEMO-077,Cybersecurity Analyst,Full-Stack Developer,False,3,0,5,0,5,0.0,4,0,0.0,83,0.0,"Express, Git, Node.js, React, SQL",,85
+DEMO-078,Cloud / DevOps Intern,Full-Stack Developer,False,4,4,5,0,5,0.0,4,0,0.0,90,0.0,"Express, Git, Node.js, React, SQL",,86
+DEMO-080,UI/UX Designer,Full-Stack Developer,False,3,0,5,0,5,0.0,4,0,0.0,67,0.0,"Express, Git, Node.js, React, SQL",,87
+DEMO-081,Python Developer,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,74,0.0,"Express, Git, Node.js, React, SQL",,88
+DEMO-084,Machine Learning Intern,Full-Stack Developer,False,3,0,5,0,5,0.0,4,0,0.0,95,0.0,"Express, Git, Node.js, React, SQL",,89
+DEMO-087,Cybersecurity Analyst,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,79,0.0,"Express, Git, Node.js, React, SQL",,90
+DEMO-088,Cloud / DevOps Intern,Full-Stack Developer,False,3,0,5,0,5,0.0,4,0,0.0,86,0.0,"Express, Git, Node.js, React, SQL",,91
+DEMO-089,QA Automation Engineer,Full-Stack Developer,False,3,0,5,0,5,0.0,4,0,0.0,93,0.0,"Express, Git, Node.js, React, SQL",,92
+DEMO-090,UI/UX Designer,Full-Stack Developer,False,4,4,5,0,5,0.0,4,0,0.0,63,0.0,"Express, Git, Node.js, React, SQL",,93
+DEMO-091,Python Developer,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,70,0.0,"Express, Git, Node.js, React, SQL",,94
+DEMO-093,Data Analyst,Full-Stack Developer,False,4,0,5,0,5,0.0,4,0,0.0,84,0.0,"Express, Git, Node.js, React, SQL",,95
+DEMO-094,Machine Learning Intern,Full-Stack Developer,False,3,3,5,0,5,0.0,4,0,0.0,91,0.0,"Express, Git, Node.js, React, SQL",,96
+DEMO-097,Cybersecurity Analyst,Full-Stack Developer,False,3,0,5,0,5,0.0,4,0,0.0,75,0.0,"Express, Git, Node.js, React, SQL",,97
+DEMO-098,Cloud / DevOps Intern,Full-Stack Developer,False,4,4,5,0,5,0.0,4,0,0.0,82,0.0,"Express, Git, Node.js, React, SQL",,98
+DEMO-099,QA Automation Engineer,Full-Stack Developer,False,3,0,5,0,5,0.0,4,0,0.0,89,0.0,"Express, Git, Node.js, React, SQL",,99
+DEMO-100,UI/UX Designer,Full-Stack Developer,False,3,0,5,0,5,0.0,4,0,0.0,96,0.0,"Express, Git, Node.js, React, SQL",,100
+DEMO-001,Python Developer,Machine Learning Intern,False,5,0,4,1,3,0.25,4,0,0.0,69,20.0,"Machine learning, NumPy, Statistics",Python,1
+DEMO-003,Data Analyst,Machine Learning Intern,False,5,0,4,1,3,0.25,4,0,0.0,83,20.0,"Machine learning, NumPy, Statistics",Python,2
+DEMO-004,Machine Learning Intern,Machine Learning Intern,True,5,0,4,1,3,0.25,4,0,0.0,90,20.0,"Machine learning, NumPy, Statistics",Python,3
+DEMO-011,Python Developer,Machine Learning Intern,False,5,0,4,1,3,0.25,4,0,0.0,65,20.0,"Machine learning, NumPy, Statistics",Python,4
+DEMO-013,Data Analyst,Machine Learning Intern,False,4,0,4,1,3,0.25,4,0,0.0,79,20.0,"Machine learning, NumPy, Statistics",Python,5
+DEMO-014,Machine Learning Intern,Machine Learning Intern,True,4,4,4,1,3,0.25,4,0,0.0,86,20.0,"Machine learning, NumPy, Statistics",Python,6
+DEMO-018,Cloud / DevOps Intern,Machine Learning Intern,False,4,4,4,1,3,0.25,4,0,0.0,77,20.0,"Machine learning, NumPy, Statistics",Python,7
+DEMO-019,QA Automation Engineer,Machine Learning Intern,False,4,0,4,1,3,0.25,4,0,0.0,84,20.0,"Machine learning, NumPy, Statistics",Python,8
+DEMO-021,Python Developer,Machine Learning Intern,False,5,0,4,1,3,0.25,4,0,0.0,98,20.0,"Machine learning, NumPy, Statistics",Python,9
+DEMO-024,Machine Learning Intern,Machine Learning Intern,True,4,0,4,1,3,0.25,4,0,0.0,82,20.0,"Machine learning, Python, Statistics",NumPy,10
+DEMO-026,Backend Developer,Machine Learning Intern,False,4,4,4,1,3,0.25,4,0,0.0,96,20.0,"Machine learning, NumPy, Statistics",Python,11
+DEMO-031,Python Developer,Machine Learning Intern,False,4,0,4,1,3,0.25,4,0,0.0,94,20.0,"Machine learning, NumPy, Statistics",Python,12
+DEMO-041,Python Developer,Machine Learning Intern,False,4,0,4,1,3,0.25,4,0,0.0,90,20.0,"Machine learning, NumPy, Statistics",Python,13
+DEMO-043,Data Analyst,Machine Learning Intern,False,4,0,4,1,3,0.25,4,0,0.0,67,20.0,"Machine learning, Python, Statistics",NumPy,14
+DEMO-044,Machine Learning Intern,Machine Learning Intern,True,3,0,4,1,3,0.25,4,0,0.0,74,20.0,"Machine learning, NumPy, Statistics",Python,15
+DEMO-051,Python Developer,Machine Learning Intern,False,5,0,4,1,3,0.25,4,0,0.0,86,20.0,"Machine learning, NumPy, Statistics",Python,16
+DEMO-053,Data Analyst,Machine Learning Intern,False,5,0,4,1,3,0.25,4,0,0.0,63,20.0,"Machine learning, NumPy, Statistics",Python,17
+DEMO-054,Machine Learning Intern,Machine Learning Intern,True,5,5,4,1,3,0.25,4,0,0.0,70,20.0,"Machine learning, NumPy, Statistics",Python,18
+DEMO-061,Python Developer,Machine Learning Intern,False,5,0,4,1,3,0.25,4,0,0.0,82,20.0,"Machine learning, NumPy, Statistics",Python,19
+DEMO-063,Data Analyst,Machine Learning Intern,False,4,0,4,1,3,0.25,4,0,0.0,96,20.0,"Machine learning, NumPy, Statistics",Python,20
+DEMO-064,Machine Learning Intern,Machine Learning Intern,True,4,0,4,1,3,0.25,4,0,0.0,66,20.0,"Machine learning, NumPy, Statistics",Python,21
+DEMO-068,Cloud / DevOps Intern,Machine Learning Intern,False,4,0,4,1,3,0.25,4,0,0.0,94,20.0,"Machine learning, NumPy, Statistics",Python,22
+DEMO-069,QA Automation Engineer,Machine Learning Intern,False,4,0,4,1,3,0.25,4,0,0.0,64,20.0,"Machine learning, NumPy, Statistics",Python,23
+DEMO-071,Python Developer,Machine Learning Intern,False,5,0,4,1,3,0.25,4,0,0.0,78,20.0,"Machine learning, NumPy, Statistics",Python,24
+DEMO-074,Machine Learning Intern,Machine Learning Intern,True,4,4,4,1,3,0.25,4,0,0.0,62,20.0,"Machine learning, Python, Statistics",NumPy,25
+DEMO-076,Backend Developer,Machine Learning Intern,False,4,0,4,1,3,0.25,4,0,0.0,76,20.0,"Machine learning, NumPy, Statistics",Python,26
+DEMO-081,Python Developer,Machine Learning Intern,False,4,0,4,1,3,0.25,4,0,0.0,74,20.0,"Machine learning, NumPy, Statistics",Python,27
+DEMO-091,Python Developer,Machine Learning Intern,False,4,0,4,1,3,0.25,4,0,0.0,70,20.0,"Machine learning, NumPy, Statistics",Python,28
+DEMO-093,Data Analyst,Machine Learning Intern,False,4,0,4,1,3,0.25,4,0,0.0,84,20.0,"Machine learning, Python, Statistics",NumPy,29
+DEMO-094,Machine Learning Intern,Machine Learning Intern,True,3,3,4,1,3,0.25,4,0,0.0,91,20.0,"Machine learning, NumPy, Statistics",Python,30
+DEMO-002,Full-Stack Developer,Machine Learning Intern,False,5,5,4,0,4,0.0,4,0,0.0,76,0.0,"Machine learning, NumPy, Python, Statistics",,31
+DEMO-005,Frontend Developer,Machine Learning Intern,False,5,0,4,0,4,0.0,4,0,0.0,97,0.0,"Machine learning, NumPy, Python, Statistics",,32
+DEMO-006,Backend Developer,Machine Learning Intern,False,5,5,4,0,4,0.0,4,0,0.0,67,0.0,"Machine learning, NumPy, Python, Statistics",,33
+DEMO-007,Cybersecurity Analyst,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,74,0.0,"Machine learning, NumPy, Python, Statistics",,34
+DEMO-008,Cloud / DevOps Intern,Machine Learning Intern,False,5,0,4,0,4,0.0,4,0,0.0,81,0.0,"Machine learning, NumPy, Python, Statistics",,35
+DEMO-009,QA Automation Engineer,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,88,0.0,"Machine learning, NumPy, Python, Statistics",,36
+DEMO-010,UI/UX Designer,Machine Learning Intern,False,5,5,4,0,4,0.0,4,0,0.0,95,0.0,"Machine learning, NumPy, Python, Statistics",,37
+DEMO-012,Full-Stack Developer,Machine Learning Intern,False,5,0,4,0,4,0.0,4,0,0.0,72,0.0,"Machine learning, NumPy, Python, Statistics",,38
+DEMO-015,Frontend Developer,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,93,0.0,"Machine learning, NumPy, Python, Statistics",,39
+DEMO-016,Backend Developer,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,63,0.0,"Machine learning, NumPy, Python, Statistics",,40
+DEMO-017,Cybersecurity Analyst,Machine Learning Intern,False,3,0,4,0,4,0.0,4,0,0.0,70,0.0,"Machine learning, NumPy, Python, Statistics",,41
+DEMO-020,UI/UX Designer,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,91,0.0,"Machine learning, NumPy, Python, Statistics",,42
+DEMO-022,Full-Stack Developer,Machine Learning Intern,False,4,4,4,0,4,0.0,4,0,0.0,68,0.0,"Machine learning, NumPy, Python, Statistics",,43
+DEMO-023,Data Analyst,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,75,0.0,"Machine learning, NumPy, Python, Statistics",,44
+DEMO-025,Frontend Developer,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,89,0.0,"Machine learning, NumPy, Python, Statistics",,45
+DEMO-027,Cybersecurity Analyst,Machine Learning Intern,False,3,0,4,0,4,0.0,4,0,0.0,66,0.0,"Machine learning, NumPy, Python, Statistics",,46
+DEMO-028,Cloud / DevOps Intern,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,73,0.0,"Machine learning, NumPy, Python, Statistics",,47
+DEMO-029,QA Automation Engineer,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,80,0.0,"Machine learning, NumPy, Python, Statistics",,48
+DEMO-030,UI/UX Designer,Machine Learning Intern,False,3,3,4,0,4,0.0,4,0,0.0,87,0.0,"Machine learning, NumPy, Python, Statistics",,49
+DEMO-032,Full-Stack Developer,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,64,0.0,"Machine learning, NumPy, Python, Statistics",,50
+DEMO-033,Data Analyst,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,71,0.0,"Machine learning, NumPy, Python, Statistics",,51
+DEMO-034,Machine Learning Intern,Machine Learning Intern,True,3,3,4,0,4,0.0,4,0,0.0,78,0.0,"Machine learning, NumPy, Python, Statistics",,52
+DEMO-035,Frontend Developer,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,85,0.0,"Machine learning, NumPy, Python, Statistics",,53
+DEMO-036,Backend Developer,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,92,0.0,"Machine learning, NumPy, Python, Statistics",,54
+DEMO-037,Cybersecurity Analyst,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,62,0.0,"Machine learning, NumPy, Python, Statistics",,55
+DEMO-038,Cloud / DevOps Intern,Machine Learning Intern,False,3,3,4,0,4,0.0,4,0,0.0,69,0.0,"Machine learning, NumPy, Python, Statistics",,56
+DEMO-039,QA Automation Engineer,Machine Learning Intern,False,3,0,4,0,4,0.0,4,0,0.0,76,0.0,"Machine learning, NumPy, Python, Statistics",,57
+DEMO-040,UI/UX Designer,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,83,0.0,"Machine learning, NumPy, Python, Statistics",,58
+DEMO-042,Full-Stack Developer,Machine Learning Intern,False,4,4,4,0,4,0.0,4,0,0.0,97,0.0,"Machine learning, NumPy, Python, Statistics",,59
+DEMO-045,Frontend Developer,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,81,0.0,"Machine learning, NumPy, Python, Statistics",,60
+DEMO-046,Backend Developer,Machine Learning Intern,False,4,4,4,0,4,0.0,4,0,0.0,88,0.0,"Machine learning, NumPy, Python, Statistics",,61
+DEMO-047,Cybersecurity Analyst,Machine Learning Intern,False,3,0,4,0,4,0.0,4,0,0.0,95,0.0,"Machine learning, NumPy, Python, Statistics",,62
+DEMO-048,Cloud / DevOps Intern,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,65,0.0,"Machine learning, NumPy, Python, Statistics",,63
+DEMO-049,QA Automation Engineer,Machine Learning Intern,False,3,0,4,0,4,0.0,4,0,0.0,72,0.0,"Machine learning, NumPy, Python, Statistics",,64
+DEMO-050,UI/UX Designer,Machine Learning Intern,False,3,3,4,0,4,0.0,4,0,0.0,79,0.0,"Machine learning, NumPy, Python, Statistics",,65
+DEMO-052,Full-Stack Developer,Machine Learning Intern,False,5,0,4,0,4,0.0,4,0,0.0,93,0.0,"Machine learning, NumPy, Python, Statistics",,66
+DEMO-055,Frontend Developer,Machine Learning Intern,False,5,0,4,0,4,0.0,4,0,0.0,77,0.0,"Machine learning, NumPy, Python, Statistics",,67
+DEMO-056,Backend Developer,Machine Learning Intern,False,5,0,4,0,4,0.0,4,0,0.0,84,0.0,"Machine learning, NumPy, Python, Statistics",,68
+DEMO-057,Cybersecurity Analyst,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,91,0.0,"Machine learning, NumPy, Python, Statistics",,69
+DEMO-058,Cloud / DevOps Intern,Machine Learning Intern,False,5,5,4,0,4,0.0,4,0,0.0,98,0.0,"Machine learning, NumPy, Python, Statistics",,70
+DEMO-059,QA Automation Engineer,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,68,0.0,"Machine learning, NumPy, Python, Statistics",,71
+DEMO-060,UI/UX Designer,Machine Learning Intern,False,5,0,4,0,4,0.0,4,0,0.0,75,0.0,"Machine learning, NumPy, Python, Statistics",,72
+DEMO-062,Full-Stack Developer,Machine Learning Intern,False,5,5,4,0,4,0.0,4,0,0.0,89,0.0,"Machine learning, NumPy, Python, Statistics",,73
+DEMO-065,Frontend Developer,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,73,0.0,"Machine learning, NumPy, Python, Statistics",,74
+DEMO-066,Backend Developer,Machine Learning Intern,False,4,4,4,0,4,0.0,4,0,0.0,80,0.0,"Machine learning, NumPy, Python, Statistics",,75
+DEMO-067,Cybersecurity Analyst,Machine Learning Intern,False,3,0,4,0,4,0.0,4,0,0.0,87,0.0,"Machine learning, NumPy, Python, Statistics",,76
+DEMO-070,UI/UX Designer,Machine Learning Intern,False,4,4,4,0,4,0.0,4,0,0.0,71,0.0,"Machine learning, NumPy, Python, Statistics",,77
+DEMO-072,Full-Stack Developer,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,85,0.0,"Machine learning, NumPy, Python, Statistics",,78
+DEMO-073,Data Analyst,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,92,0.0,"Machine learning, NumPy, Python, Statistics",,79
+DEMO-075,Frontend Developer,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,69,0.0,"Machine learning, NumPy, Python, Statistics",,80
+DEMO-077,Cybersecurity Analyst,Machine Learning Intern,False,3,0,4,0,4,0.0,4,0,0.0,83,0.0,"Machine learning, NumPy, Python, Statistics",,81
+DEMO-078,Cloud / DevOps Intern,Machine Learning Intern,False,4,4,4,0,4,0.0,4,0,0.0,90,0.0,"Machine learning, NumPy, Python, Statistics",,82
+DEMO-079,QA Automation Engineer,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,97,0.0,"Machine learning, NumPy, Python, Statistics",,83
+DEMO-080,UI/UX Designer,Machine Learning Intern,False,3,0,4,0,4,0.0,4,0,0.0,67,0.0,"Machine learning, NumPy, Python, Statistics",,84
+DEMO-082,Full-Stack Developer,Machine Learning Intern,False,4,4,4,0,4,0.0,4,0,0.0,81,0.0,"Machine learning, NumPy, Python, Statistics",,85
+DEMO-083,Data Analyst,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,88,0.0,"Machine learning, NumPy, Python, Statistics",,86
+DEMO-084,Machine Learning Intern,Machine Learning Intern,True,3,0,4,0,4,0.0,4,0,0.0,95,0.0,"Machine learning, NumPy, Python, Statistics",,87
+DEMO-085,Frontend Developer,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,65,0.0,"Machine learning, NumPy, Python, Statistics",,88
+DEMO-086,Backend Developer,Machine Learning Intern,False,4,4,4,0,4,0.0,4,0,0.0,72,0.0,"Machine learning, NumPy, Python, Statistics",,89
+DEMO-087,Cybersecurity Analyst,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,79,0.0,"Machine learning, NumPy, Python, Statistics",,90
+DEMO-088,Cloud / DevOps Intern,Machine Learning Intern,False,3,0,4,0,4,0.0,4,0,0.0,86,0.0,"Machine learning, NumPy, Python, Statistics",,91
+DEMO-089,QA Automation Engineer,Machine Learning Intern,False,3,0,4,0,4,0.0,4,0,0.0,93,0.0,"Machine learning, NumPy, Python, Statistics",,92
+DEMO-090,UI/UX Designer,Machine Learning Intern,False,4,4,4,0,4,0.0,4,0,0.0,63,0.0,"Machine learning, NumPy, Python, Statistics",,93
+DEMO-092,Full-Stack Developer,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,77,0.0,"Machine learning, NumPy, Python, Statistics",,94
+DEMO-095,Frontend Developer,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,98,0.0,"Machine learning, NumPy, Python, Statistics",,95
+DEMO-096,Backend Developer,Machine Learning Intern,False,4,0,4,0,4,0.0,4,0,0.0,68,0.0,"Machine learning, NumPy, Python, Statistics",,96
+DEMO-097,Cybersecurity Analyst,Machine Learning Intern,False,3,0,4,0,4,0.0,4,0,0.0,75,0.0,"Machine learning, NumPy, Python, Statistics",,97
+DEMO-098,Cloud / DevOps Intern,Machine Learning Intern,False,4,4,4,0,4,0.0,4,0,0.0,82,0.0,"Machine learning, NumPy, Python, Statistics",,98
+DEMO-099,QA Automation Engineer,Machine Learning Intern,False,3,0,4,0,4,0.0,4,0,0.0,89,0.0,"Machine learning, NumPy, Python, Statistics",,99
+DEMO-100,UI/UX Designer,Machine Learning Intern,False,3,0,4,0,4,0.0,4,0,0.0,96,0.0,"Machine learning, NumPy, Python, Statistics",,100
+DEMO-001,Python Developer,Python Developer,True,5,0,4,4,0,1.0,4,1,0.25,69,85.0,,"Git, OOP, Python, REST APIs",1
+DEMO-051,Python Developer,Python Developer,True,5,0,4,4,0,1.0,4,1,0.25,86,85.0,,"Git, OOP, Python, REST APIs",2
+DEMO-021,Python Developer,Python Developer,True,5,0,4,2,2,0.5,4,0,0.0,98,40.0,"OOP, REST APIs","Git, Python",3
+DEMO-071,Python Developer,Python Developer,True,5,0,4,2,2,0.5,4,0,0.0,78,40.0,"OOP, REST APIs","Git, Python",4
+DEMO-011,Python Developer,Python Developer,True,5,0,4,1,3,0.25,4,2,0.5,65,30.0,"Git, OOP, REST APIs",Python,5
+DEMO-061,Python Developer,Python Developer,True,5,0,4,1,3,0.25,4,2,0.5,82,30.0,"Git, OOP, REST APIs",Python,6
+DEMO-002,Full-Stack Developer,Python Developer,False,5,5,4,1,3,0.25,4,1,0.25,76,25.0,"OOP, Python, REST APIs",Git,7
+DEMO-003,Data Analyst,Python Developer,False,5,0,4,1,3,0.25,4,1,0.25,83,25.0,"Git, OOP, REST APIs",Python,8
+DEMO-006,Backend Developer,Python Developer,False,5,5,4,1,3,0.25,4,1,0.25,67,25.0,"Git, OOP, Python",REST APIs,9
+DEMO-019,QA Automation Engineer,Python Developer,False,4,0,4,1,3,0.25,4,1,0.25,84,25.0,"Git, OOP, REST APIs",Python,10
+DEMO-026,Backend Developer,Python Developer,False,4,4,4,1,3,0.25,4,1,0.25,96,25.0,"Git, OOP, REST APIs",Python,11
+DEMO-031,Python Developer,Python Developer,True,4,0,4,1,3,0.25,4,1,0.25,94,25.0,"Git, OOP, REST APIs",Python,12
+DEMO-052,Full-Stack Developer,Python Developer,False,5,0,4,1,3,0.25,4,1,0.25,93,25.0,"OOP, Python, REST APIs",Git,13
+DEMO-053,Data Analyst,Python Developer,False,5,0,4,1,3,0.25,4,1,0.25,63,25.0,"Git, OOP, REST APIs",Python,14
+DEMO-056,Backend Developer,Python Developer,False,5,0,4,1,3,0.25,4,1,0.25,84,25.0,"Git, OOP, Python",REST APIs,15
+DEMO-069,QA Automation Engineer,Python Developer,False,4,0,4,1,3,0.25,4,1,0.25,64,25.0,"Git, OOP, REST APIs",Python,16
+DEMO-076,Backend Developer,Python Developer,False,4,0,4,1,3,0.25,4,1,0.25,76,25.0,"Git, OOP, REST APIs",Python,17
+DEMO-081,Python Developer,Python Developer,True,4,0,4,1,3,0.25,4,1,0.25,74,25.0,"Git, OOP, REST APIs",Python,18
+DEMO-004,Machine Learning Intern,Python Developer,False,5,0,4,1,3,0.25,4,0,0.0,90,20.0,"Git, OOP, REST APIs",Python,19
+DEMO-008,Cloud / DevOps Intern,Python Developer,False,5,0,4,1,3,0.25,4,0,0.0,81,20.0,"OOP, Python, REST APIs",Git,20
+DEMO-012,Full-Stack Developer,Python Developer,False,5,0,4,1,3,0.25,4,0,0.0,72,20.0,"Git, OOP, Python",REST APIs,21
+DEMO-013,Data Analyst,Python Developer,False,4,0,4,1,3,0.25,4,0,0.0,79,20.0,"Git, OOP, REST APIs",Python,22
+DEMO-014,Machine Learning Intern,Python Developer,False,4,4,4,1,3,0.25,4,0,0.0,86,20.0,"Git, OOP, REST APIs",Python,23
+DEMO-018,Cloud / DevOps Intern,Python Developer,False,4,4,4,1,3,0.25,4,0,0.0,77,20.0,"Git, OOP, REST APIs",Python,24
+DEMO-029,QA Automation Engineer,Python Developer,False,4,0,4,1,3,0.25,4,0,0.0,80,20.0,"OOP, Python, REST APIs",Git,25
+DEMO-035,Frontend Developer,Python Developer,False,4,0,4,1,3,0.25,4,0,0.0,85,20.0,"OOP, Python, REST APIs",Git,26
+DEMO-036,Backend Developer,Python Developer,False,4,0,4,1,3,0.25,4,0,0.0,92,20.0,"OOP, Python, REST APIs",Git,27
+DEMO-041,Python Developer,Python Developer,True,4,0,4,1,3,0.25,4,0,0.0,90,20.0,"Git, OOP, REST APIs",Python,28
+DEMO-044,Machine Learning Intern,Python Developer,False,3,0,4,1,3,0.25,4,0,0.0,74,20.0,"Git, OOP, REST APIs",Python,29
+DEMO-054,Machine Learning Intern,Python Developer,False,5,5,4,1,3,0.25,4,0,0.0,70,20.0,"Git, OOP, REST APIs",Python,30
+DEMO-058,Cloud / DevOps Intern,Python Developer,False,5,5,4,1,3,0.25,4,0,0.0,98,20.0,"OOP, Python, REST APIs",Git,31
+DEMO-062,Full-Stack Developer,Python Developer,False,5,5,4,1,3,0.25,4,0,0.0,89,20.0,"Git, OOP, Python",REST APIs,32
+DEMO-063,Data Analyst,Python Developer,False,4,0,4,1,3,0.25,4,0,0.0,96,20.0,"Git, OOP, REST APIs",Python,33
+DEMO-064,Machine Learning Intern,Python Developer,False,4,0,4,1,3,0.25,4,0,0.0,66,20.0,"Git, OOP, REST APIs",Python,34
+DEMO-068,Cloud / DevOps Intern,Python Developer,False,4,0,4,1,3,0.25,4,0,0.0,94,20.0,"Git, OOP, REST APIs",Python,35
+DEMO-079,QA Automation Engineer,Python Developer,False,4,0,4,1,3,0.25,4,0,0.0,97,20.0,"OOP, Python, REST APIs",Git,36
+DEMO-085,Frontend Developer,Python Developer,False,4,0,4,1,3,0.25,4,0,0.0,65,20.0,"OOP, Python, REST APIs",Git,37
+DEMO-086,Backend Developer,Python Developer,False,4,4,4,1,3,0.25,4,0,0.0,72,20.0,"OOP, Python, REST APIs",Git,38
+DEMO-091,Python Developer,Python Developer,True,4,0,4,1,3,0.25,4,0,0.0,70,20.0,"Git, OOP, REST APIs",Python,39
+DEMO-094,Machine Learning Intern,Python Developer,False,3,3,4,1,3,0.25,4,0,0.0,91,20.0,"Git, OOP, REST APIs",Python,40
+DEMO-016,Backend Developer,Python Developer,False,4,0,4,0,4,0.0,4,1,0.25,63,5.0,"Git, OOP, Python, REST APIs",,41
+DEMO-033,Data Analyst,Python Developer,False,4,0,4,0,4,0.0,4,1,0.25,71,5.0,"Git, OOP, Python, REST APIs",,42
+DEMO-066,Backend Developer,Python Developer,False,4,4,4,0,4,0.0,4,1,0.25,80,5.0,"Git, OOP, Python, REST APIs",,43
+DEMO-083,Data Analyst,Python Developer,False,4,0,4,0,4,0.0,4,1,0.25,88,5.0,"Git, OOP, Python, REST APIs",,44
+DEMO-005,Frontend Developer,Python Developer,False,5,0,4,0,4,0.0,4,0,0.0,97,0.0,"Git, OOP, Python, REST APIs",,45
+DEMO-007,Cybersecurity Analyst,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,74,0.0,"Git, OOP, Python, REST APIs",,46
+DEMO-009,QA Automation Engineer,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,88,0.0,"Git, OOP, Python, REST APIs",,47
+DEMO-010,UI/UX Designer,Python Developer,False,5,5,4,0,4,0.0,4,0,0.0,95,0.0,"Git, OOP, Python, REST APIs",,48
+DEMO-015,Frontend Developer,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,93,0.0,"Git, OOP, Python, REST APIs",,49
+DEMO-017,Cybersecurity Analyst,Python Developer,False,3,0,4,0,4,0.0,4,0,0.0,70,0.0,"Git, OOP, Python, REST APIs",,50
+DEMO-020,UI/UX Designer,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,91,0.0,"Git, OOP, Python, REST APIs",,51
+DEMO-022,Full-Stack Developer,Python Developer,False,4,4,4,0,4,0.0,4,0,0.0,68,0.0,"Git, OOP, Python, REST APIs",,52
+DEMO-023,Data Analyst,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,75,0.0,"Git, OOP, Python, REST APIs",,53
+DEMO-024,Machine Learning Intern,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,82,0.0,"Git, OOP, Python, REST APIs",,54
+DEMO-025,Frontend Developer,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,89,0.0,"Git, OOP, Python, REST APIs",,55
+DEMO-027,Cybersecurity Analyst,Python Developer,False,3,0,4,0,4,0.0,4,0,0.0,66,0.0,"Git, OOP, Python, REST APIs",,56
+DEMO-028,Cloud / DevOps Intern,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,73,0.0,"Git, OOP, Python, REST APIs",,57
+DEMO-030,UI/UX Designer,Python Developer,False,3,3,4,0,4,0.0,4,0,0.0,87,0.0,"Git, OOP, Python, REST APIs",,58
+DEMO-032,Full-Stack Developer,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,64,0.0,"Git, OOP, Python, REST APIs",,59
+DEMO-034,Machine Learning Intern,Python Developer,False,3,3,4,0,4,0.0,4,0,0.0,78,0.0,"Git, OOP, Python, REST APIs",,60
+DEMO-037,Cybersecurity Analyst,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,62,0.0,"Git, OOP, Python, REST APIs",,61
+DEMO-038,Cloud / DevOps Intern,Python Developer,False,3,3,4,0,4,0.0,4,0,0.0,69,0.0,"Git, OOP, Python, REST APIs",,62
+DEMO-039,QA Automation Engineer,Python Developer,False,3,0,4,0,4,0.0,4,0,0.0,76,0.0,"Git, OOP, Python, REST APIs",,63
+DEMO-040,UI/UX Designer,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,83,0.0,"Git, OOP, Python, REST APIs",,64
+DEMO-042,Full-Stack Developer,Python Developer,False,4,4,4,0,4,0.0,4,0,0.0,97,0.0,"Git, OOP, Python, REST APIs",,65
+DEMO-043,Data Analyst,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,67,0.0,"Git, OOP, Python, REST APIs",,66
+DEMO-045,Frontend Developer,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,81,0.0,"Git, OOP, Python, REST APIs",,67
+DEMO-046,Backend Developer,Python Developer,False,4,4,4,0,4,0.0,4,0,0.0,88,0.0,"Git, OOP, Python, REST APIs",,68
+DEMO-047,Cybersecurity Analyst,Python Developer,False,3,0,4,0,4,0.0,4,0,0.0,95,0.0,"Git, OOP, Python, REST APIs",,69
+DEMO-048,Cloud / DevOps Intern,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,65,0.0,"Git, OOP, Python, REST APIs",,70
+DEMO-049,QA Automation Engineer,Python Developer,False,3,0,4,0,4,0.0,4,0,0.0,72,0.0,"Git, OOP, Python, REST APIs",,71
+DEMO-050,UI/UX Designer,Python Developer,False,3,3,4,0,4,0.0,4,0,0.0,79,0.0,"Git, OOP, Python, REST APIs",,72
+DEMO-055,Frontend Developer,Python Developer,False,5,0,4,0,4,0.0,4,0,0.0,77,0.0,"Git, OOP, Python, REST APIs",,73
+DEMO-057,Cybersecurity Analyst,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,91,0.0,"Git, OOP, Python, REST APIs",,74
+DEMO-059,QA Automation Engineer,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,68,0.0,"Git, OOP, Python, REST APIs",,75
+DEMO-060,UI/UX Designer,Python Developer,False,5,0,4,0,4,0.0,4,0,0.0,75,0.0,"Git, OOP, Python, REST APIs",,76
+DEMO-065,Frontend Developer,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,73,0.0,"Git, OOP, Python, REST APIs",,77
+DEMO-067,Cybersecurity Analyst,Python Developer,False,3,0,4,0,4,0.0,4,0,0.0,87,0.0,"Git, OOP, Python, REST APIs",,78
+DEMO-070,UI/UX Designer,Python Developer,False,4,4,4,0,4,0.0,4,0,0.0,71,0.0,"Git, OOP, Python, REST APIs",,79
+DEMO-072,Full-Stack Developer,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,85,0.0,"Git, OOP, Python, REST APIs",,80
+DEMO-073,Data Analyst,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,92,0.0,"Git, OOP, Python, REST APIs",,81
+DEMO-074,Machine Learning Intern,Python Developer,False,4,4,4,0,4,0.0,4,0,0.0,62,0.0,"Git, OOP, Python, REST APIs",,82
+DEMO-075,Frontend Developer,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,69,0.0,"Git, OOP, Python, REST APIs",,83
+DEMO-077,Cybersecurity Analyst,Python Developer,False,3,0,4,0,4,0.0,4,0,0.0,83,0.0,"Git, OOP, Python, REST APIs",,84
+DEMO-078,Cloud / DevOps Intern,Python Developer,False,4,4,4,0,4,0.0,4,0,0.0,90,0.0,"Git, OOP, Python, REST APIs",,85
+DEMO-080,UI/UX Designer,Python Developer,False,3,0,4,0,4,0.0,4,0,0.0,67,0.0,"Git, OOP, Python, REST APIs",,86
+DEMO-082,Full-Stack Developer,Python Developer,False,4,4,4,0,4,0.0,4,0,0.0,81,0.0,"Git, OOP, Python, REST APIs",,87
+DEMO-084,Machine Learning Intern,Python Developer,False,3,0,4,0,4,0.0,4,0,0.0,95,0.0,"Git, OOP, Python, REST APIs",,88
+DEMO-087,Cybersecurity Analyst,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,79,0.0,"Git, OOP, Python, REST APIs",,89
+DEMO-088,Cloud / DevOps Intern,Python Developer,False,3,0,4,0,4,0.0,4,0,0.0,86,0.0,"Git, OOP, Python, REST APIs",,90
+DEMO-089,QA Automation Engineer,Python Developer,False,3,0,4,0,4,0.0,4,0,0.0,93,0.0,"Git, OOP, Python, REST APIs",,91
+DEMO-090,UI/UX Designer,Python Developer,False,4,4,4,0,4,0.0,4,0,0.0,63,0.0,"Git, OOP, Python, REST APIs",,92
+DEMO-092,Full-Stack Developer,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,77,0.0,"Git, OOP, Python, REST APIs",,93
+DEMO-093,Data Analyst,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,84,0.0,"Git, OOP, Python, REST APIs",,94
+DEMO-095,Frontend Developer,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,98,0.0,"Git, OOP, Python, REST APIs",,95
+DEMO-096,Backend Developer,Python Developer,False,4,0,4,0,4,0.0,4,0,0.0,68,0.0,"Git, OOP, Python, REST APIs",,96
+DEMO-097,Cybersecurity Analyst,Python Developer,False,3,0,4,0,4,0.0,4,0,0.0,75,0.0,"Git, OOP, Python, REST APIs",,97
+DEMO-098,Cloud / DevOps Intern,Python Developer,False,4,4,4,0,4,0.0,4,0,0.0,82,0.0,"Git, OOP, Python, REST APIs",,98
+DEMO-099,QA Automation Engineer,Python Developer,False,3,0,4,0,4,0.0,4,0,0.0,89,0.0,"Git, OOP, Python, REST APIs",,99
+DEMO-100,UI/UX Designer,Python Developer,False,3,0,4,0,4,0.0,4,0,0.0,96,0.0,"Git, OOP, Python, REST APIs",,100
+DEMO-001,Python Developer,QA Automation Engineer,False,5,0,4,1,3,0.25,4,2,0.5,69,30.0,"API testing, Selenium basics, Test automation",Python,1
+DEMO-051,Python Developer,QA Automation Engineer,False,5,0,4,1,3,0.25,4,2,0.5,86,30.0,"API testing, Selenium basics, Test automation",Python,2
+DEMO-019,QA Automation Engineer,QA Automation Engineer,True,4,0,4,1,3,0.25,4,1,0.25,84,25.0,"API testing, Selenium basics, Test automation",Python,3
+DEMO-069,QA Automation Engineer,QA Automation Engineer,True,4,0,4,1,3,0.25,4,1,0.25,64,25.0,"API testing, Selenium basics, Test automation",Python,4
+DEMO-003,Data Analyst,QA Automation Engineer,False,5,0,4,1,3,0.25,4,0,0.0,83,20.0,"API testing, Selenium basics, Test automation",Python,5
+DEMO-004,Machine Learning Intern,QA Automation Engineer,False,5,0,4,1,3,0.25,4,0,0.0,90,20.0,"API testing, Selenium basics, Test automation",Python,6
+DEMO-009,QA Automation Engineer,QA Automation Engineer,True,4,0,4,1,3,0.25,4,0,0.0,88,20.0,"Python, Selenium basics, Test automation",API testing,7
+DEMO-011,Python Developer,QA Automation Engineer,False,5,0,4,1,3,0.25,4,0,0.0,65,20.0,"API testing, Selenium basics, Test automation",Python,8
+DEMO-013,Data Analyst,QA Automation Engineer,False,4,0,4,1,3,0.25,4,0,0.0,79,20.0,"API testing, Selenium basics, Test automation",Python,9
+DEMO-014,Machine Learning Intern,QA Automation Engineer,False,4,4,4,1,3,0.25,4,0,0.0,86,20.0,"API testing, Selenium basics, Test automation",Python,10
+DEMO-018,Cloud / DevOps Intern,QA Automation Engineer,False,4,4,4,1,3,0.25,4,0,0.0,77,20.0,"API testing, Selenium basics, Test automation",Python,11
+DEMO-021,Python Developer,QA Automation Engineer,False,5,0,4,1,3,0.25,4,0,0.0,98,20.0,"API testing, Selenium basics, Test automation",Python,12
+DEMO-026,Backend Developer,QA Automation Engineer,False,4,4,4,1,3,0.25,4,0,0.0,96,20.0,"API testing, Selenium basics, Test automation",Python,13
+DEMO-031,Python Developer,QA Automation Engineer,False,4,0,4,1,3,0.25,4,0,0.0,94,20.0,"API testing, Selenium basics, Test automation",Python,14
+DEMO-041,Python Developer,QA Automation Engineer,False,4,0,4,1,3,0.25,4,0,0.0,90,20.0,"API testing, Selenium basics, Test automation",Python,15
+DEMO-044,Machine Learning Intern,QA Automation Engineer,False,3,0,4,1,3,0.25,4,0,0.0,74,20.0,"API testing, Selenium basics, Test automation",Python,16
+DEMO-053,Data Analyst,QA Automation Engineer,False,5,0,4,1,3,0.25,4,0,0.0,63,20.0,"API testing, Selenium basics, Test automation",Python,17
+DEMO-054,Machine Learning Intern,QA Automation Engineer,False,5,5,4,1,3,0.25,4,0,0.0,70,20.0,"API testing, Selenium basics, Test automation",Python,18
+DEMO-059,QA Automation Engineer,QA Automation Engineer,True,4,0,4,1,3,0.25,4,0,0.0,68,20.0,"Python, Selenium basics, Test automation",API testing,19
+DEMO-061,Python Developer,QA Automation Engineer,False,5,0,4,1,3,0.25,4,0,0.0,82,20.0,"API testing, Selenium basics, Test automation",Python,20
+DEMO-063,Data Analyst,QA Automation Engineer,False,4,0,4,1,3,0.25,4,0,0.0,96,20.0,"API testing, Selenium basics, Test automation",Python,21
+DEMO-064,Machine Learning Intern,QA Automation Engineer,False,4,0,4,1,3,0.25,4,0,0.0,66,20.0,"API testing, Selenium basics, Test automation",Python,22
+DEMO-068,Cloud / DevOps Intern,QA Automation Engineer,False,4,0,4,1,3,0.25,4,0,0.0,94,20.0,"API testing, Selenium basics, Test automation",Python,23
+DEMO-071,Python Developer,QA Automation Engineer,False,5,0,4,1,3,0.25,4,0,0.0,78,20.0,"API testing, Selenium basics, Test automation",Python,24
+DEMO-076,Backend Developer,QA Automation Engineer,False,4,0,4,1,3,0.25,4,0,0.0,76,20.0,"API testing, Selenium basics, Test automation",Python,25
+DEMO-081,Python Developer,QA Automation Engineer,False,4,0,4,1,3,0.25,4,0,0.0,74,20.0,"API testing, Selenium basics, Test automation",Python,26
+DEMO-091,Python Developer,QA Automation Engineer,False,4,0,4,1,3,0.25,4,0,0.0,70,20.0,"API testing, Selenium basics, Test automation",Python,27
+DEMO-094,Machine Learning Intern,QA Automation Engineer,False,3,3,4,1,3,0.25,4,0,0.0,91,20.0,"API testing, Selenium basics, Test automation",Python,28
+DEMO-006,Backend Developer,QA Automation Engineer,False,5,5,4,0,4,0.0,4,1,0.25,67,5.0,"API testing, Python, Selenium basics, Test automation",,29
+DEMO-008,Cloud / DevOps Intern,QA Automation Engineer,False,5,0,4,0,4,0.0,4,1,0.25,81,5.0,"API testing, Python, Selenium basics, Test automation",,30
+DEMO-012,Full-Stack Developer,QA Automation Engineer,False,5,0,4,0,4,0.0,4,1,0.25,72,5.0,"API testing, Python, Selenium basics, Test automation",,31
+DEMO-056,Backend Developer,QA Automation Engineer,False,5,0,4,0,4,0.0,4,1,0.25,84,5.0,"API testing, Python, Selenium basics, Test automation",,32
+DEMO-058,Cloud / DevOps Intern,QA Automation Engineer,False,5,5,4,0,4,0.0,4,1,0.25,98,5.0,"API testing, Python, Selenium basics, Test automation",,33
+DEMO-062,Full-Stack Developer,QA Automation Engineer,False,5,5,4,0,4,0.0,4,1,0.25,89,5.0,"API testing, Python, Selenium basics, Test automation",,34
+DEMO-002,Full-Stack Developer,QA Automation Engineer,False,5,5,4,0,4,0.0,4,0,0.0,76,0.0,"API testing, Python, Selenium basics, Test automation",,35
+DEMO-005,Frontend Developer,QA Automation Engineer,False,5,0,4,0,4,0.0,4,0,0.0,97,0.0,"API testing, Python, Selenium basics, Test automation",,36
+DEMO-007,Cybersecurity Analyst,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,74,0.0,"API testing, Python, Selenium basics, Test automation",,37
+DEMO-010,UI/UX Designer,QA Automation Engineer,False,5,5,4,0,4,0.0,4,0,0.0,95,0.0,"API testing, Python, Selenium basics, Test automation",,38
+DEMO-015,Frontend Developer,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,93,0.0,"API testing, Python, Selenium basics, Test automation",,39
+DEMO-016,Backend Developer,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,63,0.0,"API testing, Python, Selenium basics, Test automation",,40
+DEMO-017,Cybersecurity Analyst,QA Automation Engineer,False,3,0,4,0,4,0.0,4,0,0.0,70,0.0,"API testing, Python, Selenium basics, Test automation",,41
+DEMO-020,UI/UX Designer,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,91,0.0,"API testing, Python, Selenium basics, Test automation",,42
+DEMO-022,Full-Stack Developer,QA Automation Engineer,False,4,4,4,0,4,0.0,4,0,0.0,68,0.0,"API testing, Python, Selenium basics, Test automation",,43
+DEMO-023,Data Analyst,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,75,0.0,"API testing, Python, Selenium basics, Test automation",,44
+DEMO-024,Machine Learning Intern,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,82,0.0,"API testing, Python, Selenium basics, Test automation",,45
+DEMO-025,Frontend Developer,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,89,0.0,"API testing, Python, Selenium basics, Test automation",,46
+DEMO-027,Cybersecurity Analyst,QA Automation Engineer,False,3,0,4,0,4,0.0,4,0,0.0,66,0.0,"API testing, Python, Selenium basics, Test automation",,47
+DEMO-028,Cloud / DevOps Intern,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,73,0.0,"API testing, Python, Selenium basics, Test automation",,48
+DEMO-029,QA Automation Engineer,QA Automation Engineer,True,4,0,4,0,4,0.0,4,0,0.0,80,0.0,"API testing, Python, Selenium basics, Test automation",,49
+DEMO-030,UI/UX Designer,QA Automation Engineer,False,3,3,4,0,4,0.0,4,0,0.0,87,0.0,"API testing, Python, Selenium basics, Test automation",,50
+DEMO-032,Full-Stack Developer,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,64,0.0,"API testing, Python, Selenium basics, Test automation",,51
+DEMO-033,Data Analyst,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,71,0.0,"API testing, Python, Selenium basics, Test automation",,52
+DEMO-034,Machine Learning Intern,QA Automation Engineer,False,3,3,4,0,4,0.0,4,0,0.0,78,0.0,"API testing, Python, Selenium basics, Test automation",,53
+DEMO-035,Frontend Developer,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,85,0.0,"API testing, Python, Selenium basics, Test automation",,54
+DEMO-036,Backend Developer,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,92,0.0,"API testing, Python, Selenium basics, Test automation",,55
+DEMO-037,Cybersecurity Analyst,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,62,0.0,"API testing, Python, Selenium basics, Test automation",,56
+DEMO-038,Cloud / DevOps Intern,QA Automation Engineer,False,3,3,4,0,4,0.0,4,0,0.0,69,0.0,"API testing, Python, Selenium basics, Test automation",,57
+DEMO-039,QA Automation Engineer,QA Automation Engineer,True,3,0,4,0,4,0.0,4,0,0.0,76,0.0,"API testing, Python, Selenium basics, Test automation",,58
+DEMO-040,UI/UX Designer,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,83,0.0,"API testing, Python, Selenium basics, Test automation",,59
+DEMO-042,Full-Stack Developer,QA Automation Engineer,False,4,4,4,0,4,0.0,4,0,0.0,97,0.0,"API testing, Python, Selenium basics, Test automation",,60
+DEMO-043,Data Analyst,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,67,0.0,"API testing, Python, Selenium basics, Test automation",,61
+DEMO-045,Frontend Developer,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,81,0.0,"API testing, Python, Selenium basics, Test automation",,62
+DEMO-046,Backend Developer,QA Automation Engineer,False,4,4,4,0,4,0.0,4,0,0.0,88,0.0,"API testing, Python, Selenium basics, Test automation",,63
+DEMO-047,Cybersecurity Analyst,QA Automation Engineer,False,3,0,4,0,4,0.0,4,0,0.0,95,0.0,"API testing, Python, Selenium basics, Test automation",,64
+DEMO-048,Cloud / DevOps Intern,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,65,0.0,"API testing, Python, Selenium basics, Test automation",,65
+DEMO-049,QA Automation Engineer,QA Automation Engineer,True,3,0,4,0,4,0.0,4,0,0.0,72,0.0,"API testing, Python, Selenium basics, Test automation",,66
+DEMO-050,UI/UX Designer,QA Automation Engineer,False,3,3,4,0,4,0.0,4,0,0.0,79,0.0,"API testing, Python, Selenium basics, Test automation",,67
+DEMO-052,Full-Stack Developer,QA Automation Engineer,False,5,0,4,0,4,0.0,4,0,0.0,93,0.0,"API testing, Python, Selenium basics, Test automation",,68
+DEMO-055,Frontend Developer,QA Automation Engineer,False,5,0,4,0,4,0.0,4,0,0.0,77,0.0,"API testing, Python, Selenium basics, Test automation",,69
+DEMO-057,Cybersecurity Analyst,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,91,0.0,"API testing, Python, Selenium basics, Test automation",,70
+DEMO-060,UI/UX Designer,QA Automation Engineer,False,5,0,4,0,4,0.0,4,0,0.0,75,0.0,"API testing, Python, Selenium basics, Test automation",,71
+DEMO-065,Frontend Developer,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,73,0.0,"API testing, Python, Selenium basics, Test automation",,72
+DEMO-066,Backend Developer,QA Automation Engineer,False,4,4,4,0,4,0.0,4,0,0.0,80,0.0,"API testing, Python, Selenium basics, Test automation",,73
+DEMO-067,Cybersecurity Analyst,QA Automation Engineer,False,3,0,4,0,4,0.0,4,0,0.0,87,0.0,"API testing, Python, Selenium basics, Test automation",,74
+DEMO-070,UI/UX Designer,QA Automation Engineer,False,4,4,4,0,4,0.0,4,0,0.0,71,0.0,"API testing, Python, Selenium basics, Test automation",,75
+DEMO-072,Full-Stack Developer,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,85,0.0,"API testing, Python, Selenium basics, Test automation",,76
+DEMO-073,Data Analyst,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,92,0.0,"API testing, Python, Selenium basics, Test automation",,77
+DEMO-074,Machine Learning Intern,QA Automation Engineer,False,4,4,4,0,4,0.0,4,0,0.0,62,0.0,"API testing, Python, Selenium basics, Test automation",,78
+DEMO-075,Frontend Developer,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,69,0.0,"API testing, Python, Selenium basics, Test automation",,79
+DEMO-077,Cybersecurity Analyst,QA Automation Engineer,False,3,0,4,0,4,0.0,4,0,0.0,83,0.0,"API testing, Python, Selenium basics, Test automation",,80
+DEMO-078,Cloud / DevOps Intern,QA Automation Engineer,False,4,4,4,0,4,0.0,4,0,0.0,90,0.0,"API testing, Python, Selenium basics, Test automation",,81
+DEMO-079,QA Automation Engineer,QA Automation Engineer,True,4,0,4,0,4,0.0,4,0,0.0,97,0.0,"API testing, Python, Selenium basics, Test automation",,82
+DEMO-080,UI/UX Designer,QA Automation Engineer,False,3,0,4,0,4,0.0,4,0,0.0,67,0.0,"API testing, Python, Selenium basics, Test automation",,83
+DEMO-082,Full-Stack Developer,QA Automation Engineer,False,4,4,4,0,4,0.0,4,0,0.0,81,0.0,"API testing, Python, Selenium basics, Test automation",,84
+DEMO-083,Data Analyst,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,88,0.0,"API testing, Python, Selenium basics, Test automation",,85
+DEMO-084,Machine Learning Intern,QA Automation Engineer,False,3,0,4,0,4,0.0,4,0,0.0,95,0.0,"API testing, Python, Selenium basics, Test automation",,86
+DEMO-085,Frontend Developer,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,65,0.0,"API testing, Python, Selenium basics, Test automation",,87
+DEMO-086,Backend Developer,QA Automation Engineer,False,4,4,4,0,4,0.0,4,0,0.0,72,0.0,"API testing, Python, Selenium basics, Test automation",,88
+DEMO-087,Cybersecurity Analyst,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,79,0.0,"API testing, Python, Selenium basics, Test automation",,89
+DEMO-088,Cloud / DevOps Intern,QA Automation Engineer,False,3,0,4,0,4,0.0,4,0,0.0,86,0.0,"API testing, Python, Selenium basics, Test automation",,90
+DEMO-089,QA Automation Engineer,QA Automation Engineer,True,3,0,4,0,4,0.0,4,0,0.0,93,0.0,"API testing, Python, Selenium basics, Test automation",,91
+DEMO-090,UI/UX Designer,QA Automation Engineer,False,4,4,4,0,4,0.0,4,0,0.0,63,0.0,"API testing, Python, Selenium basics, Test automation",,92
+DEMO-092,Full-Stack Developer,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,77,0.0,"API testing, Python, Selenium basics, Test automation",,93
+DEMO-093,Data Analyst,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,84,0.0,"API testing, Python, Selenium basics, Test automation",,94
+DEMO-095,Frontend Developer,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,98,0.0,"API testing, Python, Selenium basics, Test automation",,95
+DEMO-096,Backend Developer,QA Automation Engineer,False,4,0,4,0,4,0.0,4,0,0.0,68,0.0,"API testing, Python, Selenium basics, Test automation",,96
+DEMO-097,Cybersecurity Analyst,QA Automation Engineer,False,3,0,4,0,4,0.0,4,0,0.0,75,0.0,"API testing, Python, Selenium basics, Test automation",,97
+DEMO-098,Cloud / DevOps Intern,QA Automation Engineer,False,4,4,4,0,4,0.0,4,0,0.0,82,0.0,"API testing, Python, Selenium basics, Test automation",,98
+DEMO-099,QA Automation Engineer,QA Automation Engineer,True,3,0,4,0,4,0.0,4,0,0.0,89,0.0,"API testing, Python, Selenium basics, Test automation",,99
+DEMO-100,UI/UX Designer,QA Automation Engineer,False,3,0,4,0,4,0.0,4,0,0.0,96,0.0,"API testing, Python, Selenium basics, Test automation",,100
+DEMO-010,UI/UX Designer,UI/UX Designer,True,5,5,4,1,3,0.25,4,0,0.0,95,20.0,"Design systems, Interaction design, User research",Figma,1
+DEMO-020,UI/UX Designer,UI/UX Designer,True,4,0,4,1,3,0.25,4,0,0.0,91,20.0,"Figma, Interaction design, User research",Design systems,2
+DEMO-030,UI/UX Designer,UI/UX Designer,True,3,3,4,1,3,0.25,4,0,0.0,87,20.0,"Design systems, Figma, User research",Interaction design,3
+DEMO-040,UI/UX Designer,UI/UX Designer,True,4,0,4,1,3,0.25,4,0,0.0,83,20.0,"Design systems, Figma, Interaction design",User research,4
+DEMO-060,UI/UX Designer,UI/UX Designer,True,5,0,4,1,3,0.25,4,0,0.0,75,20.0,"Design systems, Interaction design, User research",Figma,5
+DEMO-070,UI/UX Designer,UI/UX Designer,True,4,4,4,1,3,0.25,4,0,0.0,71,20.0,"Figma, Interaction design, User research",Design systems,6
+DEMO-080,UI/UX Designer,UI/UX Designer,True,3,0,4,1,3,0.25,4,0,0.0,67,20.0,"Design systems, Figma, User research",Interaction design,7
+DEMO-090,UI/UX Designer,UI/UX Designer,True,4,4,4,1,3,0.25,4,0,0.0,63,20.0,"Design systems, Figma, Interaction design",User research,8
+DEMO-005,Frontend Developer,UI/UX Designer,False,5,0,4,0,4,0.0,4,1,0.25,97,5.0,"Design systems, Figma, Interaction design, User research",,9
+DEMO-012,Full-Stack Developer,UI/UX Designer,False,5,0,4,0,4,0.0,4,1,0.25,72,5.0,"Design systems, Figma, Interaction design, User research",,10
+DEMO-042,Full-Stack Developer,UI/UX Designer,False,4,4,4,0,4,0.0,4,1,0.25,97,5.0,"Design systems, Figma, Interaction design, User research",,11
+DEMO-045,Frontend Developer,UI/UX Designer,False,4,0,4,0,4,0.0,4,1,0.25,81,5.0,"Design systems, Figma, Interaction design, User research",,12
+DEMO-055,Frontend Developer,UI/UX Designer,False,5,0,4,0,4,0.0,4,1,0.25,77,5.0,"Design systems, Figma, Interaction design, User research",,13
+DEMO-062,Full-Stack Developer,UI/UX Designer,False,5,5,4,0,4,0.0,4,1,0.25,89,5.0,"Design systems, Figma, Interaction design, User research",,14
+DEMO-092,Full-Stack Developer,UI/UX Designer,False,4,0,4,0,4,0.0,4,1,0.25,77,5.0,"Design systems, Figma, Interaction design, User research",,15
+DEMO-095,Frontend Developer,UI/UX Designer,False,4,0,4,0,4,0.0,4,1,0.25,98,5.0,"Design systems, Figma, Interaction design, User research",,16
+DEMO-001,Python Developer,UI/UX Designer,False,5,0,4,0,4,0.0,4,0,0.0,69,0.0,"Design systems, Figma, Interaction design, User research",,17
+DEMO-002,Full-Stack Developer,UI/UX Designer,False,5,5,4,0,4,0.0,4,0,0.0,76,0.0,"Design systems, Figma, Interaction design, User research",,18
+DEMO-003,Data Analyst,UI/UX Designer,False,5,0,4,0,4,0.0,4,0,0.0,83,0.0,"Design systems, Figma, Interaction design, User research",,19
+DEMO-004,Machine Learning Intern,UI/UX Designer,False,5,0,4,0,4,0.0,4,0,0.0,90,0.0,"Design systems, Figma, Interaction design, User research",,20
+DEMO-006,Backend Developer,UI/UX Designer,False,5,5,4,0,4,0.0,4,0,0.0,67,0.0,"Design systems, Figma, Interaction design, User research",,21
+DEMO-007,Cybersecurity Analyst,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,74,0.0,"Design systems, Figma, Interaction design, User research",,22
+DEMO-008,Cloud / DevOps Intern,UI/UX Designer,False,5,0,4,0,4,0.0,4,0,0.0,81,0.0,"Design systems, Figma, Interaction design, User research",,23
+DEMO-009,QA Automation Engineer,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,88,0.0,"Design systems, Figma, Interaction design, User research",,24
+DEMO-011,Python Developer,UI/UX Designer,False,5,0,4,0,4,0.0,4,0,0.0,65,0.0,"Design systems, Figma, Interaction design, User research",,25
+DEMO-013,Data Analyst,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,79,0.0,"Design systems, Figma, Interaction design, User research",,26
+DEMO-014,Machine Learning Intern,UI/UX Designer,False,4,4,4,0,4,0.0,4,0,0.0,86,0.0,"Design systems, Figma, Interaction design, User research",,27
+DEMO-015,Frontend Developer,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,93,0.0,"Design systems, Figma, Interaction design, User research",,28
+DEMO-016,Backend Developer,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,63,0.0,"Design systems, Figma, Interaction design, User research",,29
+DEMO-017,Cybersecurity Analyst,UI/UX Designer,False,3,0,4,0,4,0.0,4,0,0.0,70,0.0,"Design systems, Figma, Interaction design, User research",,30
+DEMO-018,Cloud / DevOps Intern,UI/UX Designer,False,4,4,4,0,4,0.0,4,0,0.0,77,0.0,"Design systems, Figma, Interaction design, User research",,31
+DEMO-019,QA Automation Engineer,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,84,0.0,"Design systems, Figma, Interaction design, User research",,32
+DEMO-021,Python Developer,UI/UX Designer,False,5,0,4,0,4,0.0,4,0,0.0,98,0.0,"Design systems, Figma, Interaction design, User research",,33
+DEMO-022,Full-Stack Developer,UI/UX Designer,False,4,4,4,0,4,0.0,4,0,0.0,68,0.0,"Design systems, Figma, Interaction design, User research",,34
+DEMO-023,Data Analyst,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,75,0.0,"Design systems, Figma, Interaction design, User research",,35
+DEMO-024,Machine Learning Intern,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,82,0.0,"Design systems, Figma, Interaction design, User research",,36
+DEMO-025,Frontend Developer,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,89,0.0,"Design systems, Figma, Interaction design, User research",,37
+DEMO-026,Backend Developer,UI/UX Designer,False,4,4,4,0,4,0.0,4,0,0.0,96,0.0,"Design systems, Figma, Interaction design, User research",,38
+DEMO-027,Cybersecurity Analyst,UI/UX Designer,False,3,0,4,0,4,0.0,4,0,0.0,66,0.0,"Design systems, Figma, Interaction design, User research",,39
+DEMO-028,Cloud / DevOps Intern,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,73,0.0,"Design systems, Figma, Interaction design, User research",,40
+DEMO-029,QA Automation Engineer,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,80,0.0,"Design systems, Figma, Interaction design, User research",,41
+DEMO-031,Python Developer,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,94,0.0,"Design systems, Figma, Interaction design, User research",,42
+DEMO-032,Full-Stack Developer,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,64,0.0,"Design systems, Figma, Interaction design, User research",,43
+DEMO-033,Data Analyst,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,71,0.0,"Design systems, Figma, Interaction design, User research",,44
+DEMO-034,Machine Learning Intern,UI/UX Designer,False,3,3,4,0,4,0.0,4,0,0.0,78,0.0,"Design systems, Figma, Interaction design, User research",,45
+DEMO-035,Frontend Developer,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,85,0.0,"Design systems, Figma, Interaction design, User research",,46
+DEMO-036,Backend Developer,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,92,0.0,"Design systems, Figma, Interaction design, User research",,47
+DEMO-037,Cybersecurity Analyst,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,62,0.0,"Design systems, Figma, Interaction design, User research",,48
+DEMO-038,Cloud / DevOps Intern,UI/UX Designer,False,3,3,4,0,4,0.0,4,0,0.0,69,0.0,"Design systems, Figma, Interaction design, User research",,49
+DEMO-039,QA Automation Engineer,UI/UX Designer,False,3,0,4,0,4,0.0,4,0,0.0,76,0.0,"Design systems, Figma, Interaction design, User research",,50
+DEMO-041,Python Developer,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,90,0.0,"Design systems, Figma, Interaction design, User research",,51
+DEMO-043,Data Analyst,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,67,0.0,"Design systems, Figma, Interaction design, User research",,52
+DEMO-044,Machine Learning Intern,UI/UX Designer,False,3,0,4,0,4,0.0,4,0,0.0,74,0.0,"Design systems, Figma, Interaction design, User research",,53
+DEMO-046,Backend Developer,UI/UX Designer,False,4,4,4,0,4,0.0,4,0,0.0,88,0.0,"Design systems, Figma, Interaction design, User research",,54
+DEMO-047,Cybersecurity Analyst,UI/UX Designer,False,3,0,4,0,4,0.0,4,0,0.0,95,0.0,"Design systems, Figma, Interaction design, User research",,55
+DEMO-048,Cloud / DevOps Intern,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,65,0.0,"Design systems, Figma, Interaction design, User research",,56
+DEMO-049,QA Automation Engineer,UI/UX Designer,False,3,0,4,0,4,0.0,4,0,0.0,72,0.0,"Design systems, Figma, Interaction design, User research",,57
+DEMO-050,UI/UX Designer,UI/UX Designer,True,3,3,4,0,4,0.0,4,0,0.0,79,0.0,"Design systems, Figma, Interaction design, User research",,58
+DEMO-051,Python Developer,UI/UX Designer,False,5,0,4,0,4,0.0,4,0,0.0,86,0.0,"Design systems, Figma, Interaction design, User research",,59
+DEMO-052,Full-Stack Developer,UI/UX Designer,False,5,0,4,0,4,0.0,4,0,0.0,93,0.0,"Design systems, Figma, Interaction design, User research",,60
+DEMO-053,Data Analyst,UI/UX Designer,False,5,0,4,0,4,0.0,4,0,0.0,63,0.0,"Design systems, Figma, Interaction design, User research",,61
+DEMO-054,Machine Learning Intern,UI/UX Designer,False,5,5,4,0,4,0.0,4,0,0.0,70,0.0,"Design systems, Figma, Interaction design, User research",,62
+DEMO-056,Backend Developer,UI/UX Designer,False,5,0,4,0,4,0.0,4,0,0.0,84,0.0,"Design systems, Figma, Interaction design, User research",,63
+DEMO-057,Cybersecurity Analyst,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,91,0.0,"Design systems, Figma, Interaction design, User research",,64
+DEMO-058,Cloud / DevOps Intern,UI/UX Designer,False,5,5,4,0,4,0.0,4,0,0.0,98,0.0,"Design systems, Figma, Interaction design, User research",,65
+DEMO-059,QA Automation Engineer,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,68,0.0,"Design systems, Figma, Interaction design, User research",,66
+DEMO-061,Python Developer,UI/UX Designer,False,5,0,4,0,4,0.0,4,0,0.0,82,0.0,"Design systems, Figma, Interaction design, User research",,67
+DEMO-063,Data Analyst,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,96,0.0,"Design systems, Figma, Interaction design, User research",,68
+DEMO-064,Machine Learning Intern,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,66,0.0,"Design systems, Figma, Interaction design, User research",,69
+DEMO-065,Frontend Developer,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,73,0.0,"Design systems, Figma, Interaction design, User research",,70
+DEMO-066,Backend Developer,UI/UX Designer,False,4,4,4,0,4,0.0,4,0,0.0,80,0.0,"Design systems, Figma, Interaction design, User research",,71
+DEMO-067,Cybersecurity Analyst,UI/UX Designer,False,3,0,4,0,4,0.0,4,0,0.0,87,0.0,"Design systems, Figma, Interaction design, User research",,72
+DEMO-068,Cloud / DevOps Intern,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,94,0.0,"Design systems, Figma, Interaction design, User research",,73
+DEMO-069,QA Automation Engineer,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,64,0.0,"Design systems, Figma, Interaction design, User research",,74
+DEMO-071,Python Developer,UI/UX Designer,False,5,0,4,0,4,0.0,4,0,0.0,78,0.0,"Design systems, Figma, Interaction design, User research",,75
+DEMO-072,Full-Stack Developer,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,85,0.0,"Design systems, Figma, Interaction design, User research",,76
+DEMO-073,Data Analyst,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,92,0.0,"Design systems, Figma, Interaction design, User research",,77
+DEMO-074,Machine Learning Intern,UI/UX Designer,False,4,4,4,0,4,0.0,4,0,0.0,62,0.0,"Design systems, Figma, Interaction design, User research",,78
+DEMO-075,Frontend Developer,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,69,0.0,"Design systems, Figma, Interaction design, User research",,79
+DEMO-076,Backend Developer,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,76,0.0,"Design systems, Figma, Interaction design, User research",,80
+DEMO-077,Cybersecurity Analyst,UI/UX Designer,False,3,0,4,0,4,0.0,4,0,0.0,83,0.0,"Design systems, Figma, Interaction design, User research",,81
+DEMO-078,Cloud / DevOps Intern,UI/UX Designer,False,4,4,4,0,4,0.0,4,0,0.0,90,0.0,"Design systems, Figma, Interaction design, User research",,82
+DEMO-079,QA Automation Engineer,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,97,0.0,"Design systems, Figma, Interaction design, User research",,83
+DEMO-081,Python Developer,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,74,0.0,"Design systems, Figma, Interaction design, User research",,84
+DEMO-082,Full-Stack Developer,UI/UX Designer,False,4,4,4,0,4,0.0,4,0,0.0,81,0.0,"Design systems, Figma, Interaction design, User research",,85
+DEMO-083,Data Analyst,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,88,0.0,"Design systems, Figma, Interaction design, User research",,86
+DEMO-084,Machine Learning Intern,UI/UX Designer,False,3,0,4,0,4,0.0,4,0,0.0,95,0.0,"Design systems, Figma, Interaction design, User research",,87
+DEMO-085,Frontend Developer,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,65,0.0,"Design systems, Figma, Interaction design, User research",,88
+DEMO-086,Backend Developer,UI/UX Designer,False,4,4,4,0,4,0.0,4,0,0.0,72,0.0,"Design systems, Figma, Interaction design, User research",,89
+DEMO-087,Cybersecurity Analyst,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,79,0.0,"Design systems, Figma, Interaction design, User research",,90
+DEMO-088,Cloud / DevOps Intern,UI/UX Designer,False,3,0,4,0,4,0.0,4,0,0.0,86,0.0,"Design systems, Figma, Interaction design, User research",,91
+DEMO-089,QA Automation Engineer,UI/UX Designer,False,3,0,4,0,4,0.0,4,0,0.0,93,0.0,"Design systems, Figma, Interaction design, User research",,92
+DEMO-091,Python Developer,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,70,0.0,"Design systems, Figma, Interaction design, User research",,93
+DEMO-093,Data Analyst,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,84,0.0,"Design systems, Figma, Interaction design, User research",,94
+DEMO-094,Machine Learning Intern,UI/UX Designer,False,3,3,4,0,4,0.0,4,0,0.0,91,0.0,"Design systems, Figma, Interaction design, User research",,95
+DEMO-096,Backend Developer,UI/UX Designer,False,4,0,4,0,4,0.0,4,0,0.0,68,0.0,"Design systems, Figma, Interaction design, User research",,96
+DEMO-097,Cybersecurity Analyst,UI/UX Designer,False,3,0,4,0,4,0.0,4,0,0.0,75,0.0,"Design systems, Figma, Interaction design, User research",,97
+DEMO-098,Cloud / DevOps Intern,UI/UX Designer,False,4,4,4,0,4,0.0,4,0,0.0,82,0.0,"Design systems, Figma, Interaction design, User research",,98
+DEMO-099,QA Automation Engineer,UI/UX Designer,False,3,0,4,0,4,0.0,4,0,0.0,89,0.0,"Design systems, Figma, Interaction design, User research",,99
+DEMO-100,UI/UX Designer,UI/UX Designer,True,3,0,4,0,4,0.0,4,0,0.0,96,0.0,"Design systems, Figma, Interaction design, User research",,100

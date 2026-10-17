@@ -1,0 +1,101 @@
+student_id,certification_name,context,relevant_skill,score_or_result,date,source,verification_status
+DEMO-001,Python Programming Foundations,Foundations Course (sample),,,,self_reported,unverified
+DEMO-002,Full,Stack Web Development Basics — Project-Based Learning Module (sample),,,,self_reported,unverified
+DEMO-003,SQL Fundamentals,Skills Lab Completion (sample),,,,self_reported,unverified
+DEMO-004,Machine Learning Foundations,Online Learning Track (sample),,,,self_reported,unverified
+DEMO-005,Responsive Web Design,Applied Practice Workshop (sample),,,,self_reported,unverified
+DEMO-006,Backend Development Foundations,Foundations Course (sample),,,,self_reported,unverified
+DEMO-007,Cybersecurity Foundations,Project-Based Learning Module (sample),,,,self_reported,unverified
+DEMO-008,Cloud Computing Foundations,Skills Lab Completion (sample),,,,self_reported,unverified
+DEMO-009,Software Testing Foundations,Online Learning Track (sample),,,,self_reported,unverified
+DEMO-010,UX Design Foundations,Applied Practice Workshop (sample),,,,self_reported,unverified
+DEMO-011,REST API Basics,Project-Based Learning Module (sample),,,,self_reported,unverified
+DEMO-012,Responsive Web Design,Skills Lab Completion (sample),,,,self_reported,unverified
+DEMO-013,Data Analysis with Python,Online Learning Track (sample),,,,self_reported,unverified
+DEMO-014,Python for Data Science,Applied Practice Workshop (sample),,,,self_reported,unverified
+DEMO-015,JavaScript Essentials,Foundations Course (sample),,,,self_reported,unverified
+DEMO-016,SQL Database Design,Project-Based Learning Module (sample),,,,self_reported,unverified
+DEMO-017,Networking Essentials,Skills Lab Completion (sample),,,,self_reported,unverified
+DEMO-018,Linux Essentials,Online Learning Track (sample),,,,self_reported,unverified
+DEMO-019,API Testing Basics,Applied Practice Workshop (sample),,,,self_reported,unverified
+DEMO-020,Figma Prototyping Basics,Foundations Course (sample),,,,self_reported,unverified
+DEMO-021,Git and Version Control,Skills Lab Completion (sample),,,,self_reported,unverified
+DEMO-022,REST API Development,Online Learning Track (sample),,,,self_reported,unverified
+DEMO-023,Spreadsheet Analytics,Applied Practice Workshop (sample),,,,self_reported,unverified
+DEMO-024,Model Evaluation Basics,Foundations Course (sample),,,,self_reported,unverified
+DEMO-025,React Fundamentals,Project-Based Learning Module (sample),,,,self_reported,unverified
+DEMO-026,API Security Basics,Skills Lab Completion (sample),,,,self_reported,unverified
+DEMO-027,Linux Command Line Basics,Online Learning Track (sample),,,,self_reported,unverified
+DEMO-028,Docker Fundamentals,Applied Practice Workshop (sample),,,,self_reported,unverified
+DEMO-029,Python Test Automation,Foundations Course (sample),,,,self_reported,unverified
+DEMO-030,Accessibility in Product Design,Project-Based Learning Module (sample),,,,self_reported,unverified
+DEMO-031,Automated Testing Essentials,Online Learning Track (sample),,,,self_reported,unverified
+DEMO-032,SQL for Applications,Applied Practice Workshop (sample),,,,self_reported,unverified
+DEMO-033,Data Visualization Basics,Foundations Course (sample),,,,self_reported,unverified
+DEMO-034,Data Ethics Fundamentals,Project-Based Learning Module (sample),,,,self_reported,unverified
+DEMO-035,Web Accessibility Basics,Skills Lab Completion (sample),,,,self_reported,unverified
+DEMO-036,Java Programming Essentials,Online Learning Track (sample),,,,self_reported,unverified
+DEMO-037,Secure Coding Awareness,Applied Practice Workshop (sample),,,,self_reported,unverified
+DEMO-038,CI/CD Concepts,Foundations Course (sample),,,,self_reported,unverified
+DEMO-039,Agile QA Practices,Project-Based Learning Module (sample),,,,self_reported,unverified
+DEMO-040,User Research Methods,Skills Lab Completion (sample),,,,self_reported,unverified
+DEMO-041,SQL Fundamentals,Applied Practice Workshop (sample),,,,self_reported,unverified
+DEMO-042,Web App Testing Fundamentals,Foundations Course (sample),,,,self_reported,unverified
+DEMO-043,Statistics Foundations,Project-Based Learning Module (sample),,,,self_reported,unverified
+DEMO-044,Feature Engineering Essentials,Skills Lab Completion (sample),,,,self_reported,unverified
+DEMO-045,Frontend Testing Foundations,Online Learning Track (sample),,,,self_reported,unverified
+DEMO-046,Unit Testing Fundamentals,Applied Practice Workshop (sample),,,,self_reported,unverified
+DEMO-047,Incident Response Fundamentals,Foundations Course (sample),,,,self_reported,unverified
+DEMO-048,Monitoring and Reliability Basics,Project-Based Learning Module (sample),,,,self_reported,unverified
+DEMO-049,Accessibility Testing Essentials,Skills Lab Completion (sample),,,,self_reported,unverified
+DEMO-050,Design Systems Essentials,Online Learning Track (sample),,,,self_reported,unverified
+DEMO-051,Python Programming Foundations,Foundations Course (sample),,,,self_reported,unverified
+DEMO-052,Full,Stack Web Development Basics — Project-Based Learning Module (sample),,,,self_reported,unverified
+DEMO-053,SQL Fundamentals,Skills Lab Completion (sample),,,,self_reported,unverified
+DEMO-054,Machine Learning Foundations,Online Learning Track (sample),,,,self_reported,unverified
+DEMO-055,Responsive Web Design,Applied Practice Workshop (sample),,,,self_reported,unverified
+DEMO-056,Backend Development Foundations,Foundations Course (sample),,,,self_reported,unverified
+DEMO-057,Cybersecurity Foundations,Project-Based Learning Module (sample),,,,self_reported,unverified
+DEMO-058,Cloud Computing Foundations,Skills Lab Completion (sample),,,,self_reported,unverified
+DEMO-059,Software Testing Foundations,Online Learning Track (sample),,,,self_reported,unverified
+DEMO-060,UX Design Foundations,Applied Practice Workshop (sample),,,,self_reported,unverified
+DEMO-061,REST API Basics,Project-Based Learning Module (sample),,,,self_reported,unverified
+DEMO-062,Responsive Web Design,Skills Lab Completion (sample),,,,self_reported,unverified
+DEMO-063,Data Analysis with Python,Online Learning Track (sample),,,,self_reported,unverified
+DEMO-064,Python for Data Science,Applied Practice Workshop (sample),,,,self_reported,unverified
+DEMO-065,JavaScript Essentials,Foundations Course (sample),,,,self_reported,unverified
+DEMO-066,SQL Database Design,Project-Based Learning Module (sample),,,,self_reported,unverified
+DEMO-067,Networking Essentials,Skills Lab Completion (sample),,,,self_reported,unverified
+DEMO-068,Linux Essentials,Online Learning Track (sample),,,,self_reported,unverified
+DEMO-069,API Testing Basics,Applied Practice Workshop (sample),,,,self_reported,unverified
+DEMO-070,Figma Prototyping Basics,Foundations Course (sample),,,,self_reported,unverified
+DEMO-071,Git and Version Control,Skills Lab Completion (sample),,,,self_reported,unverified
+DEMO-072,REST API Development,Online Learning Track (sample),,,,self_reported,unverified
+DEMO-073,Spreadsheet Analytics,Applied Practice Workshop (sample),,,,self_reported,unverified
+DEMO-074,Model Evaluation Basics,Foundations Course (sample),,,,self_reported,unverified
+DEMO-075,React Fundamentals,Project-Based Learning Module (sample),,,,self_reported,unverified
+DEMO-076,API Security Basics,Skills Lab Completion (sample),,,,self_reported,unverified
+DEMO-077,Linux Command Line Basics,Online Learning Track (sample),,,,self_reported,unverified
+DEMO-078,Docker Fundamentals,Applied Practice Workshop (sample),,,,self_reported,unverified
+DEMO-079,Python Test Automation,Foundations Course (sample),,,,self_reported,unverified
+DEMO-080,Accessibility in Product Design,Project-Based Learning Module (sample),,,,self_reported,unverified
+DEMO-081,Automated Testing Essentials,Online Learning Track (sample),,,,self_reported,unverified
+DEMO-082,SQL for Applications,Applied Practice Workshop (sample),,,,self_reported,unverified
+DEMO-083,Data Visualization Basics,Foundations Course (sample),,,,self_reported,unverified
+DEMO-084,Data Ethics Fundamentals,Project-Based Learning Module (sample),,,,self_reported,unverified
+DEMO-085,Web Accessibility Basics,Skills Lab Completion (sample),,,,self_reported,unverified
+DEMO-086,Java Programming Essentials,Online Learning Track (sample),,,,self_reported,unverified
+DEMO-087,Secure Coding Awareness,Applied Practice Workshop (sample),,,,self_reported,unverified
+DEMO-088,CI/CD Concepts,Foundations Course (sample),,,,self_reported,unverified
+DEMO-089,Agile QA Practices,Project-Based Learning Module (sample),,,,self_reported,unverified
+DEMO-090,User Research Methods,Skills Lab Completion (sample),,,,self_reported,unverified
+DEMO-091,SQL Fundamentals,Applied Practice Workshop (sample),,,,self_reported,unverified
+DEMO-092,Web App Testing Fundamentals,Foundations Course (sample),,,,self_reported,unverified
+DEMO-093,Statistics Foundations,Project-Based Learning Module (sample),,,,self_reported,unverified
+DEMO-094,Feature Engineering Essentials,Skills Lab Completion (sample),,,,self_reported,unverified
+DEMO-095,Frontend Testing Foundations,Online Learning Track (sample),,,,self_reported,unverified
+DEMO-096,Unit Testing Fundamentals,Applied Practice Workshop (sample),,,,self_reported,unverified
+DEMO-097,Incident Response Fundamentals,Foundations Course (sample),,,,self_reported,unverified
+DEMO-098,Monitoring and Reliability Basics,Project-Based Learning Module (sample),,,,self_reported,unverified
+DEMO-099,Accessibility Testing Essentials,Skills Lab Completion (sample),,,,self_reported,unverified
+DEMO-100,Design Systems Essentials,Online Learning Track (sample),,,,self_reported,unverified

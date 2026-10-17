@@ -1,0 +1,111 @@
+{
+  "verdict": "supervised_training_not_justified",
+  "reason": "Source dataset (Skillseto_100_Fictional_Candidates.csv) contains no supervised labels for student-job fit or hiring outcomes. The 'Faculty Review Status (demo)' column is a verification flag, not a fit/hiring label. All 100 rows are explicitly labelled synthetic.",
+  "baseline_method": "Weighted skill-coverage matching (mirrors Skillproof platform's matching.ts: score = 100 * (4 * req_covered + 1 * pref_covered) / (4 * req_total + 1 * pref_total))",
+  "proxy_sanity_check": {
+    "target_role_ranked_1": "44 / 100 (44.0%)",
+    "target_role_in_top_3": "72 / 100 (72.0%)",
+    "target_role_in_top_5": "78 / 100 (78.0%)",
+    "mean_target_role_rank": "3.08 / 10",
+    "interpretation": "Internal-consistency check only. The source's Core Skills column was authored to match each student's target role, so the baseline will mechanically rank the target role highest. This is NOT a predictive-accuracy metric and must not be reported as such."
+  },
+  "per_role_baseline_distribution": {
+    "mean": {
+      "Backend Developer": 12.2,
+      "Cloud / DevOps Intern": 2.5,
+      "Cybersecurity Analyst": 2.1,
+      "Data Analyst": 8.4,
+      "Frontend Developer": 7.7,
+      "Full-Stack Developer": 9.33,
+      "Machine Learning Intern": 6.0,
+      "Python Developer": 10.7,
+      "QA Automation Engineer": 6.2,
+      "UI/UX Designer": 2.0
+    },
+    "median": {
+      "Backend Developer": 0.0,
+      "Cloud / DevOps Intern": 0.0,
+      "Cybersecurity Analyst": 0.0,
+      "Data Analyst": 0.0,
+      "Frontend Developer": 0.0,
+      "Full-Stack Developer": 0.0,
+      "Machine Learning Intern": 0.0,
+      "Python Developer": 0.0,
+      "QA Automation Engineer": 0.0,
+      "UI/UX Designer": 0.0
+    },
+    "min": {
+      "Backend Developer": 0.0,
+      "Cloud / DevOps Intern": 0.0,
+      "Cybersecurity Analyst": 0.0,
+      "Data Analyst": 0.0,
+      "Frontend Developer": 0.0,
+      "Full-Stack Developer": 0.0,
+      "Machine Learning Intern": 0.0,
+      "Python Developer": 0.0,
+      "QA Automation Engineer": 0.0,
+      "UI/UX Designer": 0.0
+    },
+    "max": {
+      "Backend Developer": 60.0,
+      "Cloud / DevOps Intern": 40.0,
+      "Cybersecurity Analyst": 20.0,
+      "Data Analyst": 60.0,
+      "Frontend Developer": 60.0,
+      "Full-Stack Developer": 83.33,
+      "Machine Learning Intern": 20.0,
+      "Python Developer": 85.0,
+      "QA Automation Engineer": 30.0,
+      "UI/UX Designer": 20.0
+    },
+    "std": {
+      "Backend Developer": 15.64,
+      "Cloud / DevOps Intern": 6.38,
+      "Cybersecurity Analyst": 4.27,
+      "Data Analyst": 13.39,
+      "Frontend Developer": 15.22,
+      "Full-Stack Developer": 15.81,
+      "Machine Learning Intern": 9.21,
+      "Python Developer": 15.7,
+      "QA Automation Engineer": 9.51,
+      "UI/UX Designer": 5.5
+    }
+  },
+  "label_availability": {
+    "rows_with_hiring_outcome_label": 0,
+    "rows_with_fit_category_label": 0,
+    "rows_with_verification_flag_only": 1000,
+    "verification_flag_is_not_a_fit_label": true
+  },
+  "required_additional_labels_for_supervised_training": [
+    "Recruiter-reviewed fit label per (student, job) pair \u2014 e.g. {poor, weak, moderate, strong, excellent}",
+    "Historical application outcomes \u2014 e.g. {rejected, screening, interviewed, offered, hired}",
+    "At least 200-500 labelled (student, job) pairs across multiple roles for a meaningful train/validation split",
+    "Per-skill verification status (not just a record-level faculty flag) so evidence-backed skills can be distinguished from self-declared ones",
+    "A documented labelling protocol (who labelled, when, rubric) for reproducibility"
+  ],
+  "ml_ready_features_file": "/home/z/my-project/skillproof_ml/skillproof_ml_ready_features.csv",
+  "ml_ready_features_columns": [
+    "student_id",
+    "target_role",
+    "evaluated_role",
+    "is_target_role_match",
+    "total_skills_declared",
+    "evidence_backed_skill_count",
+    "required_skill_count",
+    "required_covered_count",
+    "required_missing_count",
+    "required_coverage",
+    "preferred_skill_count",
+    "preferred_covered_count",
+    "preferred_coverage",
+    "assessment_score",
+    "baseline_match_score",
+    "missing_required_skills",
+    "covered_required_skills",
+    "target_fit_label",
+    "target_label_source",
+    "target_label_date"
+  ],
+  "ml_ready_features_target_column_state": "all null \u2014 to be filled when real labels are collected"
+}

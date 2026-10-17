@@ -1,0 +1,11 @@
+job_id,job_title,required_skills,preferred_skills,experience_requirements,source
+ROLE-PYTHON_DEVELOPER,Python Developer,"Python, OOP, REST APIs, Git","pytest, SQL, Django basics, Flask",Entry-level / intern (0-2 yrs),deterministic_role_profile
+ROLE-FULL_STACK_DEVELOPER,Full-Stack Developer,"React, Node.js, Express, SQL, Git","REST APIs, CSS, HTML, API integration",Entry-level / intern (0-2 yrs),deterministic_role_profile
+ROLE-DATA_ANALYST,Data Analyst,"Python, SQL, Excel, Statistics","Pandas, Data visualization, Power BI, Tableau",Entry-level / intern (0-2 yrs),deterministic_role_profile
+ROLE-MACHINE_LEARNING_INTERN,Machine Learning Intern,"Python, Machine learning, Statistics, NumPy","Pandas, Scikit-learn, Data preprocessing, Model evaluation",Entry-level / intern (0-2 yrs),deterministic_role_profile
+ROLE-FRONTEND_DEVELOPER,Frontend Developer,"JavaScript, HTML, CSS, React","TypeScript, Tailwind CSS, Responsive design, Git",Entry-level / intern (0-2 yrs),deterministic_role_profile
+ROLE-BACKEND_DEVELOPER,Backend Developer,"Python, REST APIs, SQL, Git","Node.js, Django basics, Docker basics, Authentication",Entry-level / intern (0-2 yrs),deterministic_role_profile
+ROLE-CYBERSECURITY_ANALYST,Cybersecurity Analyst,"Networking basics, Security fundamentals, Linux basics, Cryptography basics","Python, Threat analysis, SIEM basics, Vulnerability assessment",Entry-level / intern (0-2 yrs),deterministic_role_profile
+ROLE-CLOUD_DEVOPS_INTERN,Cloud / DevOps Intern,"Linux basics, Docker basics, CI/CD concepts, Cloud fundamentals","Kubernetes basics, AWS basics, Terraform basics, Python",Entry-level / intern (0-2 yrs),deterministic_role_profile
+ROLE-QA_AUTOMATION_ENGINEER,QA Automation Engineer,"Python, Selenium basics, API testing, Test automation","pytest, CI/CD concepts, REST APIs, Bug tracking",Entry-level / intern (0-2 yrs),deterministic_role_profile
+ROLE-UI_UX_DESIGNER,UI/UX Designer,"Figma, Design systems, Interaction design, User research","Wireframing, Prototyping, CSS, Accessibility",Entry-level / intern (0-2 yrs),deterministic_role_profile
