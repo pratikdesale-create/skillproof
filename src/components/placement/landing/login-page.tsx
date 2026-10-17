@@ -1,137 +1,180 @@
 'use client'
 
-import { useState } from 'react'
 import { useAppStore } from '@/store/app-store'
 import { useLogin } from '@/hooks/use-auth'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
-import { ArrowLeft, Eye, EyeOff } from 'lucide-react'
-import { toast } from 'sonner'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { ArrowLeft, GraduationCap, ShieldCheck, Briefcase, ArrowRight, CheckCircle2 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
-const DEMO_ACCOUNTS = [
-  { label: 'Student', email: 'aarav.sharma@demo.edu', password: 'demo1234' },
-  { label: 'Officer', email: 'officer@demo.edu', password: 'demo1234' },
-  { label: 'Recruiter', email: 'recruiter@northwind.example', password: 'demo1234' },
-  { label: 'Admin', email: 'admin@demo.edu', password: 'demo1234' },
+interface Portal {
+  role: 'STUDENT' | 'OFFICER' | 'RECRUITER'
+  label: string
+  email: string
+  password: string
+  icon: React.ComponentType<{ className?: string }>
+  gradient: string
+  iconChip: string
+  topBorder: string
+  features: string[]
+}
+
+const PORTALS: Portal[] = [
+  {
+    role: 'STUDENT',
+    label: 'Student Portal',
+    email: 'aarav.sharma@demo.edu',
+    password: 'demo1234',
+    icon: GraduationCap,
+    gradient: 'gradient-emerald-subtle',
+    iconChip: 'icon-chip-emerald',
+    topBorder: 'border-top-emerald',
+    features: [
+      'Add skills and submit supporting evidence',
+      'View job-fit scores and skill gaps',
+      'Generate evidence-backed resumes',
+      'Track applications and interviews',
+    ],
+  },
+  {
+    role: 'OFFICER',
+    label: 'Placement Officer Portal',
+    email: 'officer@demo.edu',
+    password: 'demo1234',
+    icon: ShieldCheck,
+    gradient: 'gradient-blue-subtle',
+    iconChip: 'icon-chip-blue',
+    topBorder: 'border-top-blue',
+    features: [
+      'Review pending evidence queue',
+      'Manage jobs and CSV imports',
+      'Run batch ranking for any job',
+      'Oversee the placement pipeline',
+    ],
+  },
+  {
+    role: 'RECRUITER',
+    label: 'Recruiter Portal',
+    email: 'recruiter@northwind.example',
+    password: 'demo1234',
+    icon: Briefcase,
+    gradient: 'gradient-violet-subtle',
+    iconChip: 'icon-chip-violet',
+    topBorder: 'border-top-violet',
+    features: [
+      'View jobs for your company',
+      'See ranked candidate shortlists',
+      'Inspect evidence summaries',
+      'Move candidates through stages',
+    ],
+  },
 ]
 
+/**
+ * Portal selection page — replaces the old login form.
+ *
+ * Users pick one of three portals (Student / Officer / Recruiter).
+ * Each portal auto-logs in with the corresponding demo credentials and
+ * navigates to that role's dashboard.
+ *
+ * Demo credentials are clearly fake/synthetic — this is a hackathon demo.
+ */
 export function LoginPage() {
   const navigate = useAppStore(s => s.navigate)
   const login = useLogin()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
 
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!email || !password) {
-      toast.error('Please enter your email and password')
-      return
-    }
-    login.mutate({ email, password })
+  const enterPortal = (portal: Portal) => {
+    login.mutate({ email: portal.email, password: portal.password })
   }
 
   return (
     <div className="min-h-screen bg-background flex flex-col career-auth-bg">
-      <header className="border-b bg-white dark:bg-slate-950">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <button className="flex items-center gap-2" onClick={() => navigate('landing')}>
-            <div className="size-8 rounded-lg bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 flex items-center justify-center font-bold text-sm">
-              PH
+      {/* Header */}
+      <header className="border-b bg-card/80 backdrop-blur">
+        <div className="mx-auto w-full max-w-5xl px-4 sm:px-6 py-4 flex items-center justify-between">
+          <button className="flex items-center gap-2.5" onClick={() => navigate('landing')}>
+            <div className="size-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm shadow-sm">
+              S
             </div>
             <span className="text-lg font-semibold">Skillproof</span>
           </button>
           <Button variant="ghost" size="sm" onClick={() => navigate('landing')}>
-            <ArrowLeft className="size-4 mr-1" /> Back
+            <ArrowLeft className="size-4 mr-1" /> Back to home
           </Button>
         </div>
       </header>
 
-      <main className="flex-1 flex items-center justify-center p-6">
-        <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="hidden md:flex flex-col justify-center">
-            <h1 className="text-3xl font-bold mb-3">Welcome back</h1>
-            <p className="text-slate-600 dark:text-slate-400 mb-6">
-              Sign in to continue to your Skillproof dashboard. Your role determines what you can see and do.
-            </p>
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Demo accounts (clearly fake):</p>
-              {DEMO_ACCOUNTS.map(acc => (
-                <button
-                  key={acc.email}
-                  className="w-full text-left p-3 rounded-lg border bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-                  onClick={() => { setEmail(acc.email); setPassword(acc.password) }}
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="font-medium text-sm">{acc.label}</div>
-                      <div className="text-xs text-slate-500 font-mono">{acc.email}</div>
-                    </div>
-                    <div className="text-xs text-slate-500 font-mono">demo1234</div>
-                  </div>
-                </button>
-              ))}
+      {/* Portals */}
+      <main className="flex-1 flex items-center justify-center p-4 sm:p-6">
+        <div className="w-full max-w-5xl">
+          {/* Heading */}
+          <div className="text-center mb-8 animate-fade-in-up">
+            <div className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1 text-xs font-medium text-muted-foreground mb-4 shadow-sm">
+              <span className="size-2 rounded-full bg-[var(--verified)]"></span>
+              <span className="size-2 rounded-full bg-[var(--info)]"></span>
+              <span className="size-2 rounded-full bg-violet-500"></span>
+              Choose your portal
             </div>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+              Select a portal to explore
+            </h1>
+            <p className="mt-2 text-sm text-muted-foreground max-w-lg mx-auto">
+              Each portal signs you in with demo credentials and takes you to that role's dashboard. All data is clearly synthetic.
+            </p>
           </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Sign in</CardTitle>
-              <CardDescription>Use one of the demo accounts above or your own.</CardDescription>
-            </CardHeader>
-            <form onSubmit={submit}>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    autoComplete="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@example.com"
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type={showPassword ? 'text' : 'password'}
-                      autoComplete="current-password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••"
-                      required
-                      className="pr-10"
-                    />
-                    <button
-                      type="button"
-                      className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700"
-                      onClick={() => setShowPassword(s => !s)}
-                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+          {/* Portal cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {PORTALS.map((portal, i) => {
+              const Icon = portal.icon
+              return (
+                <Card
+                  key={portal.role}
+                  className={cn(
+                    'h-full flex flex-col overflow-hidden card-hover-lift animate-fade-in-up',
+                    `animate-fade-in-up-delay-${i + 1}`,
+                    portal.gradient,
+                    portal.topBorder,
+                  )}
+                >
+                  <CardHeader>
+                    <div className={cn('size-12 rounded-xl flex items-center justify-center mb-3 shadow-sm', portal.iconChip)}>
+                      <Icon className="size-6" />
+                    </div>
+                    <CardTitle className="text-lg">{portal.label}</CardTitle>
+                    <CardDescription className="text-xs font-mono">
+                      {portal.email}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="flex-1 flex flex-col gap-4">
+                    <ul className="space-y-2 text-sm text-muted-foreground flex-1">
+                      {portal.features.map(f => (
+                        <li key={f} className="flex items-start gap-2">
+                          <CheckCircle2 className="size-4 mt-0.5 text-[var(--verified)] shrink-0" />
+                          <span>{f}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <Button
+                      className="w-full gap-2"
+                      onClick={() => enterPortal(portal)}
+                      disabled={login.isPending}
                     >
-                      {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-                    </button>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter className="flex flex-col gap-3 mt-4">
-                <Button type="submit" className="w-full" disabled={login.isPending}>
-                  {login.isPending ? 'Signing in…' : 'Sign in'}
-                </Button>
-                <p className="text-sm text-slate-500 text-center">
-                  Don&apos;t have an account?{' '}
-                  <button type="button" className="text-slate-900 dark:text-slate-100 underline" onClick={() => navigate('register')}>
-                    Register
-                  </button>
-                </p>
-              </CardFooter>
-            </form>
-          </Card>
+                      {login.isPending ? 'Signing in…' : `Enter ${portal.label.replace(' Portal', '')}`}
+                      <ArrowRight className="size-4" />
+                    </Button>
+                  </CardContent>
+                </Card>
+              )
+            })}
+          </div>
+
+          {/* Admin note */}
+          <div className="mt-6 text-center">
+            <p className="text-xs text-muted-foreground">
+              Admin access: <span className="font-mono">admin@demo.edu</span> / <span className="font-mono">demo1234</span> — sign in via the officer portal, then switch role in the profile dropdown.
+            </p>
+          </div>
         </div>
       </main>
     </div>

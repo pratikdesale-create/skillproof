@@ -41,7 +41,7 @@ export function LandingPage() {
             <Badge variant="secondary" className="ml-1 text-[10px] h-5">Demo</Badge>
           </div>
           <div className="flex items-center gap-1">
-            <Button variant="ghost" size="sm" onClick={() => navigate('login')}>Sign in</Button>
+            <Button variant="ghost" size="sm" onClick={() => navigate('login')}>Portals</Button>
             <Button size="sm" onClick={() => navigate('register')}>Get started</Button>
           </div>
         </div>
