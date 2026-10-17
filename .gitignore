@@ -47,6 +47,8 @@ local-*
 .claude
 .z-ai-config
 agent-ctx/
+tool-results/
+upload/
 
 # logs
 *.log
