@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useState, useMemo, useEffect } from 'react'
+import { Fragment, useState, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { useAppStore } from '@/store/app-store'
@@ -13,7 +13,6 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
@@ -23,9 +22,6 @@ import {
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table'
-import {
-  Collapsible, CollapsibleContent, CollapsibleTrigger,
-} from '@/components/ui/collapsible'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   Users, ChevronDown, ChevronRight, Target, AlertTriangle, Lightbulb, ArrowRight, UserCheck,
@@ -79,15 +75,6 @@ interface PairMatch {
   preferredCoverage: number
   matchingSkills: MatchingSkillRow[]
   missingSkills: MissingSkillRow[]
-  breakdown: Array<{
-    skillId: string
-    displayName: string
-    isRequired: boolean
-    weight: number
-    matchValue: number
-    bestEvidence?: { evidenceId: string; status: string; relevance: number; type: string; title: string }
-    evidenceCount: number
-  }>
   factorsSummary: string
   recommendation: string
   algorithmVersion?: string
@@ -98,7 +85,7 @@ export function Shortlist() {
   const navigate = useAppStore(s => s.navigate)
   const routeJobId = useAppStore(s => s.route.params?.jobId)
 
-  // Load company's jobs
+  // Load company's jobs (auto-filtered by recruiter's company)
   const jobsQuery = useQuery<JobsResponse>({
     queryKey: ['recruiter-jobs', 'all'],
     queryFn: () => apiGet<JobsResponse>('/api/jobs?status=ALL&take=100'),
@@ -110,7 +97,7 @@ export function Shortlist() {
   const [minScore, setMinScore] = useState(0)
   const [requiredCoverageOnly, setRequiredCoverageOnly] = useState(false)
 
-  // Derived: if no job is selected, fall back to the first available job (no effect needed).
+  // Derived: fall back to first available job when nothing is selected
   const activeJobId = selectedJobId || (jobs.length > 0 ? jobs[0].id : '')
 
   const matchesUrl = useMemo(() => {
@@ -133,7 +120,7 @@ export function Shortlist() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Candidate shortlist"
+        title="Candidate shortlists"
         description="Ranked candidates per job — based on verified evidence"
       >
         <Button variant="outline" size="sm" onClick={() => navigate('recruiter/jobs')}>
@@ -146,7 +133,7 @@ export function Shortlist() {
         <CardContent className="p-4 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-1.5 md:col-span-1">
-              <Label className="text-xs uppercase tracking-wider text-slate-500">Job</Label>
+              <Label className="text-xs uppercase tracking-wider text-muted-foreground">Job</Label>
               <Select
                 value={activeJobId}
                 onValueChange={v => setSelectedJobId(v)}
@@ -165,9 +152,9 @@ export function Shortlist() {
               </Select>
             </div>
             <div className="space-y-1.5 md:col-span-2">
-              <Label className="text-xs uppercase tracking-wider text-slate-500 flex items-center justify-between">
+              <Label className="text-xs uppercase tracking-wider text-muted-foreground flex items-center justify-between">
                 <span>Minimum fit score</span>
-                <span className="tabular-nums text-slate-700 dark:text-slate-300">{minScore}%</span>
+                <span className="tabular-nums text-foreground">{minScore}%</span>
               </Label>
               <div className="pt-2">
                 <Slider
@@ -183,7 +170,7 @@ export function Shortlist() {
           <div className="flex items-center justify-between gap-3 border-t pt-3">
             <div>
               <Label htmlFor="rco-switch" className="text-sm font-medium">Required coverage only</Label>
-              <p className="text-xs text-slate-500">Show only candidates who meet every required skill</p>
+              <p className="text-xs text-muted-foreground">Show only candidates who meet every required skill</p>
             </div>
             <Switch
               id="rco-switch"
@@ -223,7 +210,7 @@ export function Shortlist() {
             <EmptyState
               icon={Target}
               title="No candidates match these filters"
-              description="Try lowering the minimum score or turning off the required-coverage filter. If still empty, ask an officer to recompute matches for this job."
+              description="Ask the placement officer to recompute matches for this job. You can also try lowering the minimum score or turning off the required-coverage filter."
               action={
                 <Button size="sm" variant="outline" onClick={() => { setMinScore(0); setRequiredCoverageOnly(false) }}>
                   Reset filters
@@ -236,7 +223,7 @@ export function Shortlist() {
         <CandidatesTable
           jobId={activeJobId}
           candidates={matchesQuery.data!.data}
-          onCandidateClick={(studentId) => navigate(`recruiter/candidates/${studentId}`, { jobId: activeJobId })}
+          onCandidateClick={(studentId) => navigate('recruiter/candidates', { id: studentId, jobId: activeJobId })}
         />
       )}
     </div>
@@ -258,11 +245,11 @@ function CandidatesTable({
         <div className="flex items-center justify-between p-3 border-b">
           <div>
             <h3 className="text-sm font-semibold">{candidates.length} ranked candidate{candidates.length === 1 ? '' : 's'}</h3>
-            <p className="text-xs text-slate-500">Sorted by fit score (highest first)</p>
+            <p className="text-xs text-muted-foreground">Sorted by fit score (highest first)</p>
           </div>
           <Badge variant="outline" className="text-xs">Top {Math.min(100, candidates.length)}</Badge>
         </div>
-        <ScrollArea className="max-h-[600px]">
+        <ScrollArea className="max-h-[600px] scroll-area-thin">
           <Table>
             <TableHeader>
               <TableRow>
@@ -284,7 +271,7 @@ function CandidatesTable({
                 return (
                   <Fragment key={rowKey}>
                     <TableRow
-                      className="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-900"
+                      className="cursor-pointer hover:bg-muted/40"
                       onClick={() => setExpandedRow(expanded ? null : rowKey)}
                     >
                       <TableCell className="font-semibold tabular-nums text-sm">{idx + 1}</TableCell>
@@ -293,7 +280,7 @@ function CandidatesTable({
                           {expanded ? <ChevronDown className="size-3" /> : <ChevronRight className="size-3" />}
                           {c.studentName}
                         </div>
-                        {c.branch && <div className="text-xs text-slate-500">{c.branch}</div>}
+                        {c.branch && <div className="text-xs text-muted-foreground">{c.branch}</div>}
                       </TableCell>
                       <TableCell className="text-xs">{c.batch ?? '—'}</TableCell>
                       <TableCell className="text-xs">{c.branch ?? '—'}</TableCell>
@@ -308,11 +295,11 @@ function CandidatesTable({
                       </TableCell>
                       <TableCell className="text-center">
                         {c.missingSkills.length === 0 ? (
-                          <Badge variant="outline" className="text-xs bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300">
+                          <Badge variant="outline" className="text-xs bg-[var(--verified-muted)] text-[var(--verified-foreground)] border-[var(--verified)]/30">
                             None
                           </Badge>
                         ) : (
-                          <Badge variant="outline" className="text-xs bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-950 dark:text-rose-300">
+                          <Badge variant="outline" className="text-xs bg-[var(--danger-muted)] text-[var(--danger-foreground)] border-[var(--danger)]/30">
                             {c.missingSkills.length}
                           </Badge>
                         )}
@@ -332,7 +319,7 @@ function CandidatesTable({
                       </TableCell>
                     </TableRow>
                     {expanded && (
-                      <tr className="bg-slate-50 dark:bg-slate-900/50">
+                      <tr className="bg-muted/30">
                         <TableCell colSpan={9} className="p-3">
                           <ExpandedCandidate jobId={jobId} candidate={c} />
                         </TableCell>
@@ -366,7 +353,7 @@ function ExpandedCandidate({ jobId, candidate }: { jobId: string; candidate: Can
   }
   if (isError) {
     return (
-      <div className="text-sm text-rose-600 dark:text-rose-400">
+      <div className="text-sm text-[var(--danger-foreground)]">
         Failed to load match breakdown: {(error as Error)?.message}
       </div>
     )
@@ -384,8 +371,8 @@ function ExpandedCandidate({ jobId, candidate }: { jobId: string; candidate: Can
         <div className={cn(
           'text-sm rounded-md p-3 border flex items-start gap-2',
           candidate.fitScore >= 50
-            ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-900 text-emerald-700 dark:text-emerald-300'
-            : 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-900 text-amber-700 dark:text-amber-300'
+            ? 'bg-[var(--verified-muted)] border-[var(--verified)]/30 text-[var(--verified-foreground)]'
+            : 'bg-[var(--pending-muted)] border-[var(--pending)]/30 text-[var(--pending-foreground)]'
         )}>
           <Lightbulb className="size-4 mt-0.5 shrink-0" />
           <div>
@@ -397,11 +384,11 @@ function ExpandedCandidate({ jobId, candidate }: { jobId: string; candidate: Can
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Matching skills */}
         <div>
-          <h4 className="text-xs uppercase tracking-wider text-slate-500 mb-2 flex items-center gap-1">
+          <h4 className="text-xs uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1">
             <UserCheck className="size-3" /> Matching skills ({matchingCount})
           </h4>
           {candidate.matchingSkills.length === 0 ? (
-            <p className="text-xs text-slate-500">None matched</p>
+            <p className="text-xs text-muted-foreground">None matched</p>
           ) : (
             <div className="flex flex-wrap gap-1.5">
               {candidate.matchingSkills.map(s => (
@@ -410,7 +397,7 @@ function ExpandedCandidate({ jobId, candidate }: { jobId: string; candidate: Can
             </div>
           )}
           {data.factorsSummary && (
-            <p className="text-xs text-slate-600 dark:text-slate-400 mt-3 bg-slate-100 dark:bg-slate-800 rounded p-2">
+            <p className="text-xs text-muted-foreground mt-3 bg-muted rounded p-2">
               {data.factorsSummary}
             </p>
           )}
@@ -418,18 +405,18 @@ function ExpandedCandidate({ jobId, candidate }: { jobId: string; candidate: Can
 
         {/* Missing skills */}
         <div>
-          <h4 className="text-xs uppercase tracking-wider text-slate-500 mb-2 flex items-center gap-1">
+          <h4 className="text-xs uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1">
             <AlertTriangle className="size-3" /> Missing skills ({candidate.missingSkills.length})
           </h4>
           {candidate.missingSkills.length === 0 ? (
-            <p className="text-xs text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 rounded p-2">
+            <p className="text-xs text-[var(--verified-foreground)] bg-[var(--verified-muted)] rounded p-2">
               <UserCheck className="size-3 inline mr-1" /> Covers every required and preferred skill!
             </p>
           ) : (
             <div className="space-y-2">
               {missingRequired.length > 0 && (
                 <div>
-                  <div className="text-xs font-medium text-rose-700 dark:text-rose-300 mb-1">Required gaps</div>
+                  <div className="text-xs font-medium text-[var(--danger-foreground)] mb-1">Required gaps</div>
                   <div className="flex flex-wrap gap-1.5">
                     {missingRequired.map(s => (
                       <SkillTag key={s.skillId} name={s.name} isRequired />
@@ -439,7 +426,7 @@ function ExpandedCandidate({ jobId, candidate }: { jobId: string; candidate: Can
               )}
               {missingPreferred.length > 0 && (
                 <div>
-                  <div className="text-xs font-medium text-amber-700 dark:text-amber-300 mb-1">Preferred gaps</div>
+                  <div className="text-xs font-medium text-[var(--pending-foreground)] mb-1">Preferred gaps</div>
                   <div className="flex flex-wrap gap-1.5">
                     {missingPreferred.map(s => (
                       <SkillTag key={s.skillId} name={s.name} />
@@ -452,7 +439,7 @@ function ExpandedCandidate({ jobId, candidate }: { jobId: string; candidate: Can
         </div>
       </div>
 
-      <div className="text-xs text-slate-400 border-t pt-2">
+      <div className="text-xs text-muted-foreground border-t pt-2">
         Last updated {formatDate(candidate.updatedAt)} · Algorithm v{data.algorithmVersion ?? '1.0'}
       </div>
     </div>

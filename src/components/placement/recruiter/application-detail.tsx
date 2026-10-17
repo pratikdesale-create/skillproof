@@ -136,35 +136,35 @@ export function ApplicationDetail({ id }: { id: string }) {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex flex-wrap items-center gap-4">
               <div>
-                <div className="text-xs uppercase tracking-wider text-slate-500">Current status</div>
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">Current status</div>
                 <div className="mt-1"><StatusBadge status={data.status} className="text-sm" /></div>
               </div>
               <div className="border-l pl-4">
-                <div className="text-xs uppercase tracking-wider text-slate-500">Applied</div>
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">Applied</div>
                 <div className="text-sm font-medium mt-1">{formatDate(data.appliedAt)}</div>
               </div>
               {student && (
                 <div className="border-l pl-4">
-                  <div className="text-xs uppercase tracking-wider text-slate-500">Candidate</div>
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground">Candidate</div>
                   <button
-                    className="text-sm font-medium text-slate-700 dark:text-slate-300 underline mt-1 inline-flex items-center gap-1"
-                    onClick={() => navigate(`recruiter/candidates/${student.id}`, data.jobId ? { jobId: data.jobId } : undefined)}
+                    className="text-sm font-medium text-foreground hover:underline mt-1 inline-flex items-center gap-1"
+                    onClick={() => navigate('recruiter/candidates', { id: student.id, jobId: data.jobId })}
                   >
                     <User className="size-3" /> {student.user.name}
                   </button>
-                  <div className="text-xs text-slate-500 mt-0.5">{student.user.email}</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">{student.user.email}</div>
                 </div>
               )}
               {job && (
                 <div className="border-l pl-4">
-                  <div className="text-xs uppercase tracking-wider text-slate-500">Job</div>
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground">Job</div>
                   <button
-                    className="text-sm font-medium text-slate-700 dark:text-slate-300 underline mt-1 inline-flex items-center gap-1"
-                    onClick={() => navigate(`recruiter/jobs/${job.id}`)}
+                    className="text-sm font-medium text-foreground hover:underline mt-1 inline-flex items-center gap-1"
+                    onClick={() => navigate('recruiter/jobs', { id: job.id })}
                   >
                     <Briefcase className="size-3" /> {job.title}
                   </button>
-                  <div className="text-xs text-slate-500 mt-0.5 flex items-center gap-1">
+                  <div className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
                     <Building2 className="size-3" /> {job.company.name}
                   </div>
                 </div>
@@ -199,14 +199,14 @@ export function ApplicationDetail({ id }: { id: string }) {
             </CardHeader>
             <CardContent>
               {data.coverLetter ? (
-                <p className="text-sm whitespace-pre-wrap text-slate-700 dark:text-slate-300 leading-relaxed">
+                <p className="text-sm whitespace-pre-wrap text-foreground leading-relaxed">
                   {data.coverLetter}
                 </p>
               ) : (
-                <p className="text-sm text-slate-500 italic">No cover letter was attached.</p>
+                <p className="text-sm text-muted-foreground italic">No cover letter was attached.</p>
               )}
               {data.notes && (
-                <div className="mt-4 p-3 rounded-md bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 text-sm text-amber-800 dark:text-amber-300">
+                <div className="mt-4 p-3 rounded-md bg-[var(--pending-muted)] border border-[var(--pending)]/30 text-sm text-[var(--pending-foreground)]">
                   <span className="font-medium">Internal notes:</span> {data.notes}
                 </div>
               )}
@@ -232,7 +232,7 @@ export function ApplicationDetail({ id }: { id: string }) {
                     <Skeleton className="h-4 w-5/6" />
                   </div>
                 ) : resumeQuery.isError ? (
-                  <div className="rounded-md border border-amber-200 dark:border-amber-900 bg-amber-50/60 dark:bg-amber-950/40 p-3 text-sm text-amber-800 dark:text-amber-300 flex items-start gap-2">
+                  <div className="rounded-md border border-[var(--pending)]/30 bg-[var(--pending-muted)]/60 p-3 text-sm text-[var(--pending-foreground)] flex items-start gap-2">
                     <Lock className="size-4 mt-0.5 shrink-0" />
                     <div>
                       Resume bullet preview is restricted to the candidate and officers. Metadata only — PDF download is not permitted for recruiters.
@@ -255,22 +255,22 @@ export function ApplicationDetail({ id }: { id: string }) {
             </CardHeader>
             <CardContent>
               {timeline.length === 0 ? (
-                <p className="text-sm text-slate-500">No events recorded.</p>
+                <p className="text-sm text-muted-foreground">No events recorded.</p>
               ) : (
-                <ol className="relative border-l border-slate-200 dark:border-slate-800 ml-3 space-y-4">
+                <ol className="relative border-l border-border ml-3 space-y-4">
                   {timeline.map((e, i) => (
                     <li key={e.id} className="pl-4 relative">
                       <span className={cn(
-                        'absolute -left-[7px] top-1.5 size-3 rounded-full border-2 border-white dark:border-slate-950',
-                        i === timeline.length - 1 ? 'bg-slate-900 dark:bg-slate-100' : 'bg-slate-300 dark:bg-slate-700'
+                        'absolute -left-[7px] top-1.5 size-3 rounded-full border-2 border-card',
+                        i === timeline.length - 1 ? 'bg-primary' : 'bg-muted-foreground/40'
                       )} />
                       <div className="flex flex-wrap items-center gap-2">
-                        {e.previousStatus && <StatusBadge status={e.previousStatus} />}
-                        {e.previousStatus && <ArrowRight className="size-3 text-slate-400" />}
-                        <StatusBadge status={e.newStatus} />
-                        <span className="text-xs text-slate-500 ml-auto">{formatDateTime(e.timestamp)}</span>
+                        {e.previousStatus && <StatusBadge status={e.previousStatus} size="sm" />}
+                        {e.previousStatus && <ArrowRight className="size-3 text-muted-foreground" />}
+                        <StatusBadge status={e.newStatus} size="sm" />
+                        <span className="text-xs text-muted-foreground ml-auto">{formatDateTime(e.timestamp)}</span>
                       </div>
-                      <div className="text-xs text-slate-500 mt-1">
+                      <div className="text-xs text-muted-foreground mt-1">
                         by {e.actor?.name ?? 'System'}
                         {e.reason ? ` — ${e.reason}` : ''}
                       </div>
@@ -285,16 +285,16 @@ export function ApplicationDetail({ id }: { id: string }) {
         {/* Right: offer / interviews */}
         <div className="space-y-6">
           {offer && (
-            <Card className="border-emerald-200 dark:border-emerald-900 bg-emerald-50/60 dark:bg-emerald-950/40">
+            <Card className="border-[var(--verified)]/30 bg-[var(--verified-muted)]/40">
               <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2 text-emerald-800 dark:text-emerald-300">
+                <CardTitle className="text-base flex items-center gap-2 text-[var(--verified-foreground)]">
                   <DollarSign className="size-4" /> Offer
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
                 {offer.amount != null && (
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-500">Compensation</span>
+                    <span className="text-muted-foreground">Compensation</span>
                     <span className="font-semibold tabular-nums">
                       {formatCurrency(offer.amount, offer.currency ?? 'INR')}
                     </span>
@@ -302,17 +302,17 @@ export function ApplicationDetail({ id }: { id: string }) {
                 )}
                 {offer.currency && (
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-500">Currency</span>
+                    <span className="text-muted-foreground">Currency</span>
                     <span className="font-medium">{offer.currency}</span>
                   </div>
                 )}
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-slate-500">Decision</span>
+                  <span className="text-muted-foreground">Decision</span>
                   <StatusBadge status={offer.decision} />
                 </div>
                 {offer.expiresAt && (
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-500">Expires</span>
+                    <span className="text-muted-foreground">Expires</span>
                     <span className="font-medium">{formatDate(offer.expiresAt)}</span>
                   </div>
                 )}
@@ -344,7 +344,7 @@ export function ApplicationDetail({ id }: { id: string }) {
                         {formatDateTime(iv.scheduledAt)}
                       </div>
                       {iv.location && (
-                        <div className="text-xs text-slate-500 flex items-center gap-1">
+                        <div className="text-xs text-muted-foreground flex items-center gap-1">
                           <MapPin className="size-3" /> {iv.location}
                         </div>
                       )}
@@ -353,13 +353,13 @@ export function ApplicationDetail({ id }: { id: string }) {
                           href={iv.meetingUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-xs text-slate-600 dark:text-slate-400 hover:underline inline-flex items-center gap-1"
+                          className="text-xs text-muted-foreground hover:text-foreground hover:underline inline-flex items-center gap-1"
                         >
                           <Video className="size-3" /> Join meeting
                           <ExternalLink className="size-3" />
                         </a>
                       )}
-                      {iv.notes && <p className="text-xs text-slate-500 mt-1">{iv.notes}</p>}
+                      {iv.notes && <p className="text-xs text-muted-foreground mt-1">{iv.notes}</p>}
                     </li>
                   ))}
                 </ul>
@@ -371,7 +371,7 @@ export function ApplicationDetail({ id }: { id: string }) {
           {interviews.length === 0 && !isTerminal(data.status) && (
             <Card className="border-dashed">
               <CardContent className="p-4 text-center">
-                <Calendar className="size-6 mx-auto mb-2 text-slate-400" />
+                <Calendar className="size-6 mx-auto mb-2 text-muted-foreground/60" />
                 <p className="text-sm font-medium">No interviews scheduled yet</p>
                 <Button size="sm" variant="outline" className="mt-3" onClick={() => setInterviewOpen(true)}>
                   <Calendar className="size-4 mr-1" /> Schedule first interview
@@ -413,7 +413,7 @@ function ResumePreview({ resume }: { resume: ResumeDetail }) {
   const bullets = resume.bullets ?? []
   if (bullets.length === 0) {
     return (
-      <p className="text-sm text-slate-500 italic">This resume has no bullets.</p>
+      <p className="text-sm text-muted-foreground italic">This resume has no bullets.</p>
     )
   }
   // Group bullets by section
@@ -426,34 +426,34 @@ function ResumePreview({ resume }: { resume: ResumeDetail }) {
   return (
     <div className="space-y-4">
       {resume.isGenerated && (
-        <div className="text-xs text-slate-500 flex items-center gap-1">
+        <div className="text-xs text-muted-foreground flex items-center gap-1">
           <Badge variant="secondary" className="text-[10px]">Auto-generated</Badge>
         </div>
       )}
       {resume.summary && (
-        <p className="text-sm text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-900 rounded-md p-3">
+        <p className="text-sm text-foreground bg-muted rounded-md p-3">
           {resume.summary}
         </p>
       )}
       {Array.from(sections.entries()).map(([section, items]) => (
         <div key={section}>
-          <h4 className="text-xs uppercase tracking-wider text-slate-500 mb-2">{section}</h4>
+          <h4 className="text-xs uppercase tracking-wider text-muted-foreground mb-2">{section}</h4>
           <ul className="space-y-1.5">
             {items.map(b => (
               <li key={b.id} className="text-sm flex items-start gap-2">
-                <span className="text-slate-300 dark:text-slate-600 mt-1">•</span>
+                <span className="text-muted-foreground/40 mt-1">•</span>
                 <div className="flex-1">
-                  <span className="text-slate-700 dark:text-slate-300">{b.text}</span>
+                  <span className="text-foreground">{b.text}</span>
                   {b.claimStatus && (
                     <Badge
                       variant="outline"
                       className={cn(
                         'ml-2 text-[10px]',
                         b.claimStatus === 'SUPPORTED'
-                          ? 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300'
+                          ? 'bg-[var(--verified-muted)] text-[var(--verified-foreground)] border-[var(--verified)]/30'
                           : b.claimStatus === 'UNSUPPORTED'
-                          ? 'bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-950 dark:text-rose-300'
-                          : 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300'
+                          ? 'bg-[var(--danger-muted)] text-[var(--danger-foreground)] border-[var(--danger)]/30'
+                          : 'bg-[var(--pending-muted)] text-[var(--pending-foreground)] border-[var(--pending)]/30'
                       )}
                     >
                       {b.claimStatus}

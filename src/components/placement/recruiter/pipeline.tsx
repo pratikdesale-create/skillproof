@@ -60,14 +60,14 @@ const PIPELINE_COLUMNS: { status: ApplicationStatus; label: string }[] = [
 
 const ALL_STATUSES = ['APPLIED', 'UNDER_REVIEW', 'SHORTLISTED', 'ASSESSMENT', 'INTERVIEW', 'OFFER', 'REJECTED', 'WITHDRAWN']
 
-export function Pipeline() {
+export function Pipeline({ filterJobId }: { filterJobId?: string }) {
   const navigate = useAppStore(s => s.navigate)
-  const routeJobId = useAppStore(s => s.route.params?.jobId)
-
   const [searchInput, setSearchInput] = useState('')
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('ALL')
-  const [jobFilter, setJobFilter] = useState<string>(routeJobId ?? 'ALL')
+  // Initial job filter from route params (e.g., when navigating from job detail "View applications").
+  // The user can override this via the dropdown.
+  const [jobFilter, setJobFilter] = useState<string>(filterJobId ?? 'ALL')
 
   useEffect(() => {
     const t = setTimeout(() => setSearch(searchInput.trim()), 350)
@@ -103,12 +103,15 @@ export function Pipeline() {
   const total = apps.length
 
   // Group by status for board view
-  const byStatus = new Map<ApplicationStatus, ApplicationRow[]>()
-  for (const a of apps) {
-    const arr = byStatus.get(a.status) ?? []
-    arr.push(a)
-    byStatus.set(a.status, arr)
-  }
+  const byStatus = useMemo(() => {
+    const m = new Map<ApplicationStatus, ApplicationRow[]>()
+    for (const a of apps) {
+      const arr = m.get(a.status) ?? []
+      arr.push(a)
+      m.set(a.status, arr)
+    }
+    return m
+  }, [apps])
 
   const anyFilter = Boolean(search || statusFilter !== 'ALL' || jobFilter !== 'ALL')
   function clearFilters() {
@@ -129,9 +132,9 @@ export function Pipeline() {
         <CardContent className="p-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div className="space-y-1.5 md:col-span-1">
-              <Label htmlFor="rp-search" className="text-xs uppercase tracking-wider text-slate-500">Search</Label>
+              <Label htmlFor="rp-search" className="text-xs uppercase tracking-wider text-muted-foreground">Search</Label>
               <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                 <Input
                   id="rp-search"
                   value={searchInput}
@@ -142,7 +145,7 @@ export function Pipeline() {
               </div>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs uppercase tracking-wider text-slate-500">Status</Label>
+              <Label className="text-xs uppercase tracking-wider text-muted-foreground">Status</Label>
               <Select value={statusFilter} onValueChange={v => setStatusFilter(v)}>
                 <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -152,7 +155,7 @@ export function Pipeline() {
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs uppercase tracking-wider text-slate-500">Job</Label>
+              <Label className="text-xs uppercase tracking-wider text-muted-foreground">Job</Label>
               <Select
                 value={jobFilter}
                 onValueChange={v => setJobFilter(v)}
@@ -172,7 +175,7 @@ export function Pipeline() {
           </div>
           {anyFilter && (
             <div className="mt-3 flex items-center justify-end">
-              <Button variant="ghost" size="sm" onClick={clearFilters} className="text-slate-600 dark:text-slate-400">
+              <Button variant="ghost" size="sm" onClick={clearFilters} className="text-muted-foreground">
                 <X className="size-3.5 mr-1" /> Clear filters
               </Button>
             </div>
@@ -210,104 +213,108 @@ export function Pipeline() {
           {/* Table view */}
           <TabsContent value="table">
             <Card>
-              <CardContent className="p-0 overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="text-xs">Student</TableHead>
-                      <TableHead className="text-xs">Job</TableHead>
-                      <TableHead className="text-xs">Company</TableHead>
-                      <TableHead className="text-xs">Status</TableHead>
-                      <TableHead className="text-xs">Applied</TableHead>
-                      <TableHead className="text-xs text-right">Action</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {apps.map(a => (
-                      <TableRow
-                        key={a.id}
-                        className="cursor-pointer"
-                        onClick={() => navigate(`recruiter/applications/${a.id}`)}
-                      >
-                        <TableCell>
-                          <div className="text-sm font-medium">{a.studentName}</div>
-                          <div className="text-xs text-slate-500 truncate max-w-[180px]">{a.studentEmail}</div>
-                        </TableCell>
-                        <TableCell className="text-sm">{a.jobTitle}</TableCell>
-                        <TableCell className="text-xs text-slate-500">{a.companyName}</TableCell>
-                        <TableCell><StatusBadge status={a.status} /></TableCell>
-                        <TableCell className="text-xs">{formatDate(a.appliedAt)}</TableCell>
-                        <TableCell className="text-right">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-7"
-                            onClick={(e) => { e.stopPropagation(); navigate(`recruiter/applications/${a.id}`) }}
-                          >
-                            View <ArrowRight className="size-3 ml-1" />
-                          </Button>
-                        </TableCell>
+              <CardContent className="p-0">
+                <ScrollArea className="max-h-[70vh] scroll-area-thin">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="text-xs">Student</TableHead>
+                        <TableHead className="text-xs">Job</TableHead>
+                        <TableHead className="text-xs hidden md:table-cell">Company</TableHead>
+                        <TableHead className="text-xs">Status</TableHead>
+                        <TableHead className="text-xs">Applied</TableHead>
+                        <TableHead className="text-xs text-right">Action</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {apps.map(a => (
+                        <TableRow
+                          key={a.id}
+                          className="cursor-pointer hover:bg-muted/40"
+                          onClick={() => navigate('recruiter/applications', { id: a.id })}
+                        >
+                          <TableCell>
+                            <div className="text-sm font-medium">{a.studentName}</div>
+                            <div className="text-xs text-muted-foreground truncate max-w-[180px]">{a.studentEmail}</div>
+                          </TableCell>
+                          <TableCell className="text-sm">{a.jobTitle}</TableCell>
+                          <TableCell className="hidden md:table-cell text-xs text-muted-foreground">{a.companyName}</TableCell>
+                          <TableCell><StatusBadge status={a.status} size="sm" /></TableCell>
+                          <TableCell className="text-xs">{formatDate(a.appliedAt)}</TableCell>
+                          <TableCell className="text-right">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-7"
+                              onClick={(e) => { e.stopPropagation(); navigate('recruiter/applications', { id: a.id }) }}
+                            >
+                              View <ArrowRight className="size-3 ml-1" />
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </ScrollArea>
               </CardContent>
             </Card>
           </TabsContent>
 
           {/* Board view */}
           <TabsContent value="board">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-              {PIPELINE_COLUMNS.map(col => {
-                const items = byStatus.get(col.status) ?? []
-                return (
-                  <Card key={col.status} className="flex flex-col">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-sm font-semibold flex items-center justify-between">
-                        <span className="uppercase tracking-wider text-slate-600 dark:text-slate-400">
-                          {col.label}
-                        </span>
-                        <Badge variant="secondary" className="text-xs tabular-nums">{items.length}</Badge>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex-1 p-2">
-                      {items.length === 0 ? (
-                        <div className="text-xs text-slate-400 text-center py-6">No items</div>
-                      ) : (
-                        <ScrollArea className="max-h-96">
-                          <ul className="space-y-2">
-                            {items.map(a => (
-                              <li
-                                key={a.id}
-                                className="rounded-md border p-3 hover:bg-slate-50 dark:hover:bg-slate-900 cursor-pointer bg-white dark:bg-slate-950"
-                                onClick={() => navigate(`recruiter/applications/${a.id}`)}
-                              >
-                                <div className="text-sm font-medium truncate">{a.studentName}</div>
-                                <div className="text-xs text-slate-500 truncate mt-0.5 flex items-center gap-1">
-                                  <Briefcase className="size-3" /> {a.jobTitle}
-                                </div>
-                                <div className="text-xs text-slate-500 truncate mt-0.5 flex items-center gap-1">
-                                  <MapPin className="size-3" /> {a.companyName}
-                                </div>
-                                <div className="flex items-center justify-between mt-2 text-xs text-slate-400">
-                                  <span className="flex items-center gap-1">
-                                    <Clock className="size-3" />
-                                    {formatDate(a.appliedAt)}
-                                  </span>
-                                  {a.resume && <Badge variant="outline" className="text-xs">Resume</Badge>}
-                                </div>
-                                <Button size="sm" variant="ghost" className="w-full mt-2 h-7 text-xs">
-                                  View <ArrowRight className="size-3 ml-1" />
-                                </Button>
-                              </li>
-                            ))}
-                          </ul>
-                        </ScrollArea>
-                      )}
-                    </CardContent>
-                  </Card>
-                )
-              })}
+            {/* Horizontal scroll on narrow screens so the kanban stays usable on mobile */}
+            <div className="w-full overflow-x-auto scroll-area-thin pb-2">
+              <div className="flex gap-4 min-w-max">
+                {PIPELINE_COLUMNS.map(col => {
+                  const items = byStatus.get(col.status) ?? []
+                  return (
+                    <Card key={col.status} className="flex flex-col w-[260px] sm:w-[280px] shrink-0">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-sm font-semibold flex items-center justify-between">
+                          <span className="uppercase tracking-wider text-muted-foreground">
+                            {col.label}
+                          </span>
+                          <Badge variant="secondary" className="text-xs tabular-nums">
+                            {items.length}
+                          </Badge>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="flex-1 p-2">
+                        {items.length === 0 ? (
+                          <div className="text-xs text-muted-foreground text-center py-6">No items</div>
+                        ) : (
+                          <ScrollArea className="max-h-96 scroll-area-thin">
+                            <ul className="space-y-2">
+                              {items.map(a => (
+                                <li
+                                  key={a.id}
+                                  className="rounded-md border p-3 hover:bg-muted/40 cursor-pointer bg-card"
+                                  onClick={() => navigate('recruiter/applications', { id: a.id })}
+                                >
+                                  <div className="text-sm font-medium truncate">{a.studentName}</div>
+                                  <div className="text-xs text-muted-foreground truncate mt-0.5 flex items-center gap-1">
+                                    <Briefcase className="size-3" /> {a.jobTitle}
+                                  </div>
+                                  <div className="text-xs text-muted-foreground truncate mt-0.5 flex items-center gap-1">
+                                    <MapPin className="size-3" /> {a.companyName}
+                                  </div>
+                                  <div className="flex items-center justify-between mt-2 text-xs text-muted-foreground">
+                                    <span className="flex items-center gap-1">
+                                      <Clock className="size-3" />
+                                      {formatDate(a.appliedAt)}
+                                    </span>
+                                    {a.resume && <Badge variant="outline" className="text-xs">Resume</Badge>}
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                          </ScrollArea>
+                        )}
+                      </CardContent>
+                    </Card>
+                  )
+                })}
+              </div>
             </div>
           </TabsContent>
         </Tabs>

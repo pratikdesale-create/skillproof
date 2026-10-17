@@ -5,9 +5,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPost } from '@/lib/api-client'
 import { useAppStore } from '@/store/app-store'
 import {
-  PageHeader, CardSkeleton, EmptyState, ErrorState, formatDate,
+  PageHeader, CardSkeleton, EmptyState, ErrorState, ProgressRing, formatDate,
 } from '@/components/placement/shared/ui'
-import { CoverageBadge } from '@/components/placement/shared/status-badge'
+import { CoverageBadge, StatusBadge, FitScoreBadge } from '@/components/placement/shared/status-badge'
 import { SkillTag, EvidenceStatusBadge } from '@/components/placement/shared/skill-tag'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -25,11 +25,11 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   ArrowLeft, Mail, MapPin, GraduationCap, Github, Linkedin, Globe, Award,
-  Target, ShieldCheck, Calendar, Video, ExternalLink, Lightbulb, AlertTriangle,
+  Target, ShieldCheck, Calendar, Video, ExternalLink, Lightbulb, AlertTriangle, User,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
-import type { EvidenceStatus } from '@/types'
+import type { ApplicationStatus, EvidenceStatus } from '@/types'
 
 interface CandidateSkill {
   id: string
@@ -93,7 +93,11 @@ interface PairMatch {
 interface ApplicationRow {
   id: string
   studentId: string
-  status: string
+  jobId: string
+  jobTitle: string
+  companyName: string
+  status: ApplicationStatus
+  appliedAt: string
 }
 interface ApplicationsResponse { data: ApplicationRow[]; total: number }
 
@@ -113,15 +117,15 @@ export function CandidateDetail({ id, jobId }: { id: string; jobId?: string }) {
     staleTime: 60_000,
   })
 
-  // Look for an existing application for this student+job (so we can schedule an interview)
+  // All applications for this student — the API auto-filters by recruiter's company
   const appsQuery = useQuery<ApplicationsResponse>({
-    queryKey: ['job-applications-count', jobId],
-    queryFn: () => apiGet<ApplicationsResponse>(`/api/applications?jobId=${jobId}`),
+    queryKey: ['recruiter-applications', 'student', id],
+    queryFn: () => apiGet<ApplicationsResponse>('/api/applications'),
     enabled: Boolean(jobId),
     staleTime: 30_000,
   })
-
-  const existingApp = appsQuery.data?.data.find(a => a.studentId === id) ?? null
+  const studentApps = (appsQuery.data?.data ?? []).filter(a => a.studentId === id)
+  const existingAppForJob = studentApps.find(a => a.jobId === jobId) ?? null
 
   const loading = profileQuery.isLoading
   const loadErr = profileQuery.error as Error | null
@@ -149,6 +153,10 @@ export function CandidateDetail({ id, jobId }: { id: string; jobId?: string }) {
       <PageHeader
         title={candidate.name}
         description={candidate.email}
+        breadcrumbs={[
+          { label: 'Candidate shortlists' },
+          { label: candidate.name },
+        ]}
       >
         <Button variant="outline" size="sm" onClick={() => navigate('recruiter/shortlist', jobId ? { jobId } : undefined)}>
           <ArrowLeft className="size-4 mr-1" /> Back to shortlist
@@ -169,7 +177,7 @@ export function CandidateDetail({ id, jobId }: { id: string; jobId?: string }) {
                 <Field label="Location" value={candidate.location ?? '—'} icon={<MapPin className="size-3" />} />
               </div>
               {candidate.bio && (
-                <p className="text-sm text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-900 rounded-md p-3">
+                <p className="text-sm text-muted-foreground bg-muted rounded-md p-3">
                   {candidate.bio}
                 </p>
               )}
@@ -180,7 +188,7 @@ export function CandidateDetail({ id, jobId }: { id: string; jobId?: string }) {
                     href={`https://github.com/${candidate.githubUser}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs text-slate-700 dark:text-slate-300 hover:underline border rounded px-2 py-1 bg-white dark:bg-slate-950"
+                    className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground hover:underline border rounded px-2 py-1 bg-card"
                   >
                     <Github className="size-3" /> {candidate.githubUser}
                   </a>
@@ -190,7 +198,7 @@ export function CandidateDetail({ id, jobId }: { id: string; jobId?: string }) {
                     href={candidate.linkedinUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs text-slate-700 dark:text-slate-300 hover:underline border rounded px-2 py-1 bg-white dark:bg-slate-950"
+                    className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground hover:underline border rounded px-2 py-1 bg-card"
                   >
                     <Linkedin className="size-3" /> LinkedIn
                   </a>
@@ -200,19 +208,22 @@ export function CandidateDetail({ id, jobId }: { id: string; jobId?: string }) {
                     href={candidate.portfolioUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs text-slate-700 dark:text-slate-300 hover:underline border rounded px-2 py-1 bg-white dark:bg-slate-950"
+                    className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground hover:underline border rounded px-2 py-1 bg-card"
                   >
                     <Globe className="size-3" /> Portfolio
                   </a>
                 )}
               </div>
             </div>
-            <div className="space-y-2">
-              <div className="text-xs uppercase tracking-wider text-slate-500">Profile completion</div>
-              <div className="text-2xl font-bold tabular-nums">{candidate.profileCompletion}%</div>
-              <div className="text-xs text-slate-500">{candidate.applicationsCount} application{candidate.applicationsCount === 1 ? '' : 's'} total</div>
-              <div className="text-xs text-slate-500">
-                {verifiedSkills.length} verified · {unverifiedSkills.length} unverified skills
+            <div className="flex items-center gap-4">
+              <ProgressRing value={candidate.profileCompletion} size={72} strokeWidth={6} label="complete" />
+              <div className="space-y-1">
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">Profile</div>
+                <div className="text-2xl font-bold tabular-nums">{candidate.profileCompletion}%</div>
+                <div className="text-xs text-muted-foreground">{candidate.applicationsCount} application{candidate.applicationsCount === 1 ? '' : 's'} total</div>
+                <div className="text-xs text-muted-foreground">
+                  {verifiedSkills.length} verified · {unverifiedSkills.length} unverified skills
+                </div>
               </div>
             </div>
           </div>
@@ -232,11 +243,11 @@ export function CandidateDetail({ id, jobId }: { id: string; jobId?: string }) {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <div className="text-xs font-medium text-emerald-700 dark:text-emerald-300 mb-2">
+                <div className="text-xs font-medium text-[var(--verified-foreground)] mb-2">
                   Verified ({verifiedSkills.length})
                 </div>
                 {verifiedSkills.length === 0 ? (
-                  <p className="text-xs text-slate-500">No verified skills yet</p>
+                  <p className="text-xs text-muted-foreground">No verified skills yet</p>
                 ) : (
                   <div className="flex flex-wrap gap-1.5">
                     {verifiedSkills.map(s => (
@@ -246,11 +257,11 @@ export function CandidateDetail({ id, jobId }: { id: string; jobId?: string }) {
                 )}
               </div>
               <div className="border-t pt-3">
-                <div className="text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
+                <div className="text-xs font-medium text-muted-foreground mb-2">
                   Unverified ({unverifiedSkills.length})
                 </div>
                 {unverifiedSkills.length === 0 ? (
-                  <p className="text-xs text-slate-500">None — every skill is backed by evidence</p>
+                  <p className="text-xs text-muted-foreground">None — every skill is backed by evidence</p>
                 ) : (
                   <div className="flex flex-wrap gap-1.5">
                     {unverifiedSkills.map(s => (
@@ -278,14 +289,14 @@ export function CandidateDetail({ id, jobId }: { id: string; jobId?: string }) {
                   description="This candidate has not yet submitted any proof of skill"
                 />
               ) : (
-                <ScrollArea className="max-h-96">
+                <ScrollArea className="max-h-96 scroll-area-thin">
                   <ul className="divide-y">
                     {candidate.evidence.map(ev => (
                       <li key={ev.id} className="p-3 space-y-1">
                         <div className="flex items-start justify-between gap-3">
                           <div className="min-w-0 flex-1">
                             <div className="text-sm font-medium truncate">{ev.title}</div>
-                            <div className="text-xs text-slate-500 mt-0.5">
+                            <div className="text-xs text-muted-foreground mt-0.5">
                               <Badge variant="secondary" className="text-[10px] mr-1">{ev.type}</Badge>
                               {ev.organization && <span className="mr-2">· {ev.organization}</span>}
                               {ev.submittedAt && <span>· {formatDate(ev.submittedAt)}</span>}
@@ -294,7 +305,7 @@ export function CandidateDetail({ id, jobId }: { id: string; jobId?: string }) {
                           <EvidenceStatusBadge status={ev.status} size="sm" />
                         </div>
                         {(ev.score != null || ev.sourceUrl) && (
-                          <div className="flex items-center gap-3 text-xs text-slate-500 mt-1">
+                          <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1">
                             {ev.score != null && (
                               <span>
                                 Score: <span className="font-medium tabular-nums">{ev.score}{ev.maxScore != null ? ` / ${ev.maxScore}` : ''}</span>
@@ -320,6 +331,53 @@ export function CandidateDetail({ id, jobId }: { id: string; jobId?: string }) {
               )}
             </CardContent>
           </Card>
+
+          {/* Applications summary for this candidate to the recruiter's company */}
+          {jobId && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <User className="size-4" /> Applications to your company
+                </CardTitle>
+                <CardDescription>
+                  {studentApps.length} application{studentApps.length === 1 ? '' : 's'} from this candidate
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-0">
+                {appsQuery.isLoading ? (
+                  <div className="p-4 space-y-2">
+                    {[0, 1].map(i => <Skeleton key={i} className="h-12 w-full" />)}
+                  </div>
+                ) : studentApps.length === 0 ? (
+                  <EmptyState
+                    icon={User}
+                    title="No applications yet"
+                    description="This candidate has not applied to any of your company's jobs"
+                  />
+                ) : (
+                  <ul className="divide-y">
+                    {studentApps.map(a => (
+                      <li
+                        key={a.id}
+                        className="p-3 hover:bg-muted/40 cursor-pointer"
+                        onClick={() => navigate('recruiter/applications', { id: a.id })}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0 flex-1">
+                            <div className="text-sm font-medium truncate">{a.jobTitle}</div>
+                            <div className="text-xs text-muted-foreground mt-0.5">
+                              Applied {formatDate(a.appliedAt)}
+                            </div>
+                          </div>
+                          <StatusBadge status={a.status} size="sm" />
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         {/* Right: Fit analysis + interview scheduling */}
@@ -364,8 +422,9 @@ export function CandidateDetail({ id, jobId }: { id: string; jobId?: string }) {
           {jobId && (
             <InterviewPanel
               jobId={jobId}
-              existingApp={existingApp}
+              existingApp={existingAppForJob}
               appsLoading={appsQuery.isLoading}
+              studentApps={studentApps}
             />
           )}
         </div>
@@ -377,7 +436,7 @@ export function CandidateDetail({ id, jobId }: { id: string; jobId?: string }) {
 function Field({ label, value, icon, compact }: { label: string; value: string; icon?: React.ReactNode; compact?: boolean }) {
   return (
     <div>
-      <div className="text-xs uppercase tracking-wider text-slate-500">{label}</div>
+      <div className="text-xs uppercase tracking-wider text-muted-foreground">{label}</div>
       <div className={cn('font-medium flex items-center gap-1', compact ? 'text-xs' : 'text-sm')}>
         {icon}
         {value}
@@ -397,29 +456,21 @@ function FitAnalysisPanel({ match }: { match: PairMatch }) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex flex-col items-center text-center py-4">
-          <div className={cn(
-            'text-5xl font-bold tabular-nums',
-            match.fitScore >= 75 ? 'text-emerald-600 dark:text-emerald-400'
-            : match.fitScore >= 50 ? 'text-amber-600 dark:text-amber-400'
-            : match.fitScore >= 25 ? 'text-orange-600 dark:text-orange-400'
-            : 'text-rose-600 dark:text-rose-400'
-          )}>
-            {match.fitScore.toFixed(1)}%
-          </div>
-          <div className="text-xs text-slate-500 mt-1">fit score</div>
+          <FitScoreBadge score={match.fitScore} size="lg" className="text-2xl" />
+          <div className="text-xs text-muted-foreground mt-2">fit score</div>
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div className="text-center">
-            <div className="text-xs uppercase tracking-wider text-slate-500 mb-1">Required cov.</div>
+            <div className="text-xs uppercase tracking-wider text-muted-foreground mb-1">Required cov.</div>
             <CoverageBadge value={match.requiredCoverage} />
           </div>
           <div className="text-center">
-            <div className="text-xs uppercase tracking-wider text-slate-500 mb-1">Preferred cov.</div>
+            <div className="text-xs uppercase tracking-wider text-muted-foreground mb-1">Preferred cov.</div>
             <CoverageBadge value={match.preferredCoverage} />
           </div>
         </div>
         {match.factorsSummary && (
-          <div className="text-xs text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-900 rounded-md p-3">
+          <div className="text-xs text-muted-foreground bg-muted rounded-md p-3">
             <Lightbulb className="size-3.5 inline mr-1" />
             {match.factorsSummary}
           </div>
@@ -428,23 +479,23 @@ function FitAnalysisPanel({ match }: { match: PairMatch }) {
           <div className={cn(
             'text-xs rounded-md p-3 border',
             match.fitScore >= 50
-              ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-900 text-emerald-700 dark:text-emerald-300'
-              : 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-900 text-amber-700 dark:text-amber-300'
+              ? 'bg-[var(--verified-muted)] border-[var(--verified)]/30 text-[var(--verified-foreground)]'
+              : 'bg-[var(--pending-muted)] border-[var(--pending)]/30 text-[var(--pending-foreground)]'
           )}>
             <span className="font-medium">Recommendation:</span> {match.recommendation}
           </div>
         )}
-        <div className="text-xs text-slate-400 pt-1 border-t flex items-center justify-between">
+        <div className="text-xs text-muted-foreground pt-1 border-t flex items-center justify-between">
           <span>Algorithm v{match.algorithmVersion}</span>
           {match.storedAt && <span>Last computed {formatDate(match.storedAt)}</span>}
         </div>
         <div className="grid grid-cols-2 gap-2 pt-2 border-t">
           <div className="text-center">
-            <div className="text-xs uppercase tracking-wider text-slate-500">Matching</div>
+            <div className="text-xs uppercase tracking-wider text-muted-foreground">Matching</div>
             <div className="text-lg font-semibold tabular-nums">{match.matchingSkills.length}</div>
           </div>
           <div className="text-center">
-            <div className="text-xs uppercase tracking-wider text-slate-500">Missing</div>
+            <div className="text-xs uppercase tracking-wider text-muted-foreground">Missing</div>
             <div className="text-lg font-semibold tabular-nums">{match.missingSkills.length}</div>
           </div>
         </div>
@@ -454,11 +505,12 @@ function FitAnalysisPanel({ match }: { match: PairMatch }) {
 }
 
 function InterviewPanel({
-  jobId, existingApp, appsLoading,
+  jobId, existingApp, appsLoading, studentApps,
 }: {
   jobId: string
   existingApp: ApplicationRow | null
   appsLoading: boolean
+  studentApps: ApplicationRow[]
 }) {
   const navigate = useAppStore(s => s.navigate)
   const qc = useQueryClient()
@@ -487,7 +539,7 @@ function InterviewPanel({
     },
     onSuccess: () => {
       toast.success('Interview scheduled')
-      qc.invalidateQueries({ queryKey: ['job-applications-count', jobId] })
+      qc.invalidateQueries({ queryKey: ['recruiter-applications', 'student'] })
       qc.invalidateQueries({ queryKey: ['application', existingApp?.id] })
       setOpen(false)
       // Reset
@@ -499,7 +551,7 @@ function InterviewPanel({
       setRound('1')
       setType('TECHNICAL')
       // Navigate to the application detail
-      if (existingApp) navigate(`recruiter/applications/${existingApp.id}`)
+      if (existingApp) navigate('recruiter/applications', { id: existingApp.id })
     },
     onError: (err: unknown) => {
       const e = err as { message?: string }
@@ -521,16 +573,21 @@ function InterviewPanel({
 
   if (!existingApp) {
     return (
-      <Card className="border-amber-200 dark:border-amber-900 bg-amber-50/60 dark:bg-amber-950/40">
+      <Card className="border-[var(--pending)]/30 bg-[var(--pending-muted)]/40">
         <CardHeader>
-          <CardTitle className="text-base flex items-center gap-2 text-amber-800 dark:text-amber-300">
+          <CardTitle className="text-base flex items-center gap-2 text-[var(--pending-foreground)]">
             <AlertTriangle className="size-4" /> No active application
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <p className="text-sm text-amber-800 dark:text-amber-300">
-            This candidate has not applied to this job yet. Recruiters cannot create applications — ask an officer to advance this candidate to APPLIED or SHORTLISTED first.
+          <p className="text-sm text-[var(--pending-foreground)]">
+            This candidate has not applied to this job yet. Recruiters cannot create applications — ask the placement officer to advance this candidate to APPLIED or SHORTLISTED first.
           </p>
+          {studentApps.length > 0 && (
+            <div className="text-xs text-[var(--pending-foreground)] bg-card rounded-md p-2 border border-[var(--pending)]/20">
+              They have {studentApps.length} other application{studentApps.length === 1 ? '' : 's'} to your company — review them in the pipeline.
+            </div>
+          )}
         </CardContent>
       </Card>
     )
@@ -543,15 +600,15 @@ function InterviewPanel({
           <Calendar className="size-4" /> Schedule interview
         </CardTitle>
         <CardDescription>
-          Application: <Badge variant="outline" className="text-xs ml-1">{existingApp.status}</Badge>
+          Application: <StatusBadge status={existingApp.status} size="sm" className="ml-1" />
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-muted-foreground">
           Scheduling an interview will automatically advance the application to INTERVIEW stage if it isn't already.
         </p>
         <Button className="w-full" onClick={() => setOpen(true)}>
-          <Video className="size-4 mr-2" /> Move to interview stage
+          <Video className="size-4 mr-2" /> Schedule interview
         </Button>
 
         <Dialog open={open} onOpenChange={setOpen}>
@@ -562,7 +619,7 @@ function InterviewPanel({
                 All times in your local timezone. The candidate will receive a notification.
               </DialogDescription>
             </DialogHeader>
-            <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-1">
+            <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-1 scroll-area-thin">
               <div className="space-y-1.5">
                 <Label htmlFor="iv-scheduled">Scheduled at *</Label>
                 <Input

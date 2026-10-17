@@ -18,6 +18,7 @@ import {
 import {
   ArrowLeft, MapPin, Calendar, Building2, Users, Target, Briefcase, Layers, ShieldCheck, Pencil,
 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { JobForm, type JobFormValues } from './job-form'
 
 interface JobCompany { id: string; name: string; industry?: string | null; website?: string | null }
@@ -66,6 +67,14 @@ interface MatchesResponse {
 interface ApplicationsResponse {
   data: unknown[]
   total: number
+}
+
+// Semantic-toned status badges. OPEN=verified, CLOSED=muted, ARCHIVED=danger, DRAFT=pending.
+const JOB_STATUS_CLS: Record<string, string> = {
+  OPEN: 'bg-[var(--verified-muted)] text-[var(--verified-foreground)] border-[var(--verified)]/30',
+  CLOSED: 'bg-muted text-muted-foreground border-border',
+  ARCHIVED: 'bg-[var(--danger-muted)] text-[var(--danger-foreground)] border-[var(--danger)]/30',
+  DRAFT: 'bg-[var(--pending-muted)] text-[var(--pending-foreground)] border-[var(--pending)]/30',
 }
 
 function isoToDatetimeLocal(iso?: string | null): string {
@@ -151,6 +160,10 @@ export function JobDetail({ id }: { id: string }) {
       <PageHeader
         title={job.title}
         description={`${job.company.name}${job.company.industry ? ` · ${job.company.industry}` : ''}`}
+        breadcrumbs={[
+          { label: 'My jobs' },
+          { label: job.title },
+        ]}
       >
         <Button variant="outline" size="sm" onClick={() => navigate('recruiter/jobs')}>
           <ArrowLeft className="size-4 mr-1" /> All jobs
@@ -166,45 +179,42 @@ export function JobDetail({ id }: { id: string }) {
           <div className="flex flex-col lg:flex-row lg:items-start gap-6">
             <div className="flex-1 min-w-0 space-y-3">
               <div className="flex flex-wrap gap-2">
-                <Badge variant="outline" className={job.status === 'OPEN'
-                  ? 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300'
-                  : 'bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-900 dark:text-slate-300'
-                }>
+                <Badge variant="outline" className={cn('text-xs', JOB_STATUS_CLS[job.status] ?? '')}>
                   {job.status}
                 </Badge>
                 {job.workArrangement && (
-                  <Badge variant="outline" className="capitalize">{job.workArrangement}</Badge>
+                  <Badge variant="outline" className="capitalize text-xs">{job.workArrangement}</Badge>
                 )}
                 {job.employmentType && (
-                  <Badge variant="outline" className="capitalize">{job.employmentType}</Badge>
+                  <Badge variant="outline" className="capitalize text-xs">{job.employmentType}</Badge>
                 )}
                 {job.location && (
-                  <Badge variant="outline" className="bg-slate-50 dark:bg-slate-900">
+                  <Badge variant="outline" className="text-xs">
                     <MapPin className="size-3 mr-1" /> {job.location}
                   </Badge>
                 )}
-                <Badge variant="secondary" className="capitalize">{job.sourceType}</Badge>
+                <Badge variant="secondary" className="capitalize text-xs">{job.sourceType}</Badge>
                 {job.batchEligible && (
-                  <Badge variant="outline" className="bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-950 dark:text-violet-300 dark:border-violet-900">
+                  <Badge variant="outline" className="text-xs bg-[var(--info-muted)] text-[var(--info-foreground)] border-[var(--info)]/30">
                     Batch {job.batchEligible}
                   </Badge>
                 )}
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
                 <div>
-                  <div className="text-xs uppercase tracking-wider text-slate-500">Salary</div>
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground">Salary</div>
                   <div className="font-medium">{formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency ?? 'INR')}</div>
                 </div>
                 <div>
-                  <div className="text-xs uppercase tracking-wider text-slate-500">Posted</div>
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground">Posted</div>
                   <div className="font-medium">{formatDate(job.postingDate)}</div>
                 </div>
                 <div>
-                  <div className="text-xs uppercase tracking-wider text-slate-500">Closing</div>
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground">Closing</div>
                   <div className="font-medium">{formatDate(job.closingDate)}</div>
                 </div>
                 <div>
-                  <div className="text-xs uppercase tracking-wider text-slate-500">Experience</div>
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground">Experience</div>
                   <div className="font-medium">
                     {job.minExperience ?? job.maxExperience
                       ? `${job.minExperience ?? 0}–${job.maxExperience ?? '?'} yrs`
@@ -213,8 +223,8 @@ export function JobDetail({ id }: { id: string }) {
                 </div>
               </div>
               {job.eligibilityCriteria && (
-                <p className="text-sm text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-900 rounded-md p-3">
-                  <span className="font-medium">Eligibility:</span> {job.eligibilityCriteria}
+                <p className="text-sm text-muted-foreground bg-[var(--pending-muted)] border border-[var(--pending)]/30 rounded-md p-3">
+                  <span className="font-medium text-[var(--pending-foreground)]">Eligibility:</span> {job.eligibilityCriteria}
                 </p>
               )}
               {job.applicationUrl && (
@@ -222,7 +232,7 @@ export function JobDetail({ id }: { id: string }) {
                   href={job.applicationUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block text-sm text-slate-700 dark:text-slate-300 hover:underline"
+                  className="inline-block text-sm text-muted-foreground hover:text-foreground hover:underline"
                 >
                   External application URL ↗
                 </a>
@@ -245,25 +255,25 @@ export function JobDetail({ id }: { id: string }) {
         <Card>
           <CardContent className="p-5 flex items-center justify-between">
             <div>
-              <div className="text-xs uppercase tracking-wider text-slate-500">Candidates ranked</div>
+              <div className="text-xs uppercase tracking-wider text-muted-foreground">Candidates ranked</div>
               <div className="text-2xl font-bold tabular-nums mt-1">
                 {matchesQuery.isLoading ? <Skeleton className="h-8 w-12" /> : matchesCount}
               </div>
-              <div className="text-xs text-slate-500 mt-1">Across all students</div>
+              <div className="text-xs text-muted-foreground mt-1">Across all students</div>
             </div>
-            <Target className="size-8 text-slate-400" />
+            <Target className="size-8 text-muted-foreground" />
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-5 flex items-center justify-between">
             <div>
-              <div className="text-xs uppercase tracking-wider text-slate-500">Applications received</div>
+              <div className="text-xs uppercase tracking-wider text-muted-foreground">Applications received</div>
               <div className="text-2xl font-bold tabular-nums mt-1">
                 {appsQuery.isLoading ? <Skeleton className="h-8 w-12" /> : appsCount}
               </div>
-              <div className="text-xs text-slate-500 mt-1">Applied to this role</div>
+              <div className="text-xs text-muted-foreground mt-1">Applied to this role</div>
             </div>
-            <Users className="size-8 text-slate-400" />
+            <Users className="size-8 text-muted-foreground" />
           </CardContent>
         </Card>
       </div>
@@ -276,7 +286,7 @@ export function JobDetail({ id }: { id: string }) {
               <CardDescription>Last updated {formatDateTime(job.updatedAt)}</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm whitespace-pre-wrap text-slate-700 dark:text-slate-300 leading-relaxed">
+              <p className="text-sm whitespace-pre-wrap text-foreground leading-relaxed">
                 {job.description}
               </p>
             </CardContent>
@@ -330,23 +340,23 @@ export function JobDetail({ id }: { id: string }) {
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
               <div>
-                <div className="text-xs text-slate-500">Name</div>
+                <div className="text-xs text-muted-foreground">Name</div>
                 <div className="font-medium">{job.company.name}</div>
               </div>
               {job.company.industry && (
                 <div>
-                  <div className="text-xs text-slate-500">Industry</div>
+                  <div className="text-xs text-muted-foreground">Industry</div>
                   <div className="font-medium">{job.company.industry}</div>
                 </div>
               )}
               {job.company.website && (
                 <div>
-                  <div className="text-xs text-slate-500">Website</div>
+                  <div className="text-xs text-muted-foreground">Website</div>
                   <a
                     href={job.company.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-slate-700 dark:text-slate-300 hover:underline"
+                    className="text-sm text-muted-foreground hover:text-foreground hover:underline"
                   >
                     {job.company.website} ↗
                   </a>
@@ -363,15 +373,15 @@ export function JobDetail({ id }: { id: string }) {
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
               <div>
-                <div className="text-xs text-slate-500">Posted</div>
+                <div className="text-xs text-muted-foreground">Posted</div>
                 <div className="font-medium">{formatDate(job.postingDate)}</div>
               </div>
               <div>
-                <div className="text-xs text-slate-500">Closing</div>
+                <div className="text-xs text-muted-foreground">Closing</div>
                 <div className="font-medium">{formatDate(job.closingDate)}</div>
               </div>
               <div>
-                <div className="text-xs text-slate-500">Created</div>
+                <div className="text-xs text-muted-foreground">Created</div>
                 <div className="font-medium">{formatDateTime(job.createdAt)}</div>
               </div>
             </CardContent>

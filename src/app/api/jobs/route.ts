@@ -167,6 +167,7 @@ export async function GET(req: NextRequest) {
         include: {
           company: { select: { id: true, name: true, industry: true } },
           requirements: { select: { id: true, isRequired: true } },
+          _count: { select: { applications: true } },
         },
       }),
       db.job.count({ where }),
@@ -194,6 +195,7 @@ export async function GET(req: NextRequest) {
         status: j.status,
         requiredSkillCount,
         preferredSkillCount,
+        applicationsCount: j._count.applications,
       }
     })
 

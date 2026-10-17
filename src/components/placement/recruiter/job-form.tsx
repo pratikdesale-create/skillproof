@@ -309,7 +309,7 @@ export function JobForm({
           onChange={e => set('requiredSkills', e.target.value)}
           placeholder="e.g. Python, SQL, AWS"
         />
-        <p className="text-xs text-slate-500">These are weighted heavily in fit scoring</p>
+        <p className="text-xs text-muted-foreground">These are weighted heavily in fit scoring</p>
       </div>
 
       <div className="space-y-1.5">
@@ -320,7 +320,7 @@ export function JobForm({
           onChange={e => set('preferredSkills', e.target.value)}
           placeholder="e.g. Docker, Kafka"
         />
-        <p className="text-xs text-slate-500">Nice-to-haves; lower weight</p>
+        <p className="text-xs text-muted-foreground">Nice-to-haves; lower weight</p>
       </div>
 
       <div className="flex justify-end gap-2 pt-2 border-t">

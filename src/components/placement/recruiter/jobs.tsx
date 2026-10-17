@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { apiGet, api } from '@/lib/api-client'
 import { useAppStore } from '@/store/app-store'
 import {
-  PageHeader, CardSkeleton, EmptyState, ErrorState, formatSalary, formatDate,
+  PageHeader, CardSkeleton, EmptyState, ErrorState, formatDate,
 } from '@/components/placement/shared/ui'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -18,12 +18,14 @@ import {
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle,
 } from '@/components/ui/dialog'
 import {
-  Briefcase, Search, Plus, MapPin, ArrowRight, Loader2, X, Building2,
+  Briefcase, Search, Plus, MapPin, ArrowRight, Loader2, X, Users,
 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { JobForm } from './job-form'
 import type { AuthUser, RecruiterProfile } from '@/types'
 
@@ -42,6 +44,7 @@ interface JobListItem {
   batchEligible?: string | null
   requiredSkillCount: number
   preferredSkillCount: number
+  applicationsCount?: number
 }
 interface JobsResponse {
   data: JobListItem[]
@@ -53,6 +56,14 @@ interface JobsResponse {
 interface MeResponse {
   user: AuthUser | null
   profile: RecruiterProfile & { id: string; companyId?: string | null } | null
+}
+
+// Semantic-toned status badges. OPEN=verified, CLOSED=muted, ARCHIVED=danger, DRAFT=pending.
+const JOB_STATUS_CLS: Record<string, string> = {
+  OPEN: 'bg-[var(--verified-muted)] text-[var(--verified-foreground)] border-[var(--verified)]/30',
+  CLOSED: 'bg-muted text-muted-foreground border-border',
+  ARCHIVED: 'bg-[var(--danger-muted)] text-[var(--danger-foreground)] border-[var(--danger)]/30',
+  DRAFT: 'bg-[var(--pending-muted)] text-[var(--pending-foreground)] border-[var(--pending)]/30',
 }
 
 export function Jobs() {
@@ -105,7 +116,7 @@ export function Jobs() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Company jobs"
+        title="My jobs"
         description={companyName ? `Managing roles for ${companyName}` : 'Your open and closed job postings'}
       >
         <Button size="sm" onClick={() => setCreateOpen(true)} disabled={!companyId}>
@@ -114,8 +125,8 @@ export function Jobs() {
       </PageHeader>
 
       {!companyId && !meQuery.isLoading && (
-        <Card className="border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/40">
-          <CardContent className="p-4 text-sm text-amber-800 dark:text-amber-300">
+        <Card className="border-[var(--pending)]/30 bg-[var(--pending-muted)]/40">
+          <CardContent className="p-4 text-sm text-[var(--pending-foreground)]">
             No company is bound to your recruiter profile. Ask an officer to assign your company before creating jobs.
           </CardContent>
         </Card>
@@ -126,9 +137,9 @@ export function Jobs() {
         <CardContent className="p-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div className="space-y-1.5 md:col-span-2">
-              <Label htmlFor="rjob-search" className="text-xs uppercase tracking-wider text-slate-500">Search</Label>
+              <Label htmlFor="rjob-search" className="text-xs uppercase tracking-wider text-muted-foreground">Search</Label>
               <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                 <Input
                   id="rjob-search"
                   value={searchInput}
@@ -139,7 +150,7 @@ export function Jobs() {
               </div>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs uppercase tracking-wider text-slate-500">Status</Label>
+              <Label className="text-xs uppercase tracking-wider text-muted-foreground">Status</Label>
               <Select value={statusFilter} onValueChange={v => setStatusFilter(v)}>
                 <SelectTrigger className="w-full">
                   <SelectValue />
@@ -156,7 +167,7 @@ export function Jobs() {
           </div>
           {anyFilter && (
             <div className="mt-3 flex items-center justify-end">
-              <Button variant="ghost" size="sm" onClick={clearFilters} className="text-slate-600 dark:text-slate-400">
+              <Button variant="ghost" size="sm" onClick={clearFilters} className="text-muted-foreground">
                 <X className="size-3.5 mr-1" /> Clear filters
               </Button>
             </div>
@@ -166,7 +177,7 @@ export function Jobs() {
 
       {/* Results */}
       {isLoading ? (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="space-y-2">
           {[0, 1, 2, 3].map(i => <CardSkeleton key={i} />)}
         </div>
       ) : isError ? (
@@ -179,8 +190,8 @@ export function Jobs() {
           <CardContent className="p-0">
             <EmptyState
               icon={Briefcase}
-              title={anyFilter ? 'No jobs match your filters' : 'No jobs yet'}
-              description={anyFilter ? 'Try adjusting or clearing filters' : 'Create your first job posting'}
+              title={anyFilter ? 'No jobs match your filters' : 'No jobs posted yet'}
+              description={anyFilter ? 'Try adjusting or clearing filters' : 'Create your first job posting to start receiving candidates.'}
               action={
                 <div className="flex gap-2">
                   {anyFilter && <Button size="sm" variant="outline" onClick={clearFilters}>Clear filters</Button>}
@@ -196,85 +207,98 @@ export function Jobs() {
         </Card>
       ) : (
         <>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-muted-foreground">
             {total} job{total === 1 ? '' : 's'} for your company
           </p>
           <Card>
-            <CardContent className="p-0 overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-xs">Title</TableHead>
-                    <TableHead className="text-xs">Location</TableHead>
-                    <TableHead className="text-xs">Arrangement</TableHead>
-                    <TableHead className="text-xs">Type</TableHead>
-                    <TableHead className="text-xs">Source</TableHead>
-                    <TableHead className="text-xs">Posted</TableHead>
-                    <TableHead className="text-xs text-right">Skills (R/P)</TableHead>
-                    <TableHead className="text-xs">Status</TableHead>
-                    <TableHead className="text-xs text-right">Action</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {jobs.map(job => (
-                    <TableRow
-                      key={job.id}
-                      className="cursor-pointer"
-                      onClick={() => navigate(`recruiter/jobs/${job.id}`)}
-                    >
-                      <TableCell className="font-medium text-sm">
-                        {job.title}
-                        {job.batchEligible && (
-                          <Badge variant="outline" className="ml-2 text-[10px] bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-950 dark:text-violet-300 dark:border-violet-900">
-                            Batch {job.batchEligible}
-                          </Badge>
-                        )}
-                      </TableCell>
-                      <TableCell className="text-xs">
-                        {job.location ? (
-                          <span className="inline-flex items-center gap-1">
-                            <MapPin className="size-3" /> {job.location}
-                          </span>
-                        ) : '—'}
-                      </TableCell>
-                      <TableCell className="text-xs capitalize">{job.workArrangement ?? '—'}</TableCell>
-                      <TableCell className="text-xs capitalize">{job.employmentType ?? '—'}</TableCell>
-                      <TableCell className="text-xs">
-                        <Badge variant="secondary" className="text-[10px]">{job.sourceType}</Badge>
-                      </TableCell>
-                      <TableCell className="text-xs">{formatDate(job.postingDate)}</TableCell>
-                      <TableCell className="text-xs text-right tabular-nums">
-                        {job.requiredSkillCount} / {job.preferredSkillCount}
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant="outline"
-                          className={
-                            job.status === 'OPEN'
-                              ? 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 text-xs'
-                              : 'bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-900 dark:text-slate-300 text-xs'
-                          }
-                        >
-                          {job.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            navigate(`recruiter/jobs/${job.id}`)
-                          }}
-                          className="h-7"
-                        >
-                          View <ArrowRight className="size-3 ml-1" />
-                        </Button>
-                      </TableCell>
+            <CardContent className="p-0">
+              <ScrollArea className="max-h-[70vh] scroll-area-thin">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="text-xs">Title</TableHead>
+                      <TableHead className="text-xs hidden md:table-cell">Location</TableHead>
+                      <TableHead className="text-xs hidden md:table-cell">Arrangement</TableHead>
+                      <TableHead className="text-xs hidden lg:table-cell">Type</TableHead>
+                      <TableHead className="text-xs hidden lg:table-cell">Source</TableHead>
+                      <TableHead className="text-xs hidden sm:table-cell">Posted</TableHead>
+                      <TableHead className="text-xs text-right hidden md:table-cell">Applications</TableHead>
+                      <TableHead className="text-xs">Status</TableHead>
+                      <TableHead className="text-xs text-right">Actions</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {jobs.map(job => (
+                      <TableRow
+                        key={job.id}
+                        className="cursor-pointer hover:bg-muted/40"
+                        onClick={() => navigate('recruiter/jobs', { id: job.id })}
+                      >
+                        <TableCell className="font-medium text-sm">
+                          {job.title}
+                          {job.batchEligible && (
+                            <Badge variant="outline" className="ml-2 text-[10px] bg-[var(--info-muted)] text-[var(--info-foreground)] border-[var(--info)]/30">
+                              Batch {job.batchEligible}
+                            </Badge>
+                          )}
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell text-xs">
+                          {job.location ? (
+                            <span className="inline-flex items-center gap-1">
+                              <MapPin className="size-3" /> {job.location}
+                            </span>
+                          ) : '—'}
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell text-xs capitalize">{job.workArrangement ?? '—'}</TableCell>
+                        <TableCell className="hidden lg:table-cell text-xs capitalize">{job.employmentType ?? '—'}</TableCell>
+                        <TableCell className="hidden lg:table-cell">
+                          <Badge variant="secondary" className="text-[10px]">{job.sourceType}</Badge>
+                        </TableCell>
+                        <TableCell className="hidden sm:table-cell text-xs">{formatDate(job.postingDate)}</TableCell>
+                        <TableCell className="hidden md:table-cell text-xs text-right tabular-nums">
+                          {job.applicationsCount ?? '—'}
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant="outline"
+                            className={cn('text-xs', JOB_STATUS_CLS[job.status] ?? '')}
+                          >
+                            {job.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex items-center justify-end gap-1">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-7"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                navigate('recruiter/jobs', { id: job.id })
+                              }}
+                              aria-label="Edit"
+                            >
+                              Edit <ArrowRight className="size-3 ml-1" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-7"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                navigate('recruiter/shortlist', { jobId: job.id })
+                              }}
+                              aria-label="View candidates"
+                            >
+                              <Users className="size-3 mr-1" /> Candidates
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </ScrollArea>
             </CardContent>
           </Card>
         </>
@@ -305,7 +329,7 @@ export function Jobs() {
 export function JobsSkeleton() {
   return (
     <div className="space-y-6">
-      <PageHeader title="Company jobs" description="Loading…" />
+      <PageHeader title="My jobs" description="Loading…" />
       <Card><CardContent className="p-4"><Loader2 className="size-4 animate-spin" /></CardContent></Card>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {[0, 1, 2, 3].map(i => <CardSkeleton key={i} />)}

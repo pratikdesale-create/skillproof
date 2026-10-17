@@ -4,7 +4,8 @@ import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { useAppStore } from '@/store/app-store'
 import {
-  PageHeader, StatCard, CardSkeleton, EmptyState, ErrorState, formatDateTime,
+  PageHeader, StatCard, CardSkeleton, EmptyState, ErrorState,
+  formatDateTime, formatRelativeTime,
 } from '@/components/placement/shared/ui'
 import { StatusBadge } from '@/components/placement/shared/status-badge'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -16,7 +17,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from 'recharts'
 import {
-  Briefcase, Users, ListChecks, Clock, ArrowRight, Plus, UserCheck, Activity,
+  Briefcase, Users, UserCheck, Clock, ArrowRight, Plus, ListChecks, Activity,
 } from 'lucide-react'
 import type { ApplicationStatus } from '@/types'
 
@@ -30,7 +31,6 @@ interface RecentActivityItem {
   actor?: { id: string; name: string } | null
   studentName?: string
   jobTitle?: string
-  companyName?: string
 }
 
 interface DashboardData {
@@ -81,12 +81,45 @@ export function Dashboard() {
     .map(s => ({ status: s, label: STAGE_LABELS[s] ?? s, count: data.stageDistribution[s] ?? 0 }))
     .filter(d => d.count > 0)
 
-  const reviewTone = data.candidatesNeedingReview > 0 ? 'warning' : 'default'
+  const reviewTone = data.candidatesNeedingReview > 0 ? 'warning' : 'success'
+  const reviewEmphasis = data.candidatesNeedingReview > 0
+  const totalApps = Object.values(data.stageDistribution).reduce((a, b) => a + b, 0)
+
+  // Overall empty state — no jobs and no candidates
+  if (data.openJobsForCompany === 0 && data.totalCandidates === 0) {
+    return (
+      <div className="space-y-6">
+        <PageHeader
+          title="Overview"
+          description="Your company's pipeline at a glance"
+        >
+          <Button size="sm" onClick={() => navigate('recruiter/jobs')}>
+            <Plus className="size-4 mr-1" /> Create job posting
+          </Button>
+        </PageHeader>
+
+        <Card>
+          <CardContent className="p-0">
+            <EmptyState
+              icon={Briefcase}
+              title="No jobs posted yet"
+              description="Create your first job to start receiving candidates."
+              action={
+                <Button size="sm" onClick={() => navigate('recruiter/jobs')}>
+                  <Plus className="size-4 mr-1" /> Create your first job
+                </Button>
+              }
+            />
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Recruiter Dashboard"
+        title="Overview"
         description="Your company's pipeline at a glance"
       >
         <Button size="sm" onClick={() => navigate('recruiter/jobs')}>
@@ -94,7 +127,7 @@ export function Dashboard() {
         </Button>
       </PageHeader>
 
-      {/* Stat cards */}
+      {/* Stat cards — every one clickable */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           label="Open jobs"
@@ -102,12 +135,14 @@ export function Dashboard() {
           hint="Posted by your company"
           icon={Briefcase}
           tone="info"
+          onClick={() => navigate('recruiter/jobs')}
         />
         <StatCard
           label="Total candidates"
           value={data.totalCandidates}
           hint="Distinct students applied"
           icon={Users}
+          onClick={() => navigate('recruiter/candidates')}
         />
         <StatCard
           label="Shortlisted"
@@ -115,6 +150,7 @@ export function Dashboard() {
           hint="Currently in shortlist"
           icon={UserCheck}
           tone="success"
+          onClick={() => navigate('recruiter/shortlist')}
         />
         <StatCard
           label="Need review"
@@ -122,6 +158,8 @@ export function Dashboard() {
           hint="UNDER_REVIEW applications"
           icon={Clock}
           tone={reviewTone}
+          emphasis={reviewEmphasis}
+          onClick={() => navigate('recruiter/applications')}
         />
       </div>
 
@@ -132,25 +170,27 @@ export function Dashboard() {
             <CardTitle className="text-base flex items-center gap-2">
               <Activity className="size-4" /> Stage distribution
             </CardTitle>
-            <CardDescription>Applications grouped by current stage</CardDescription>
+            <CardDescription>
+              {totalApps} application{totalApps === 1 ? '' : 's'} across {chartData.length || 0} stage{chartData.length === 1 ? '' : 's'}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             {chartData.length === 0 ? (
               <EmptyState
                 icon={Activity}
                 title="No applications yet"
-                description="Once candidates apply, you'll see the pipeline here"
+                description="Once candidates apply to your jobs, you'll see the pipeline here"
               />
             ) : (
               <div className="h-72 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={chartData} margin={{ top: 8, right: 8, left: 0, bottom: 8 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+                    <CartesianGrid strokeDasharray="3 3" className="stroke-border" vertical={false} />
                     <XAxis
                       dataKey="label"
                       tick={{ fontSize: 11 }}
                       tickLine={false}
-                      axisLine={{ stroke: '#cbd5e1' }}
+                      axisLine={{ stroke: 'var(--border)' }}
                       interval={0}
                       angle={-15}
                       textAnchor="end"
@@ -163,9 +203,11 @@ export function Dashboard() {
                       allowDecimals={false}
                     />
                     <Tooltip
+                      cursor={{ fillOpacity: 0.15 }}
                       contentStyle={{
                         borderRadius: 8,
-                        border: '1px solid #e2e8f0',
+                        border: '1px solid var(--border)',
+                        background: 'var(--card)',
                         fontSize: 12,
                       }}
                       formatter={(value: number) => [`${value} application${value === 1 ? '' : 's'}`, 'Count']}
@@ -173,7 +215,7 @@ export function Dashboard() {
                     <Bar
                       dataKey="count"
                       name="Applications"
-                      fill="#0f172a"
+                      fill="var(--chart-1)"
                       radius={[4, 4, 0, 0]}
                       maxBarSize={56}
                     />
@@ -199,8 +241,8 @@ export function Dashboard() {
               className="justify-start h-auto py-3 flex-col items-start"
             >
               <Briefcase className="size-4 mb-1" />
-              <span className="text-sm font-medium">Manage jobs</span>
-              <span className="text-xs text-slate-500">Post new roles, edit existing</span>
+              <span className="text-sm font-medium">Create job posting</span>
+              <span className="text-xs text-muted-foreground">Post new roles and edit existing</span>
             </Button>
             <Button
               variant="outline"
@@ -209,7 +251,7 @@ export function Dashboard() {
             >
               <UserCheck className="size-4 mb-1" />
               <span className="text-sm font-medium">Review candidates</span>
-              <span className="text-xs text-slate-500">Shortlist top fits per job</span>
+              <span className="text-xs text-muted-foreground">Shortlist top fits per job</span>
             </Button>
             <Button
               variant="outline"
@@ -218,7 +260,7 @@ export function Dashboard() {
             >
               <ListChecks className="size-4 mb-1" />
               <span className="text-sm font-medium">Track pipeline</span>
-              <span className="text-xs text-slate-500">See applications across stages</span>
+              <span className="text-xs text-muted-foreground">See applications across stages</span>
             </Button>
           </CardContent>
         </Card>
@@ -228,9 +270,9 @@ export function Dashboard() {
       <Card>
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
-            <Clock className="size-4" /> Recent activity
+            <Clock className="size-4" /> Recent candidate activity
           </CardTitle>
-          <CardDescription>Last 10 application events for your company</CardDescription>
+          <CardDescription>Latest 10 application events for your company</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
           {data.recentActivity.length === 0 ? (
@@ -240,33 +282,32 @@ export function Dashboard() {
               description="Application events will appear here as they happen"
             />
           ) : (
-            <ScrollArea className="max-h-96">
+            <ScrollArea className="max-h-96 scroll-area-thin">
               <ul className="divide-y">
                 {data.recentActivity.map((e) => (
                   <li
                     key={e.id}
-                    className="p-3 hover:bg-slate-50 dark:hover:bg-slate-900 cursor-pointer"
-                    onClick={() => navigate(`recruiter/applications/${e.applicationId}`)}
+                    className="p-3 hover:bg-muted/40 cursor-pointer"
+                    onClick={() => navigate('recruiter/applications', { id: e.applicationId })}
                   >
-                    <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0 flex-1">
                         <div className="text-sm font-medium truncate">
                           {e.studentName ?? 'Unknown candidate'}
                         </div>
-                        <div className="text-xs text-slate-500 truncate mt-0.5">
+                        <div className="text-xs text-muted-foreground truncate mt-0.5">
                           {e.jobTitle ?? 'Application'}
-                          {e.companyName ? ` · ${e.companyName}` : ''}
                         </div>
-                        <div className="text-xs text-slate-400 mt-0.5 truncate">
+                        <div className="text-xs text-muted-foreground mt-0.5 truncate">
                           by {e.actor?.name ?? 'System'}
                           {e.reason ? ` · ${e.reason}` : ''}
-                          {' · '}{formatDateTime(e.timestamp)}
+                          {' · '}{formatRelativeTime(e.timestamp)}
                         </div>
                       </div>
                       <div className="flex items-center gap-1 shrink-0">
-                        {e.previousStatus && <StatusBadge status={e.previousStatus} />}
-                        {e.previousStatus && <ArrowRight className="size-3 text-slate-400" />}
-                        <StatusBadge status={e.newStatus} />
+                        {e.previousStatus && <StatusBadge status={e.previousStatus} size="sm" />}
+                        {e.previousStatus && <ArrowRight className="size-3 text-muted-foreground" />}
+                        <StatusBadge status={e.newStatus} size="sm" />
                       </div>
                     </div>
                   </li>
@@ -282,12 +323,13 @@ export function Dashboard() {
         <Card>
           <CardHeader>
             <CardTitle className="text-base">Stage counts</CardTitle>
+            <CardDescription>Distribution of applications across the pipeline</CardDescription>
           </CardHeader>
           <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {STAGE_ORDER.map(s => (
               <div key={s} className="rounded-md border p-3">
                 <div className="flex items-center justify-between gap-2">
-                  <StatusBadge status={s} />
+                  <StatusBadge status={s} size="sm" />
                   <Badge variant="secondary" className="tabular-nums text-xs">
                     {data.stageDistribution[s] ?? 0}
                   </Badge>
@@ -304,7 +346,7 @@ export function Dashboard() {
 function DashboardSkeleton() {
   return (
     <div className="space-y-6">
-      <PageHeader title="Recruiter Dashboard" description="Your company's pipeline at a glance" />
+      <PageHeader title="Overview" description="Your company's pipeline at a glance" />
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[0, 1, 2, 3].map(i => <CardSkeleton key={i} />)}
       </div>

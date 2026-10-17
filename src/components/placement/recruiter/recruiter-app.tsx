@@ -3,21 +3,37 @@
 import { useAppStore } from '@/store/app-store'
 import { AppShell, type NavItem } from '@/components/placement/shared/app-shell'
 import {
-  LayoutDashboard, Briefcase, Users, GitBranch,
+  LayoutDashboard, Users, Briefcase, GitBranch, CalendarClock,
+  Settings as SettingsIcon,
 } from 'lucide-react'
 import { Dashboard } from './dashboard'
 import { Jobs } from './jobs'
 import { JobDetail } from './job-detail'
 import { Shortlist } from './shortlist'
 import { CandidateDetail } from './candidate-detail'
+import { Candidates } from './candidates'
+import { Interviews } from './interviews'
 import { Pipeline } from './pipeline'
 import { ApplicationDetail } from './application-detail'
+import { Settings } from './settings'
 
+// Grouped sidebar navigation per spec section 8:
+//   OVERVIEW   — Overview, Candidate Shortlists
+//   JOBS       — My Jobs, Recruitment Pipeline
+//   CANDIDATES — Candidate Profiles, Interviews
+//   SETTINGS   — Settings
 const NAV_ITEMS: NavItem[] = [
-  { view: 'recruiter/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { view: 'recruiter/jobs', label: 'Company Jobs', icon: Briefcase },
-  { view: 'recruiter/shortlist', label: 'Candidate Shortlist', icon: Users },
-  { view: 'recruiter/applications', label: 'Recruitment Pipeline', icon: GitBranch },
+  // OVERVIEW
+  { view: 'recruiter/dashboard', label: 'Overview', icon: LayoutDashboard, group: 'OVERVIEW' },
+  { view: 'recruiter/shortlist', label: 'Candidate Shortlists', icon: Users, group: 'OVERVIEW' },
+  // JOBS
+  { view: 'recruiter/jobs', label: 'My Jobs', icon: Briefcase, group: 'JOBS' },
+  { view: 'recruiter/applications', label: 'Recruitment Pipeline', icon: GitBranch, group: 'JOBS' },
+  // CANDIDATES
+  { view: 'recruiter/candidates', label: 'Candidate Profiles', icon: Users, group: 'CANDIDATES' },
+  { view: 'recruiter/interviews', label: 'Interviews', icon: CalendarClock, group: 'CANDIDATES' },
+  // SETTINGS
+  { view: 'recruiter/settings', label: 'Settings', icon: SettingsIcon, group: 'SETTINGS' },
 ]
 
 // Extract the trailing id from a view path like 'recruiter/jobs/abc123' -> 'abc123'.
@@ -49,19 +65,24 @@ function RecruiterRouter({
 }) {
   // List views (must be checked before detail views)
   if (view === 'recruiter/dashboard') return <Dashboard />
-  if (view === 'recruiter/jobs') return <Jobs />
   if (view === 'recruiter/shortlist') return <Shortlist />
-  if (view === 'recruiter/applications') return <Pipeline />
+  if (view === 'recruiter/jobs') return <Jobs />
+  if (view === 'recruiter/applications') return <Pipeline filterJobId={params.jobId} />
+  if (view === 'recruiter/candidates') return <Candidates />
+  if (view === 'recruiter/interviews') return <Interviews />
+  if (view === 'recruiter/settings') return <Settings />
 
-  // Detail views — id may be supplied in params.id or trailing path segment
-  const jobId = params.id ?? getId(view, 'recruiter/jobs') ?? null
-  if (jobId) return <JobDetail id={jobId} />
+  // Detail views — id may be supplied in params.id or trailing path segment.
+  // Order matters: check list view prefixes first so 'recruiter/candidates' wins over
+  // 'recruiter/candidates/abc'.
+  const jobId = params.jobId ?? params.id ?? getId(view, 'recruiter/jobs')
+  if (jobId && view !== 'recruiter/jobs') return <JobDetail id={jobId} />
 
-  const appId = params.id ?? getId(view, 'recruiter/applications') ?? null
-  if (appId) return <ApplicationDetail id={appId} />
+  const applicationId = params.applicationId ?? params.id ?? getId(view, 'recruiter/applications')
+  if (applicationId && view !== 'recruiter/applications') return <ApplicationDetail id={applicationId} />
 
-  const candidateId = params.id ?? getId(view, 'recruiter/candidates') ?? null
-  if (candidateId) {
+  const candidateId = params.candidateId ?? params.id ?? getId(view, 'recruiter/candidates')
+  if (candidateId && view !== 'recruiter/candidates') {
     return <CandidateDetail id={candidateId} jobId={params.jobId} />
   }
 
