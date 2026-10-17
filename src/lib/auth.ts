@@ -27,7 +27,46 @@ export function verifyPassword(password: string, stored: string): boolean {
 }
 
 // Session token = base64(userId + ':' + random + ':' + signature)
-const SESSION_SECRET = process.env.SESSION_SECRET || 'placement-hub-dev-secret-change-me'
+//
+// SECURITY (P0-B): the session secret MUST come from the environment.
+// In production we FAIL CLOSED if SESSION_SECRET is missing or too short,
+// rather than falling back to a predictable default. A predictable secret
+// would let an attacker forge session tokens and sign in as any user.
+//
+// In development (NODE_ENV !== 'production'), a non-secret fallback is
+// permitted ONLY so the demo can run without manual env setup — but we
+// log a loud warning so developers set the env var before deploying.
+
+const MIN_SECRET_LENGTH = 32
+
+function resolveSessionSecret(): string {
+  const envSecret = process.env.SESSION_SECRET
+  const isProd = process.env.NODE_ENV === 'production'
+
+  if (envSecret && envSecret.length >= MIN_SECRET_LENGTH) {
+    return envSecret
+  }
+
+  if (isProd) {
+    // FAIL CLOSED in production. Throwing here prevents the server from
+    // starting / signing tokens with a predictable secret.
+    throw new Error(
+      '[security] SESSION_SECRET is missing or too short (min ' + MIN_SECRET_LENGTH +
+      ' chars). Set it in your environment before running in production. ' +
+      'Generate one with: openssl rand -hex 32'
+    )
+  }
+
+  // Development only — log loud warning on every module load.
+  console.warn(
+    '[security] SESSION_SECRET not set or too short. Using an INSECURE dev-only fallback. ' +
+    'This MUST NOT be used in production. Set SESSION_SECRET=' +
+    '"$(openssl rand -hex 32)" in .env before deploying.'
+  )
+  return 'skillproof-dev-only-insecure-fallback-DO-NOT-USE-IN-PROD'
+}
+
+const SESSION_SECRET = resolveSessionSecret()
 
 export function createSessionToken(userId: string): string {
   const payload = `${userId}:${Date.now()}:${crypto.randomBytes(16).toString('hex')}`
@@ -110,8 +149,26 @@ export class ResponseError extends Error {
 
 export function errorResponse(err: unknown) {
   if (err instanceof ResponseError) {
+    // Known application error — safe to expose the message to the client.
     return Response.json({ error: err.message }, { status: err.status })
   }
-  console.error('Unhandled error:', err)
-  return Response.json({ error: 'Internal server error' }, { status: 500 })
+  // Unknown / unexpected error — log the full details server-side only,
+  // return a generic message to the client to avoid leaking stack traces,
+  // internal paths, or sensitive information that might appear in error
+  // messages from Prisma or other libraries.
+  // SECURITY: do NOT include `err.message` in the response body.
+  // Do NOT include `err.stack` in the response body.
+  // Do NOT log `err` if it might contain user data — instead log only
+  // the name, message and (in dev) the stack.
+  if (process.env.NODE_ENV !== 'production') {
+    console.error('[unhandled-error]', err instanceof Error ? err.stack : err)
+  } else {
+    // Production: log only the error name + message (no stack, no full object).
+    // This keeps server logs readable without leaking sensitive request data.
+    console.error('[unhandled-error]', err instanceof Error ? err.name : typeof err, err instanceof Error ? err.message : 'no-message')
+  }
+  return Response.json(
+    { error: 'Internal server error. Please try again or contact support if the problem persists.' },
+    { status: 500 }
+  )
 }

@@ -67,7 +67,7 @@ function AuthGate() {
             PH
           </div>
           <Skeleton className="h-4 w-32 mx-auto" />
-          <p className="text-xs text-slate-500 mt-2">Loading Placement Hub…</p>
+          <p className="text-xs text-slate-500 mt-2">Loading Skillproof…</p>
         </div>
       </div>
     )

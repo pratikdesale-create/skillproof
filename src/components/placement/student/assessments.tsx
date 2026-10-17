@@ -87,7 +87,7 @@ export function Assessments() {
           <div className="rounded-md border border-[var(--info)]/30 bg-[var(--info-muted)] p-3 flex items-start gap-2 text-xs text-[var(--info-foreground)]">
             <Info className="size-4 shrink-0 mt-0.5" />
             <p>
-              Placement Hub records your scores but does not host question banks or proctor exams.
+              Skillproof records your scores but does not host question banks or proctor exams.
               Contact your placement officer for instructions and proctoring details before taking an assessment.
             </p>
           </div>
@@ -231,7 +231,7 @@ function AssessmentStartDialog({
               Instructions
             </div>
             <div className="rounded-md border bg-muted/40 p-3 text-sm text-muted-foreground">
-              Ask your placement officer for proctoring details, scoring rubric, and any pre-read materials specific to this assessment. Placement Hub does not host question banks or proctor exams in this MVP.
+              Ask your placement officer for proctoring details, scoring rubric, and any pre-read materials specific to this assessment. Skillproof does not host question banks or proctor exams in this MVP.
             </div>
           </div>
 

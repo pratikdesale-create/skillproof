@@ -342,7 +342,7 @@ export function AppFooter({ variant = 'default' }: { variant?: 'default' | 'mini
     return (
       <footer className="border-t bg-card py-3">
         <div className="container mx-auto px-6 text-center text-xs text-muted-foreground">
-          Placement Hub · Evidence-based placements · Algorithm v1.0 ·{' '}
+          Skillproof · Evidence-based placements · Algorithm v1.0 ·{' '}
           <span className="text-[var(--pending-foreground)]">Demo data — do not use for real recruitment</span>
         </div>
       </footer>
@@ -357,7 +357,7 @@ export function AppFooter({ variant = 'default' }: { variant?: 'default' | 'mini
               <div className="size-6 rounded-md bg-primary text-primary-foreground flex items-center justify-center font-bold text-xs">
                 PH
               </div>
-              <span className="text-sm font-semibold">Placement Hub</span>
+              <span className="text-sm font-semibold">Skillproof</span>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed">
               One intelligent placement platform to connect verified skills with relevant jobs, build evidence-backed resumes and track your career progress.
@@ -370,7 +370,7 @@ export function AppFooter({ variant = 'default' }: { variant?: 'default' | 'mini
           </div>
         </div>
         <div className="border-t mt-6 pt-4 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Placement Hub. Built as a hackathon demonstration.
+          © {new Date().getFullYear()} Skillproof. Built as a hackathon demonstration.
         </div>
       </div>
     </footer>

@@ -171,7 +171,7 @@ export function Sources() {
           <div className="font-medium text-sm text-foreground mb-2 flex items-center gap-2">
             <FileText className="size-4" /> About job sources
           </div>
-          <p>• Sources let Placement Hub automatically pull jobs from external feeds, alumni networks, or partner APIs.</p>
+          <p>• Sources let Skillproof automatically pull jobs from external feeds, alumni networks, or partner APIs.</p>
           <p>• The <code>Sync now</code> action triggers a sync with the source. The current implementation updates the <code>lastSyncAt</code> timestamp and returns a demo payload — full ingestion is not configured in this demo build.</p>
           <p>• Contact your admin to enable real integration endpoints.</p>
         </CardContent>

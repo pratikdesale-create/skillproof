@@ -16,6 +16,17 @@ import {
 export function LandingPage() {
   const navigate = useAppStore(s => s.navigate)
 
+  // P4-A fix: actually scroll to the #how-it-works section instead of
+  // navigating to a fake 'landing#how-it-works' route (which the Zustand
+  // SPA router doesn't understand — it would just stay on the landing page).
+  const scrollToHowItWorks = () => {
+    if (typeof document === 'undefined') return
+    const el = document.getElementById('how-it-works')
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       {/* Top nav */}
@@ -23,9 +34,9 @@ export function LandingPage() {
         <div className="mx-auto w-full max-w-7xl flex items-center justify-between px-4 sm:px-6 py-3 h-14">
           <div className="flex items-center gap-2.5">
             <div className="size-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm shadow-sm">
-              PH
+              S
             </div>
-            <span className="text-base font-semibold tracking-tight">Placement Hub</span>
+            <span className="text-base font-semibold tracking-tight">Skillproof</span>
             <Badge variant="secondary" className="ml-1 text-[10px] h-5">Demo</Badge>
           </div>
           <div className="flex items-center gap-1">
@@ -60,7 +71,7 @@ export function LandingPage() {
                   <Button size="lg" onClick={() => navigate('login')} className="gap-2 w-full sm:w-auto">
                     Explore Opportunities <ArrowRight className="size-4" />
                   </Button>
-                  <Button size="lg" variant="outline" onClick={() => navigate('landing#how-it-works')} className="w-full sm:w-auto">
+                  <Button size="lg" variant="outline" onClick={scrollToHowItWorks} className="w-full sm:w-auto">
                     See How It Works
                   </Button>
                 </div>
@@ -228,7 +239,7 @@ export function LandingPage() {
         {/* Differentiators */}
         <section className="py-16 md:py-20 bg-muted/30 border-y">
           <div className="mx-auto w-full max-w-5xl px-4 sm:px-6">
-            <h2 className="text-center text-2xl md:text-3xl font-semibold tracking-tight mb-10">What makes Placement Hub different</h2>
+            <h2 className="text-center text-2xl md:text-3xl font-semibold tracking-tight mb-10">What makes Skillproof different</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-5">
               {[
                 { icon: <Scale className="size-4 text-primary" />, title: 'Skill normalization engine', desc: 'ReactJS, React.js and React all map to the same canonical skill. Java and JavaScript stay distinct.' },
@@ -282,7 +293,7 @@ export function LandingPage() {
             <div className="max-w-md">
               <div className="flex items-center gap-2 mb-2">
                 <div className="size-6 rounded-md bg-primary text-primary-foreground flex items-center justify-center font-bold text-xs">PH</div>
-                <span className="text-sm font-semibold">Placement Hub</span>
+                <span className="text-sm font-semibold">Skillproof</span>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 One intelligent placement platform to connect verified skills with relevant jobs, build evidence-backed resumes and track your career progress.
@@ -295,7 +306,7 @@ export function LandingPage() {
             </div>
           </div>
           <div className="border-t mt-6 pt-4 text-center text-xs text-muted-foreground">
-            © {new Date().getFullYear()} Placement Hub. Built as a hackathon demonstration. Not affiliated with the referenced platforms.
+            © {new Date().getFullYear()} Skillproof. Built as a hackathon demonstration. Not affiliated with the referenced platforms.
           </div>
         </div>
       </footer>

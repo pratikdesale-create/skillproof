@@ -77,10 +77,10 @@ const RESOURCE_CATALOG: Record<string, CuratedResource[]> = {
 
 // Curated career-readiness articles (not skill-specific).
 const CAREER_ARTICLES = [
-  { id: 'resume-tailoring', title: 'Tailor your resume for each job application', category: 'Resume', duration: '5 min read', source: 'Placement Hub Guide', summary: 'Why generic resumes fail and how to choose which verified evidence to highlight per role.' },
-  { id: 'interview-star', title: 'Use the STAR method for behavioural interviews', category: 'Interview', duration: '8 min read', source: 'Placement Hub Guide', summary: 'Situation, Task, Action, Result — a simple structure for clear, evidence-backed answers.' },
-  { id: 'dsa-strategy', title: 'A 30-day plan for DSA interview prep', category: 'Interview', duration: '10 min read', source: 'Placement Hub Guide', summary: 'Recommended daily focus areas with free practice resources.' },
-  { id: 'github-portfolio', title: 'Polish your GitHub portfolio', category: 'Profile', duration: '6 min read', source: 'Placement Hub Guide', summary: 'Pinned repos, README quality, contribution graph basics.' },
+  { id: 'resume-tailoring', title: 'Tailor your resume for each job application', category: 'Resume', duration: '5 min read', source: 'Skillproof Guide', summary: 'Why generic resumes fail and how to choose which verified evidence to highlight per role.' },
+  { id: 'interview-star', title: 'Use the STAR method for behavioural interviews', category: 'Interview', duration: '8 min read', source: 'Skillproof Guide', summary: 'Situation, Task, Action, Result — a simple structure for clear, evidence-backed answers.' },
+  { id: 'dsa-strategy', title: 'A 30-day plan for DSA interview prep', category: 'Interview', duration: '10 min read', source: 'Skillproof Guide', summary: 'Recommended daily focus areas with free practice resources.' },
+  { id: 'github-portfolio', title: 'Polish your GitHub portfolio', category: 'Profile', duration: '6 min read', source: 'Skillproof Guide', summary: 'Pinned repos, README quality, contribution graph basics.' },
 ]
 
 export async function GET(req: NextRequest) {

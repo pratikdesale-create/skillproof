@@ -75,7 +75,7 @@ export function AppShell({
             PH
           </div>
           <div className="flex-1 text-left">
-            <div className="text-sm font-semibold leading-tight text-sidebar-foreground">Placement Hub</div>
+            <div className="text-sm font-semibold leading-tight text-sidebar-foreground">Skillproof</div>
             <div className="text-xs text-muted-foreground mt-0.5">{roleLabel[user.role]}</div>
           </div>
         </button>
@@ -183,7 +183,7 @@ export function AppShell({
             {/* Breadcrumb-style page indicator on mobile */}
             <div className="md:hidden">
               <div className="text-sm font-medium truncate max-w-[60vw]">
-                {navItems.find(n => route.view === n.view || route.view.startsWith(n.view + '/'))?.label ?? 'Placement Hub'}
+                {navItems.find(n => route.view === n.view || route.view.startsWith(n.view + '/'))?.label ?? 'Skillproof'}
               </div>
             </div>
           </div>
@@ -319,7 +319,7 @@ export function AppShell({
       {/* Sticky footer */}
       <footer className="border-t bg-card py-3 mt-auto">
         <div className="container mx-auto px-6 text-center text-xs text-muted-foreground">
-          Placement Hub · Evidence-based placements · Algorithm v1.0 ·{' '}
+          Skillproof · Evidence-based placements · Algorithm v1.0 ·{' '}
           <span className="text-[var(--pending-foreground)]">Demo data — do not use for real recruitment</span>
         </div>
       </footer>

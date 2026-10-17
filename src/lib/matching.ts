@@ -178,16 +178,50 @@ export interface ScoreBreakdown {
   isRequired: boolean
   weight: number
   matchValue: number
+  // P3 fix: distinguish verified vs provisional vs missing in the breakdown
+  coverageTier: 'verified' | 'provisional' | 'missing'
   bestEvidence?: EvidenceMatch
   evidenceCount: number
 }
 
 export interface MatchExplanation {
   fitScore: number
+  /**
+   * LEGACY (kept for backward compat): counts a requirement as "covered"
+   * if any evidence contributes > 0 to the score (including provisional).
+   * Use `verifiedRequiredCoverage` / `provisionalRequiredCoverage` /
+   * `missingRequiredCoverage` for the P3-correct separated view.
+   */
   requiredCoverage: number
   preferredCoverage: number
-  matchingSkills: Array<{ skillId: string; name: string; evidenceIds: string[] }>
-  missingSkills: Array<{ skillId: string; name: string; weight: number; isRequired: boolean; status: string }>
+  // P3 fix: explicit verified / provisional / missing coverage tiers.
+  verifiedRequiredCoverage: number
+  provisionalRequiredCoverage: number
+  missingRequiredCoverage: number
+  verifiedPreferredCoverage: number
+  provisionalPreferredCoverage: number
+  missingPreferredCoverage: number
+  matchingSkills: Array<{
+    skillId: string
+    name: string
+    evidenceIds: string[]
+    coverageTier: 'verified' | 'provisional'
+  }>
+  missingSkills: Array<{
+    skillId: string
+    name: string
+    weight: number
+    isRequired: boolean
+    status: string
+  }>
+  /** Skills with pending/unverified evidence — neither fully covered nor missing. */
+  provisionalSkills: Array<{
+    skillId: string
+    name: string
+    weight: number
+    isRequired: boolean
+    evidenceIds: string[]
+  }>
   breakdown: ScoreBreakdown[]
   factorsSummary: string
   recommendation: string
@@ -203,9 +237,20 @@ const EVIDENCE_VALUE_RULES: Record<string, number> = {
   NEEDS_MORE_EVIDENCE: 0,
 }
 
+/** Returns the coverage tier for a given matchValue (0..1). */
+function coverageTierFor(matchValue: number): 'verified' | 'provisional' | 'missing' {
+  // matchValue == 1.0 → fully verified evidence
+  // 0 < matchValue < 1.0 → provisional (pending / unverified) credit
+  // matchValue == 0 → no supporting evidence
+  if (matchValue >= 1.0) return 'verified'
+  if (matchValue > 0) return 'provisional'
+  return 'missing'
+}
+
 function deduplicateSkillContribution(evidence: EvidenceMatch[]): { matchValue: number; best?: EvidenceMatch } {
   if (!evidence || evidence.length === 0) return { matchValue: 0 }
-  // Take max contribution across all evidence items
+  // Take max contribution across all evidence items — a student cannot
+  // inflate their score by attaching many similar links.
   let best: EvidenceMatch | undefined
   let max = 0
   for (const ev of evidence) {
@@ -228,24 +273,38 @@ export function calculateMatch(
   const breakdown: ScoreBreakdown[] = []
   const matchingSkills: MatchExplanation['matchingSkills'] = []
   const missingSkills: MatchExplanation['missingSkills'] = []
+  const provisionalSkills: MatchExplanation['provisionalSkills'] = []
 
   let totalWeightedMatch = 0
   let totalWeight = 0
+
+  // Legacy coverage counters (provisional counts as covered)
   let reqCovered = 0
   let reqTotal = 0
   let prefCovered = 0
   let prefTotal = 0
 
+  // P3 fix: separated verified / provisional / missing counters
+  let reqVerified = 0, reqProvisional = 0, reqMissing = 0
+  let prefVerified = 0, prefProvisional = 0, prefMissing = 0
+
   for (const req of requirements) {
     const ev = studentEvidenceMap.get(req.skillId) ?? []
     const { matchValue, best } = deduplicateSkillContribution(ev)
+    const tier = coverageTierFor(matchValue)
     totalWeightedMatch += req.weight * matchValue
     totalWeight += req.weight
 
     if (req.isRequired) {
       reqTotal += 1
-      if (matchValue >= 0.25) reqCovered += 1
-      if (matchValue === 0) {
+      // Legacy: provisional counts as covered
+      if (matchValue > 0) reqCovered += 1
+      // P3 separated tiers
+      if (tier === 'verified') reqVerified += 1
+      else if (tier === 'provisional') reqProvisional += 1
+      else reqMissing += 1
+
+      if (tier === 'missing') {
         missingSkills.push({
           skillId: req.skillId,
           name: req.displayName,
@@ -253,11 +312,23 @@ export function calculateMatch(
           isRequired: true,
           status: ev.length === 0 ? 'NO_EVIDENCE' : 'INSUFFICIENT_EVIDENCE',
         })
+      } else if (tier === 'provisional') {
+        provisionalSkills.push({
+          skillId: req.skillId,
+          name: req.displayName,
+          weight: req.weight,
+          isRequired: true,
+          evidenceIds: ev.filter(e => EVIDENCE_VALUE_RULES[e.status] > 0).map(e => e.evidenceId),
+        })
       }
     } else {
       prefTotal += 1
-      if (matchValue >= 0.25) prefCovered += 1
-      if (matchValue === 0) {
+      if (matchValue > 0) prefCovered += 1
+      if (tier === 'verified') prefVerified += 1
+      else if (tier === 'provisional') prefProvisional += 1
+      else prefMissing += 1
+
+      if (tier === 'missing') {
         missingSkills.push({
           skillId: req.skillId,
           name: req.displayName,
@@ -265,14 +336,23 @@ export function calculateMatch(
           isRequired: false,
           status: ev.length === 0 ? 'NO_EVIDENCE' : 'INSUFFICIENT_EVIDENCE',
         })
+      } else if (tier === 'provisional') {
+        provisionalSkills.push({
+          skillId: req.skillId,
+          name: req.displayName,
+          weight: req.weight,
+          isRequired: false,
+          evidenceIds: ev.filter(e => EVIDENCE_VALUE_RULES[e.status] > 0).map(e => e.evidenceId),
+        })
       }
     }
 
-    if (matchValue >= 0.25 && best) {
+    if (tier !== 'missing' && best) {
       matchingSkills.push({
         skillId: req.skillId,
         name: req.displayName,
         evidenceIds: ev.filter(e => EVIDENCE_VALUE_RULES[e.status] > 0).map(e => e.evidenceId),
+        coverageTier: tier,
       })
     }
 
@@ -282,14 +362,23 @@ export function calculateMatch(
       isRequired: req.isRequired,
       weight: req.weight,
       matchValue,
+      coverageTier: tier,
       bestEvidence: best,
       evidenceCount: ev.length,
     })
   }
 
   const fitScore = totalWeight === 0 ? 0 : Math.round((totalWeightedMatch / totalWeight) * 1000) / 10
+  // Legacy coverage (provisional counts as covered)
   const requiredCoverage = reqTotal === 0 ? 1 : reqCovered / reqTotal
   const preferredCoverage = prefTotal === 0 ? 1 : prefCovered / prefTotal
+  // P3 fix: separated coverage tiers — each in [0, 1]
+  const verifiedRequiredCoverage = reqTotal === 0 ? 1 : reqVerified / reqTotal
+  const provisionalRequiredCoverage = reqTotal === 0 ? 0 : reqProvisional / reqTotal
+  const missingRequiredCoverage = reqTotal === 0 ? 0 : reqMissing / reqTotal
+  const verifiedPreferredCoverage = prefTotal === 0 ? 1 : prefVerified / prefTotal
+  const provisionalPreferredCoverage = prefTotal === 0 ? 0 : prefProvisional / prefTotal
+  const missingPreferredCoverage = prefTotal === 0 ? 0 : prefMissing / prefTotal
 
   // Build human-readable factors summary
   const topMatched = breakdown
@@ -313,10 +402,20 @@ export function calculateMatch(
 
   return {
     fitScore,
+    // Legacy fields (kept for backward compat — provisional counts as covered)
     requiredCoverage,
     preferredCoverage,
+    // P3 fix: separated coverage tiers in [0, 1] — sum to 1.0 (or to 0 with
+    // an empty requirements set treated as `verified = 1`).
+    verifiedRequiredCoverage,
+    provisionalRequiredCoverage,
+    missingRequiredCoverage,
+    verifiedPreferredCoverage,
+    provisionalPreferredCoverage,
+    missingPreferredCoverage,
     matchingSkills,
     missingSkills,
+    provisionalSkills,
     breakdown,
     factorsSummary,
     recommendation,

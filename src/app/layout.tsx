@@ -10,11 +10,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Placement Hub — Prove your skills. Find your next opportunity.",
+  title: "Skillproof — Prove your skills. Find your next opportunity.",
   description:
     "One intelligent placement platform to connect verified skills with relevant jobs, build evidence-backed resumes and track your career progress.",
   keywords: [
-    "Placement Hub",
+    "Skillproof",
     "campus placements",
     "evidence-based skills",
     "job matching",
@@ -22,20 +22,20 @@ export const metadata: Metadata = {
     "Next.js",
     "TypeScript",
   ],
-  authors: [{ name: "Placement Hub" }],
+  authors: [{ name: "Skillproof" }],
   icons: {
     icon: "/logo.svg",
   },
   openGraph: {
-    title: "Placement Hub",
+    title: "Skillproof",
     description:
       "Connect verified skills with relevant jobs, build evidence-backed resumes and track your career progress.",
-    siteName: "Placement Hub",
+    siteName: "Skillproof",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Placement Hub",
+    title: "Skillproof",
     description:
       "Connect verified skills with relevant jobs, build evidence-backed resumes and track your career progress.",
   },

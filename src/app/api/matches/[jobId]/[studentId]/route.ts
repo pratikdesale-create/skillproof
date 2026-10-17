@@ -52,10 +52,24 @@ export async function GET(
         ? { id: stored.student.id, name: stored.student.user.name }
         : null,
       fitScore: live?.fitScore ?? stored?.fitScore ?? 0,
+      // Legacy coverage fields (kept for backward compat)
       requiredCoverage: live?.requiredCoverage ?? stored?.requiredCoverage ?? 0,
       preferredCoverage: live?.preferredCoverage ?? stored?.preferredCoverage ?? 0,
+      // P3 fix: separated verified / provisional / missing coverage tiers.
+      // These come from the live computation (which now exposes them).
+      // Falls back to 0 if the live computation wasn't possible (e.g. empty
+      // job requirements — in which case verified = 1.0 by convention).
+      verifiedRequiredCoverage: live?.verifiedRequiredCoverage ?? 0,
+      provisionalRequiredCoverage: live?.provisionalRequiredCoverage ?? 0,
+      missingRequiredCoverage: live?.missingRequiredCoverage ?? 0,
+      verifiedPreferredCoverage: live?.verifiedPreferredCoverage ?? 0,
+      provisionalPreferredCoverage: live?.provisionalPreferredCoverage ?? 0,
+      missingPreferredCoverage: live?.missingPreferredCoverage ?? 0,
       matchingSkills: live?.matchingSkills ?? safeParseJson(stored?.matchingSkills ?? null, []) ?? [],
       missingSkills: live?.missingSkills ?? safeParseJson(stored?.missingSkills ?? null, []) ?? [],
+      // P3 fix: provisional skills (pending/unverified evidence — neither
+      // fully covered nor missing).
+      provisionalSkills: live?.provisionalSkills ?? [],
       breakdown: live?.breakdown ?? [],
       factorsSummary: live?.factorsSummary ?? '',
       recommendation: live?.recommendation ?? '',

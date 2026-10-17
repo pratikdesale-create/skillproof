@@ -41,7 +41,7 @@ export function LoginPage() {
             <div className="size-8 rounded-lg bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 flex items-center justify-center font-bold text-sm">
               PH
             </div>
-            <span className="text-lg font-semibold">Placement Hub</span>
+            <span className="text-lg font-semibold">Skillproof</span>
           </button>
           <Button variant="ghost" size="sm" onClick={() => navigate('landing')}>
             <ArrowLeft className="size-4 mr-1" /> Back
@@ -54,7 +54,7 @@ export function LoginPage() {
           <div className="hidden md:flex flex-col justify-center">
             <h1 className="text-3xl font-bold mb-3">Welcome back</h1>
             <p className="text-slate-600 dark:text-slate-400 mb-6">
-              Sign in to continue to your Placement Hub dashboard. Your role determines what you can see and do.
+              Sign in to continue to your Skillproof dashboard. Your role determines what you can see and do.
             </p>
             <div className="space-y-2">
               <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Demo accounts (clearly fake):</p>

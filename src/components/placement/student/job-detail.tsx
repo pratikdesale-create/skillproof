@@ -394,7 +394,7 @@ export function JobDetail({ id }: { id: string }) {
             <CardContent className="space-y-3 text-sm">
               <div className="flex items-center justify-between gap-3">
                 <span className="text-muted-foreground">Apply via</span>
-                <span className="font-medium">Placement Hub (1-click apply)</span>
+                <span className="font-medium">Skillproof (1-click apply)</span>
               </div>
               {job.applicationUrl && (
                 <div className="flex items-center justify-between gap-3">

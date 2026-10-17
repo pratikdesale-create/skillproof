@@ -411,19 +411,56 @@ The API follows REST conventions and returns JSON. All endpoints are under `/api
 
 ```bash
 bun run lint          # ESLint check (Next.js + TypeScript rules)
+bun run test          # Vitest unit tests (29 tests covering security, evidence, matching)
 bun run db:push       # Push schema to database
-bun run scripts/seed.ts  # Seed demo data
-bun run dev          # Start dev server on port 3000
+bun run seed          # Seed demo data (DESTRUCTIVE — wipes existing data first)
+bun run dev           # Start dev server on port 3000
 ```
 
-There are no automated test suites in this MVP. Manual verification is performed via the seeded demo accounts and the `/api/*` endpoints.
+### Automated tests (`scripts/tests/security-evidence-matching.test.ts`)
+
+29 unit tests covering the spec's "Required testing" items:
+
+| # | Test | Coverage |
+|---|---|---|
+| 1 | Alias normalisation (whitespace + case) | P3 — matching engine |
+| 2 | Deterministic scores (empty / all-verified / all-provisional) | P3 — matching engine |
+| 3 | Duplicate-evidence handling (max contribution, no sum) | P3 — matching engine |
+| 4 | Verified / provisional / missing coverage tiers | P3 — matching engine |
+| 5 | Empty-requirements edge case | P3 — matching engine |
+| 6 | `validateSkillClaim` (SUPPORTED / NEEDS_REVIEW / UNSUPPORTED) | P2 — evidence integrity |
+| 7 | `validateProjectClaim` — no auto-attach of unrelated evidence | P2 — evidence integrity |
+| 8 | `validateProjectClaim` — cross-student guard (nonexistent evidenceId) | P2 — evidence integrity |
+| 9 | `validateAssessmentClaim` — wrong-evidence-type rejection | P2 — evidence integrity |
+| 10 | `validateAssessmentClaim` — nonexistent evidenceId | P2 — evidence integrity |
+| 11 | `validateCertificationClaim` (verified / pending / rejected) | P2 — evidence integrity |
+| 12 | `filterOwnedEvidenceIds` — drops foreign evidence IDs | P2 — cross-student guard |
+
+### Manual / end-to-end tests (documented in `scripts/tests/README.md`)
+
+These require a running dev server and are documented as manual checks:
+
+- Anonymous registration requesting `OFFICER` is rejected (forced to STUDENT)
+- Unauthenticated requests to protected officer APIs are denied (401)
+- A student cannot access officer-only features (403)
+- Production fails safely when `SESSION_SECRET` is missing
+- Landing-page "See How It Works" CTA scrolls to the section
+- GLM failure / malformed output does not corrupt stored data
+- Secrets are not staged, committed, or exposed to the frontend
+- Demo reset is safe, repeatable, and restricted to demo data
 
 ## External integrations
 
 The platform is designed to work end-to-end without external integrations. The following are optional and clearly labeled:
 
-- **GitHub REST API** — the project supports linking GitHub repository URLs as evidence. The seed data uses `https://github.com/<user>/...` URLs. No GitHub API token is required for the MVP — repository metadata is presented as submitted, not validated. To enable live GitHub metadata retrieval, set `GITHUB_TOKEN` in `.env` and implement the integration adapter in `src/lib/integrations/github.ts` (placeholder).
-- **AI provider** — the deterministic resume generator and matching engine run without any AI API key. An optional LLM can refine resume bullet wording; set `AI_PROVIDER_API_KEY` and `AI_MODEL` in `.env` to enable. The LLM cannot invent metrics, employment history or achievements — it only rewrites supported facts.
+- **GLM (z-ai-web-dev-sdk)** — **LIVE in this environment**. The server-side service at `src/lib/ai/glm-service.ts` provides three functions:
+  - `parseJobDescription(text)` — extracts job title, required/preferred skills, responsibilities, qualifications, source excerpts, confidence indicators, and items needing human review. Treats job descriptions as untrusted data (no instruction-following).
+  - `explainMatch(matchData)` — explains an already-computed match score in plain language. **Does NOT override the authoritative score** and **does NOT invent evidence**.
+  - `draftResumeBullets(input)` — generates resume bullets with evidence references. **Validates every evidence ID against a trusted whitelist** — any IDs in the GLM output that don't exist in the supplied evidence pool are stripped.
+  - Health check: `GET /api/ai/health` (officer-only) returns `{ available: boolean, model?: string, error?: string }`.
+  - API: `POST /api/ai` (officer/recruiter) with body `{ description: string }` for parsing or `{ fitScore, ... }` for explaining.
+  - Each result includes `source: 'live_glm' | 'demo_fallback'` so the UI can label the output honestly. If GLM credentials are missing or the call times out (30s), a deterministic fallback is returned with the error explanation.
+- **GitHub REST API** — the project supports linking GitHub repository URLs as evidence. The seed data uses `https://github.com/<user>/...` URLs. No GitHub API token is required for the MVP — repository metadata is presented as submitted, not validated. To enable live GitHub metadata retrieval, set `GITHUB_TOKEN` in `.env`.
 - **Partner job feeds** — the JobSource model supports FEED/API types with `endpoint` and `apiKey` fields. No live feeds are connected. To add a feed, create a new adapter in `src/lib/integrations/` and a sync job in `POST /api/job-sources/[id]/sync`.
 
 ## Common troubleshooting
@@ -434,19 +471,35 @@ The platform is designed to work end-to-end without external integrations. The f
 
 **`Module not found` errors after pull**: run `bun install` to ensure new dependencies are installed.
 
-**Seed fails with unique constraint**: the seed script wipes data first, but if you've made manual changes that conflict, run `bun run db:reset` (destructive) then `bun run scripts/seed.ts`.
+**Seed fails with unique constraint**: the seed script wipes data first, but if you've made manual changes that conflict, run `bun run db:reset` (destructive) then `bun run seed`.
 
 **PDF download returns 401**: sign in first — the PDF endpoint requires authentication and ownership checks.
 
 **Notifications popover shows "Loading…" forever**: check that `/api/notifications` returns 200 — the query is `enabled: !!user` so it skips when not logged in.
 
+**Production server fails to start with `[security] SESSION_SECRET is missing`**: set `SESSION_SECRET=$(openssl rand -hex 32)` in your environment. This is the P0-B security fix — the server FAILS CLOSED in production if the secret is missing or too short.
+
+**GLM endpoints return `source: 'demo_fallback'`**: the z-ai-web-dev-sdk credentials are not configured or the request timed out. Check `GET /api/ai/health`. The fallback is deterministic and clearly labeled — the app continues to work without GLM.
+
 ## Security and privacy considerations
 
 - **Password hashing**: PBKDF2 with 120,000 iterations + 16-byte salt + SHA-512 (Node built-in `crypto`).
 - **Session tokens**: HMAC-SHA256 signed tokens in HttpOnly + SameSite=Lax cookies. 7-day expiry. No `Secure` flag in dev (set in production via `NODE_ENV=production`).
+- **P0-A Public registration is STUDENT-only**: the `POST /api/auth/register` endpoint accepts but **ignores** any client-supplied `role` field and forces the role to `STUDENT`. Attempts to register as `OFFICER` / `RECRUITER` / `ADMIN` are silently downgraded to `STUDENT` and the attempt is logged server-side for audit. Officer/recruiter/admin accounts must be provisioned through the trusted seed script (`bun run seed`) or a future admin-invite workflow.
+- **P0-B Session secret fail-closed in production**: the session-signing secret comes from `process.env.SESSION_SECRET`. In `NODE_ENV=production`, the server **throws on startup** if the secret is missing or shorter than 32 chars — it does NOT fall back to a predictable default. In development, an insecure fallback is used with a loud console warning so developers set the env var before deploying. Generate one with `openssl rand -hex 32`.
+- **P0-C Prisma query logging restricted to dev**: `src/lib/db.ts` configures Prisma with `log: ['query', 'warn', 'error']` in development and `log: ['warn', 'error']` in production (with `errorFormat: 'minimal'`). This prevents user records, password-hash lookups, and session-token values from leaking into production logs.
+- **P0-C Safe error responses**: `errorResponse()` returns a generic `"Internal server error"` message to the client for unhandled errors (no stack traces, no Prisma internals). Full stack traces are logged server-side in dev only.
 - **Server-enforced RBAC**: every protected endpoint calls `requireUser(req)` and `requireRole(...)` or `requireStudentProfileId(...)` / `requireRecruiterCompanyId(...)`. Frontend route guards are convenience only.
 - **Recruiter scoping**: recruiters only see their own company's jobs, applications, interviews and offers. The GET endpoints filter by `recruiterProfile.companyId`.
 - **Student data isolation**: students can only access their own skills, evidence, matches, resumes, applications and notifications.
+- **P2 Evidence validation**: resume generation goes through `src/lib/evidence-validation.ts` which enforces:
+  - Evidence records must exist and belong to the correct student.
+  - Project claims must reference the specifically linked `Project.evidenceId` — no indiscriminate auto-attachment of unrelated project evidence.
+  - Assessment claims must reference evidence of type `'assessment'` (not project/github/etc.).
+  - Pending evidence → `NEEDS_REVIEW` (NOT `SUPPORTED`).
+  - Missing/rejected/cross-student evidence → `UNSUPPORTED`.
+- **P3 Match score integrity**: the authoritative match score is computed deterministically by `src/lib/matching.ts` on the server. GLM may **explain** the score but **cannot override it**. GLM may **not** declare evidence verified — verification is a human-reviewer action via `POST /api/evidence/[id]/review`.
+- **P5 GLM input safety**: job descriptions are passed to GLM as untrusted data with explicit instructions not to follow embedded instructions. GLM outputs are JSON-validated and sanitised before being saved. Resume-bullet evidence IDs are filtered against a server-supplied whitelist — any IDs in GLM output that don't exist in the trusted evidence pool are stripped.
 - **Audit log**: evidence reviews, application status changes and duplicate merges are recorded in `AuditEvent`.
 - **Input validation**: every request body is validated with Zod.
 - **No secrets in source**: `.env` is gitignored. The seed script uses clearly fake emails and synthetic data.
@@ -455,12 +508,14 @@ The platform is designed to work end-to-end without external integrations. The f
 ## Known limitations
 
 - **No real-time WebSocket updates**: notifications are polled every 60 seconds via TanStack Query `refetchInterval`.
-- **No automated test suite**: verification is manual via the seeded demo accounts and API smoke tests. The spec required "implement actual tests" but the MVP prioritized a working end-to-end product.
+- **P4-B URL/hash routing not yet implemented**: the SPA uses Zustand-persisted view state — the browser URL does not update on navigation. Refresh keeps your current view (via persisted state), but direct URLs and browser back/forward do not work per-view. This is documented as a known limitation; a proper Next.js App Router migration would require restructuring the single-`/` route into per-view routes, which is out of scope for this iteration.
+- **P4-D Notifications**: only Sonner `Toaster` is active. The shadcn `Toaster` component in `src/components/ui/toaster.tsx` wraps Sonner, so there is no duplication.
 - **Assessments are MVP scope**: the assessments directory shows available assessments and recorded results, but does not implement a full question bank or proctoring (spec: "Begin with a manageable MVP" and "Do not implement invasive monitoring").
 - **Career events/hackathons not implemented**: spec said "Include career events or hackathons only if an actual event-management workflow can be implemented."
 - **No DOCX export**: PDF export is implemented; DOCX is not (spec: "Optional DOCX export if supported").
 - **No live job feed integration**: JobSource FEED/API types are stubbed. The sync endpoint returns a "demo: integration not configured" message.
 - **Skill normalization is deterministic only**: no semantic/context-aware matching (spec: "Add context-aware or semantic matching only when needed").
+- **Seed script is destructive**: `bun run seed` wipes all existing data before inserting demo records. It is restricted to demo/dev use — never run against shared or production data without a reviewed backup.
 
 ## Suggested future improvements
 

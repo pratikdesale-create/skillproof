@@ -70,12 +70,15 @@ export function useRegister() {
   const navigate = useAppStore(s => s.navigate)
   const setUser = useAppStore(s => s.setUser)
 
+  // SECURITY: public registration is STUDENT-only. The `role` field is
+  // accepted but the server forces it to STUDENT. See
+  // src/app/api/auth/register/route.ts (P0-A security fix).
   return useMutation({
     mutationFn: async (body: {
       name: string
       email: string
       password: string
-      role: 'STUDENT' | 'OFFICER' | 'RECRUITER'
+      role?: 'STUDENT' // accepted for backward compat; server forces STUDENT
       university?: string
       batch?: string
       branch?: string
@@ -84,7 +87,7 @@ export function useRegister() {
       setUser(user)
       qc.invalidateQueries({ queryKey: ['me'] })
       navigate(roleHomeView(user.role))
-      toast.success(`Welcome to Placement Hub, ${user.name.split(' ')[0]}!`)
+      toast.success(`Welcome to Skillproof, ${user.name.split(' ')[0]}!`)
     },
     onError: (err: unknown) => {
       const e = err as { message?: string }
