@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { ProgressRing } from '@/components/placement/shared/ui'
 import { FitScoreBadge, StatusBadge } from '@/components/placement/shared/status-badge'
 import { SkillTag } from '@/components/placement/shared/skill-tag'
+import { cn } from '@/lib/utils'
 import {
   ShieldCheck, FileText, Target, Users, BarChart3, GitBranch, Award, Scale, ArrowRight,
   CheckCircle2, Sparkles, TrendingUp, Briefcase, Bell, ChevronRight,
@@ -88,9 +89,9 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* Stats band */}
-        <section className="border-y bg-card/50">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 py-8">
+        {/* Stats band — colorful gradient */}
+        <section className="border-y gradient-brand">
+          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 py-10">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 text-center">
               <Stat label="Demo students" value="16" sub="seeded profiles" />
               <Stat label="Active jobs" value="10" sub="across 6 companies" />
@@ -100,10 +101,15 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* Value propositions */}
-        <section className="py-16 md:py-24">
+        {/* Value propositions — colorful gradient cards */}
+        <section className="py-16 md:py-24 bg-gradient-to-b from-background to-muted/30">
           <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
             <div className="max-w-2xl mb-10">
+              <div className="inline-flex items-center gap-2 mb-3">
+                <span className="size-2 rounded-full bg-[var(--verified)]"></span>
+                <span className="size-2 rounded-full bg-[var(--pending)]"></span>
+                <span className="size-2 rounded-full bg-[var(--info)]"></span>
+              </div>
               <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
                 Three pillars of an honest placement process
               </h2>
@@ -117,6 +123,7 @@ export function LandingPage() {
                 eyebrow="Pillar 1"
                 title="Verified Skills"
                 description="Link each skill to assessments, projects, GitHub repositories, certifications or reviewer feedback. Reviewers approve, reject or request more evidence with an audit trail."
+                gradient="gradient-emerald-subtle border-top-emerald"
                 points={[
                   'Assessments with scores',
                   'Project evidence with reviewer notes',
@@ -129,6 +136,7 @@ export function LandingPage() {
                 eyebrow="Pillar 2"
                 title="Explainable Job Matching"
                 description="A deterministic scoring engine compares job requirements to evidence-backed skills. Every score breaks down by skill, evidence and contribution."
+                gradient="gradient-blue-subtle border-top-blue"
                 points={[
                   'Weighted required vs. preferred skills',
                   'Required-skill coverage flag',
@@ -141,6 +149,7 @@ export function LandingPage() {
                 eyebrow="Pillar 3"
                 title="Truthful Resume Building"
                 description="Resume bullets link to the underlying evidence records. Unsupported claims are flagged or excluded — the AI can refine wording but cannot invent metrics or achievements."
+                gradient="gradient-violet-subtle border-top-violet"
                 points={[
                   'Job-specific resume versions',
                   'Evidence-traceable bullets',
@@ -422,28 +431,28 @@ function MiniStat({ label, value, tone }: { label: string; value: string; tone: 
 function Stat({ label, value, sub }: { label: string; value: string; sub: string }) {
   return (
     <div>
-      <div className="text-2xl md:text-3xl font-bold tabular-nums text-foreground">{value}</div>
-      <div className="text-xs text-muted-foreground mt-1">{label}</div>
-      <div className="text-[10px] text-muted-foreground/70">{sub}</div>
+      <div className="text-3xl md:text-4xl font-bold tabular-nums text-primary-foreground">{value}</div>
+      <div className="text-xs text-primary-foreground/80 mt-1 font-medium">{label}</div>
+      <div className="text-[10px] text-primary-foreground/60">{sub}</div>
     </div>
   )
 }
 
 function ValueCard({
-  icon, eyebrow, title, description, points,
-}: { icon: React.ReactNode; eyebrow: string; title: string; description: string; points: string[] }) {
+  icon, eyebrow, title, description, points, gradient = 'gradient-emerald-subtle',
+}: { icon: React.ReactNode; eyebrow: string; title: string; description: string; points: string[]; gradient?: string }) {
   return (
-    <Card className="h-full flex flex-col">
+    <Card className={cn('h-full flex flex-col overflow-hidden border-top-emerald', gradient)}>
       <CardHeader>
-        <div className="size-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center mb-3">
+        <div className="size-12 rounded-xl icon-chip-emerald flex items-center justify-center mb-3 shadow-sm">
           {icon}
         </div>
-        <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">{eyebrow}</div>
+        <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">{eyebrow}</div>
         <CardTitle className="text-lg">{title}</CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col gap-4">
         <CardDescription className="text-sm leading-relaxed">{description}</CardDescription>
-        <ul className="space-y-1.5 text-sm text-muted-foreground mt-auto">
+        <ul className="space-y-2 text-sm text-muted-foreground mt-auto">
           {points.map(p => (
             <li key={p} className="flex items-start gap-2">
               <CheckCircle2 className="size-4 mt-0.5 text-[var(--verified)] shrink-0" />
@@ -459,13 +468,17 @@ function ValueCard({
 function Step({
   num, title, description, icon,
 }: { num: number; title: string; description: string; icon: React.ReactNode }) {
+  const gradients = ['gradient-emerald-subtle border-top-emerald', 'gradient-blue-subtle border-top-blue', 'gradient-amber-subtle border-top-amber', 'gradient-violet-subtle border-top-violet']
+  const iconChips = ['icon-chip-emerald', 'icon-chip-blue', 'icon-chip-amber', 'icon-chip-violet']
+  const g = gradients[(num - 1) % gradients.length]
+  const ic = iconChips[(num - 1) % iconChips.length]
   return (
-    <div className="relative rounded-xl border bg-card p-5">
-      <div className="flex items-center gap-2 mb-2">
-        <div className="size-7 rounded-full bg-primary text-primary-foreground text-xs font-semibold flex items-center justify-center">
+    <div className={cn('relative rounded-xl border bg-card p-5 overflow-hidden', g)}>
+      <div className="flex items-center gap-2.5 mb-3">
+        <div className={cn('size-9 rounded-lg text-sm font-bold flex items-center justify-center shadow-sm', ic)}>
           {num}
         </div>
-        {icon}
+        <div className="text-muted-foreground">{icon}</div>
       </div>
       <h3 className="text-sm font-semibold">{title}</h3>
       <p className="text-sm text-muted-foreground mt-1 leading-relaxed">{description}</p>
@@ -477,9 +490,9 @@ function RoleCard({
   title, items, accent, onClick, cta,
 }: { title: string; items: string[]; accent: string; onClick: () => void; cta: string }) {
   return (
-    <Card className="h-full flex flex-col hover:shadow-md transition-shadow">
+    <Card className="h-full flex flex-col hover:shadow-md transition-shadow overflow-hidden border-top-brand">
       <CardHeader>
-        <div className={`size-2 rounded-full ${accent} mb-1`} />
+        <div className={`size-3 rounded-full ${accent} mb-2 shadow-sm`} />
         <CardTitle className="text-lg">{title}</CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col gap-4">

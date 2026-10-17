@@ -14,7 +14,9 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   Briefcase, ArrowRight, Inbox, Clock,
+  FileText, Eye, ShieldCheck, ClipboardCheck, Users, Trophy, XCircle, Ban,
 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import type { ApplicationStatus } from '@/types'
 
 interface ApplicationRow {
@@ -33,15 +35,23 @@ interface ApplicationRow {
 }
 interface ApplicationsResponse { data: ApplicationRow[]; total: number }
 
-const COLUMNS: { status: ApplicationStatus; label: string }[] = [
-  { status: 'APPLIED', label: 'Applied' },
-  { status: 'UNDER_REVIEW', label: 'Under Review' },
-  { status: 'SHORTLISTED', label: 'Shortlisted' },
-  { status: 'ASSESSMENT', label: 'Assessment' },
-  { status: 'INTERVIEW', label: 'Interview' },
-  { status: 'OFFER', label: 'Offer' },
-  { status: 'REJECTED', label: 'Rejected' },
-  { status: 'WITHDRAWN', label: 'Withdrawn' },
+// Each column has a distinct color theme — vibrant but professional
+const COLUMNS: Array<{
+  status: ApplicationStatus
+  label: string
+  icon: React.ComponentType<{ className?: string }>
+  headerGradient: string
+  cardBorder: string
+  countBadge: string
+}> = [
+  { status: 'APPLIED',        label: 'Applied',        icon: FileText,       headerGradient: 'gradient-blue-subtle',     cardBorder: 'border-left-blue',    countBadge: 'bg-[var(--info)] text-[var(--info-foreground)]' },
+  { status: 'UNDER_REVIEW',   label: 'Under Review',   icon: Eye,            headerGradient: 'gradient-amber-subtle',   cardBorder: 'border-left-amber',   countBadge: 'bg-[var(--pending)] text-[var(--pending-foreground)]' },
+  { status: 'SHORTLISTED',    label: 'Shortlisted',    icon: ShieldCheck,    headerGradient: 'gradient-violet-subtle',   cardBorder: 'border-left-violet',  countBadge: 'bg-violet-500 text-white' },
+  { status: 'ASSESSMENT',     label: 'Assessment',     icon: ClipboardCheck, headerGradient: 'gradient-cyan-subtle',    cardBorder: 'border-left-cyan',    countBadge: 'bg-cyan-500 text-white' },
+  { status: 'INTERVIEW',      label: 'Interview',      icon: Users,          headerGradient: 'gradient-violet-subtle',   cardBorder: 'border-left-violet',  countBadge: 'bg-violet-500 text-white' },
+  { status: 'OFFER',          label: 'Offer',          icon: Trophy,         headerGradient: 'gradient-emerald-subtle', cardBorder: 'border-left-emerald', countBadge: 'bg-[var(--verified)] text-[var(--verified-foreground)]' },
+  { status: 'REJECTED',       label: 'Rejected',       icon: XCircle,        headerGradient: 'gradient-rose-subtle',     cardBorder: 'border-left-rose',    countBadge: 'bg-[var(--danger)] text-[var(--danger-foreground)]' },
+  { status: 'WITHDRAWN',      label: 'Withdrawn',      icon: Ban,            headerGradient: '',                          cardBorder: '',                    countBadge: 'bg-muted text-muted-foreground' },
 ]
 
 export function Applications() {
@@ -72,7 +82,7 @@ export function Applications() {
   const total = apps.length
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 route-fade-enter">
       <PageHeader
         title="My Applications"
         description={`${total} application${total === 1 ? '' : 's'} across the pipeline`}
@@ -97,19 +107,21 @@ export function Applications() {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
           {COLUMNS.map((col) => {
             const items = byStatus.get(col.status) ?? []
+            const ColIcon = col.icon
             return (
-              <Card key={col.status} className="flex flex-col">
+              <Card key={col.status} className={cn('flex flex-col overflow-hidden', col.headerGradient)}>
                 <CardHeader className="pb-3">
                   <CardTitle className="text-sm font-semibold flex items-center justify-between">
-                    <span className="uppercase tracking-wider text-muted-foreground">
+                    <span className="flex items-center gap-2 uppercase tracking-wider">
+                      <ColIcon className="size-4 text-muted-foreground" />
                       {col.label}
                     </span>
-                    <Badge variant="secondary" className="text-xs tabular-nums">
+                    <Badge className={cn('text-xs tabular-nums', col.countBadge)}>
                       {items.length}
                     </Badge>
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="flex-1 p-2">
+                <CardContent className="flex-1 p-2 bg-card/60">
                   {items.length === 0 ? (
                     <div className="text-xs text-muted-foreground text-center py-6">No items</div>
                   ) : (
@@ -118,7 +130,10 @@ export function Applications() {
                         {items.map((a) => (
                           <li
                             key={a.id}
-                            className="rounded-md border p-3 hover:bg-muted/50 cursor-pointer transition-colors"
+                            className={cn(
+                              'rounded-md border bg-card p-3 hover:shadow-sm cursor-pointer transition-all card-hover-lift',
+                              col.cardBorder
+                            )}
                             onClick={() => navigate(`student/applications/${a.id}`)}
                           >
                             <div className="text-sm font-medium truncate">{a.jobTitle}</div>

@@ -386,4 +386,102 @@
   .shadow-pop {
     box-shadow: 0 4px 8px -2px oklch(0.18 0.02 260 / 0.10), 0 8px 16px -4px oklch(0.18 0.02 260 / 0.10);
   }
+
+  /* ============================================================
+     VIBRANT GRADIENT UTILITIES — for colorful, engaging UI
+     ============================================================ */
+
+  /* Card gradient backgrounds — bold but not garish */
+  .gradient-brand {
+    background: linear-gradient(135deg, oklch(0.30 0.08 265) 0%, oklch(0.25 0.06 260) 100%);
+    color: oklch(0.99 0.005 250);
+  }
+  .gradient-brand-subtle {
+    background: linear-gradient(135deg, oklch(0.96 0.02 265) 0%, oklch(0.94 0.015 250) 100%);
+  }
+  .gradient-emerald {
+    background: linear-gradient(135deg, oklch(0.72 0.15 152) 0%, oklch(0.55 0.14 152) 100%);
+    color: oklch(0.99 0.005 152);
+  }
+  .gradient-emerald-subtle {
+    background: linear-gradient(135deg, oklch(0.96 0.03 152) 0%, oklch(0.93 0.04 152) 100%);
+  }
+  .gradient-amber {
+    background: linear-gradient(135deg, oklch(0.82 0.16 75) 0%, oklch(0.70 0.15 75) 100%);
+    color: oklch(0.15 0.02 75);
+  }
+  .gradient-amber-subtle {
+    background: linear-gradient(135deg, oklch(0.96 0.04 75) 0%, oklch(0.93 0.05 75) 100%);
+  }
+  .gradient-rose {
+    background: linear-gradient(135deg, oklch(0.65 0.22 27) 0%, oklch(0.55 0.22 27) 100%);
+    color: oklch(0.99 0.005 27);
+  }
+  .gradient-rose-subtle {
+    background: linear-gradient(135deg, oklch(0.96 0.04 27) 0%, oklch(0.93 0.05 27) 100%);
+  }
+  .gradient-blue {
+    background: linear-gradient(135deg, oklch(0.62 0.14 240) 0%, oklch(0.50 0.14 240) 100%);
+    color: oklch(0.99 0.005 240);
+  }
+  .gradient-blue-subtle {
+    background: linear-gradient(135deg, oklch(0.96 0.03 240) 0%, oklch(0.93 0.04 240) 100%);
+  }
+  .gradient-violet {
+    background: linear-gradient(135deg, oklch(0.60 0.20 290) 0%, oklch(0.50 0.20 290) 100%);
+    color: oklch(0.99 0.005 290);
+  }
+  .gradient-violet-subtle {
+    background: linear-gradient(135deg, oklch(0.96 0.04 290) 0%, oklch(0.93 0.05 290) 100%);
+  }
+  .gradient-cyan {
+    background: linear-gradient(135deg, oklch(0.70 0.13 200) 0%, oklch(0.55 0.13 200) 100%);
+    color: oklch(0.99 0.005 200);
+  }
+  .gradient-cyan-subtle {
+    background: linear-gradient(135deg, oklch(0.96 0.03 200) 0%, oklch(0.93 0.04 200) 100%);
+  }
+
+  /* Hero gradient — for landing page */
+  .gradient-hero {
+    background: linear-gradient(135deg, oklch(0.30 0.08 265) 0%, oklch(0.25 0.06 260) 40%, oklch(0.20 0.04 255) 100%);
+    color: oklch(0.99 0.005 250);
+  }
+
+  /* Rainbow gradient text — for special accents */
+  .text-gradient-rainbow {
+    background: linear-gradient(90deg, oklch(0.55 0.22 27), oklch(0.70 0.15 75), oklch(0.55 0.14 152), oklch(0.55 0.13 240), oklch(0.55 0.20 290));
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient-pan 8s ease-in-out infinite;
+  }
+
+  /* Colorful icon chip backgrounds — for stat cards + section headers */
+  .icon-chip-brand { background: oklch(0.30 0.08 265); color: oklch(0.99 0.005 250); }
+  .icon-chip-emerald { background: oklch(0.72 0.15 152); color: oklch(0.99 0.005 152); }
+  .icon-chip-amber { background: oklch(0.82 0.16 75); color: oklch(0.15 0.02 75); }
+  .icon-chip-rose { background: oklch(0.65 0.22 27); color: oklch(0.99 0.005 27); }
+  .icon-chip-blue { background: oklch(0.62 0.14 240); color: oklch(0.99 0.005 240); }
+  .icon-chip-violet { background: oklch(0.60 0.20 290); color: oklch(0.99 0.005 290); }
+  .icon-chip-cyan { background: oklch(0.70 0.13 200); color: oklch(0.99 0.005 200); }
+
+  /* Colorful top-border accent for cards */
+  .border-top-brand { border-top: 3px solid oklch(0.30 0.08 265); }
+  .border-top-emerald { border-top: 3px solid oklch(0.72 0.15 152); }
+  .border-top-amber { border-top: 3px solid oklch(0.82 0.16 75); }
+  .border-top-rose { border-top: 3px solid oklch(0.65 0.22 27); }
+  .border-top-blue { border-top: 3px solid oklch(0.62 0.14 240); }
+  .border-top-violet { border-top: 3px solid oklch(0.60 0.20 290); }
+  .border-top-cyan { border-top: 3px solid oklch(0.70 0.13 200); }
+
+  /* Colorful left-border accent for kanban cards */
+  .border-left-brand { border-left: 4px solid oklch(0.30 0.08 265); }
+  .border-left-emerald { border-left: 4px solid oklch(0.72 0.15 152); }
+  .border-left-amber { border-left: 4px solid oklch(0.82 0.16 75); }
+  .border-left-rose { border-left: 4px solid oklch(0.65 0.22 27); }
+  .border-left-blue { border-left: 4px solid oklch(0.62 0.14 240); }
+  .border-left-violet { border-left: 4px solid oklch(0.60 0.20 290); }
+  .border-left-cyan { border-left: 4px solid oklch(0.70 0.13 200); }
 }

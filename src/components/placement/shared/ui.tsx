@@ -178,30 +178,60 @@ export function StatCard({
   onClick?: () => void
   className?: string
 }) {
-  const tones: Record<string, string> = {
-    default: 'bg-card',
-    success: 'bg-[var(--verified-muted)] border-[var(--verified)]/30',
-    warning: 'bg-[var(--pending-muted)] border-[var(--pending)]/30',
-    danger: 'bg-[var(--danger-muted)] border-[var(--danger)]/30',
-    info: 'bg-[var(--info-muted)] border-[var(--info)]/30',
-    brand: 'bg-primary text-primary-foreground border-primary',
+  // Vibrant gradient backgrounds per tone — bold but readable
+  const toneStyles: Record<string, { card: string; iconChip: string; label: string; value: string; hint: string }> = {
+    default: {
+      card: 'bg-card border-border',
+      iconChip: 'icon-chip-brand',
+      label: 'text-muted-foreground',
+      value: 'text-foreground',
+      hint: 'text-muted-foreground',
+    },
+    success: {
+      card: 'gradient-emerald-subtle border-[var(--verified)]/30 border-top-emerald',
+      iconChip: 'icon-chip-emerald',
+      label: 'text-[var(--verified-foreground)]/80',
+      value: 'text-foreground',
+      hint: 'text-[var(--verified-foreground)]/70',
+    },
+    warning: {
+      card: 'gradient-amber-subtle border-[var(--pending)]/30 border-top-amber',
+      iconChip: 'icon-chip-amber',
+      label: 'text-[var(--pending-foreground)]/80',
+      value: 'text-foreground',
+      hint: 'text-[var(--pending-foreground)]/70',
+    },
+    danger: {
+      card: 'gradient-rose-subtle border-[var(--danger)]/30 border-top-rose',
+      iconChip: 'icon-chip-rose',
+      label: 'text-[var(--danger-foreground)]/80',
+      value: 'text-foreground',
+      hint: 'text-[var(--danger-foreground)]/70',
+    },
+    info: {
+      card: 'gradient-blue-subtle border-[var(--info)]/30 border-top-blue',
+      iconChip: 'icon-chip-blue',
+      label: 'text-[var(--info-foreground)]/80',
+      value: 'text-foreground',
+      hint: 'text-[var(--info-foreground)]/70',
+    },
+    brand: {
+      card: 'gradient-brand border-primary',
+      iconChip: 'bg-primary-foreground/15 text-primary-foreground',
+      label: 'text-primary-foreground/80',
+      value: 'text-primary-foreground',
+      hint: 'text-primary-foreground/70',
+    },
   }
-  const iconTones: Record<string, string> = {
-    default: 'text-foreground',
-    success: 'text-[var(--verified-foreground)]',
-    warning: 'text-[var(--pending-foreground)]',
-    danger: 'text-[var(--danger-foreground)]',
-    info: 'text-[var(--info-foreground)]',
-    brand: 'text-primary-foreground',
-  }
+  const ts = toneStyles[tone] ?? toneStyles.default
   const isBrand = tone === 'brand'
   return (
     <Card
       className={cn(
-        'transition-all',
+        'transition-all overflow-hidden',
         onClick && 'card-hover-lift cursor-pointer',
-        emphasis && 'ring-1 ring-primary/30 shadow-soft',
-        tones[tone],
+        emphasis && 'shadow-soft',
+        ts.card,
         className
       )}
       onClick={onClick}
@@ -212,16 +242,16 @@ export function StatCard({
       <CardContent className="p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <div className={cn('text-xs uppercase tracking-wider font-medium', isBrand ? 'text-primary-foreground/80' : 'text-muted-foreground')}>{label}</div>
-            <div className={cn('text-2xl font-bold tabular-nums mt-1', isBrand ? 'text-primary-foreground' : 'text-foreground')}>{value}</div>
-            {hint && <div className={cn('text-xs mt-1.5', isBrand ? 'text-primary-foreground/70' : 'text-muted-foreground')}>{hint}</div>}
+            <div className={cn('text-xs uppercase tracking-wider font-semibold', ts.label)}>{label}</div>
+            <div className={cn('text-2xl font-bold tabular-nums mt-1.5', ts.value)}>{value}</div>
+            {hint && <div className={cn('text-xs mt-1.5', ts.hint)}>{hint}</div>}
           </div>
           {Icon && (
             <div className={cn(
-              'size-9 rounded-lg flex items-center justify-center shrink-0',
-              isBrand ? 'bg-primary-foreground/10' : 'bg-muted'
+              'size-10 rounded-xl flex items-center justify-center shrink-0 shadow-sm',
+              ts.iconChip
             )}>
-              <Icon className={cn('size-4', iconTones[tone])} />
+              <Icon className="size-5" />
             </div>
           )}
         </div>
