@@ -31,24 +31,38 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env*
+.env
+.env.local
+.env.*.local
 
 # vercel
 .vercel
-
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 local-*
+
+# internal tooling
 .claude
 .z-ai-config
+agent-ctx/
+
+# logs
 *.log
 dev.log
 dev.out.log
+server.log
+
+# runtime state
+.zscripts/dev.pid
 test
 prompt
 
-server.log
+# database (runtime state — re-seed with `bun run scripts/seed.ts`)
+db/custom.db
+db/custom.db-journal
+db/*.db-journal
+
 # Skills directory
 /skills/
