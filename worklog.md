@@ -571,3 +571,59 @@ Stage Summary:
   - Subtle full-page presence on the login + register pages (8% opacity, fixed position).
 - Image served from /career-bg.png (public folder).
 - Accessibility preserved: text contrast maintained, image never competes with primary content.
+
+---
+Task ID: 14 (UI/UX enhancements done by main agent)
+Agent: main
+Task: Enhance the UI/UX of the prototype with micro-interactions, command palette, dashboard polish
+
+Work Log:
+- Added a comprehensive micro-interactions + animations layer in src/app/globals.css:
+  - `animate-fade-in-up` + delay variants (-1 through -4) for staggered card entrances
+  - `skeleton-shimmer` for loading states
+  - `animate-pulse-soft` for "new"/unread indicators
+  - `card-hover-lift` for clickable cards (translateY -2px + soft shadow)
+  - `row-hover-highlight` for tables
+  - `sticky-table-head` for sticky table headers
+  - `text-gradient-animated` (animated 6s gradient pan) for hero accents
+  - `route-fade-enter` for SPA route transitions
+  - `focus-ring` utility for keyboard nav
+  - `shadow-soft` / `shadow-pop` elevation utilities
+  All animations respect prefers-reduced-motion (defined earlier in globals).
+
+- Built a global Command Palette (Cmd+K / Ctrl+K) at src/components/placement/shared/command-palette.tsx:
+  - Mounted once per role-app via the AppShell.
+  - Topbar shows a "Search or jump to…" input (desktop) and a search icon button (mobile) that dispatches a synthetic Cmd+K keydown to open the palette.
+  - Searches all nav items by label/group/keywords, groups results, supports ↑/↓ keyboard navigation + Enter to select + ESC to close.
+  - Includes a "Go to dashboard" quick action at the top.
+
+- Enhanced the Student dashboard (src/components/placement/student/dashboard.tsx):
+  - Replaced the PageHeader with a Hero Welcome Card: gradient background (from-primary/[0.04] via-card), time-aware greeting ("Good morning/afternoon/evening/Working late"), name, next-action label + 2 CTAs (primary next action + "Browse jobs"), and a 72px ProgressRing with profile-completion label on the right.
+  - Replaced the redundant "Profile readiness" stat card with "Avg fit score" (already shown via ProgressRing in hero). Now the 4 stat cards are: Avg fit score, Supported skills, Suitable jobs, Upcoming interviews — each with a distinct icon and tone.
+  - Added staggered `animate-fade-in-up-delay-*` classes on the 4 stat cards.
+  - Added `route-fade-enter` on the dashboard root for smooth SPA-style transitions.
+
+- Added `route-fade-enter` to Officer + Recruiter dashboard roots for consistent transitions.
+
+- Enhanced the landing page hero headline with `text-gradient-animated` — the "Find your next opportunity." text now has a slowly animated navy→blue→navy gradient.
+
+- Enhanced the EmptyState component (src/components/placement/shared/ui.tsx) with optional SVG background patterns (illustration prop): 'default' (dots), 'empty-list' (lines), 'no-results' (grid), 'success' (dots). All at 4-5% opacity for subtle visual interest without distraction.
+
+- Enhanced the StatCard component to accept a `className` prop and use `card-hover-lift` on clickable cards (instead of the previous basic hover-shadow). Emphasis cards now use `shadow-soft`.
+
+- Verified with Agent Browser at 1440x900 desktop:
+  - Student dashboard: hero card with "GOOD MORNING" greeting + "Welcome back, Aarav" + ProgressRing (100% ready). 4 stat cards: Avg fit score 41.3%, Supported skills 4, Suitable jobs 5, Upcoming interviews 3. Command palette search bar in topbar with ⌘K hint.
+  - Command palette opens on click of topbar search button or Cmd+K. Filtering works (typing "skill" filters to "My Skills & Evidence" only). ↑/↓ navigation + Enter selection works. ESC closes.
+  - VLM confirmed: "highly polished, modern, and professional" with "strong visual hierarchy".
+  - Mobile (390x844): topbar shows hamburger + search icon + notifications icon. Stat cards stack vertically. Mobile search button opens command palette. Landing page renders all sections.
+
+- Lint clean throughout.
+
+Stage Summary:
+- New micro-interactions layer (fade-in-up, shimmer, pulse-soft, card-hover-lift, sticky-table-head, animated gradient, route-fade) all respecting prefers-reduced-motion.
+- Command Palette (Cmd+K) live across all 3 role apps with keyboard navigation.
+- Student dashboard redesigned with hero welcome card (time-aware greeting + ProgressRing) and 4 distinct animated stat cards.
+- EmptyState now supports 4 subtle SVG background illustrations.
+- StatCard improved with className prop and card-hover-lift animation.
+- Landing hero headline uses animated gradient text.
+- All verified at desktop + mobile widths with Agent Browser + VLM.

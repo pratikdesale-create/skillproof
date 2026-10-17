@@ -125,7 +125,7 @@ export function Dashboard() {
   const topMatches = matchesQuery.data?.data ?? []
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 route-fade-enter">
       <PageHeader
         title="Overview"
         description="Placement operations at a glance"

@@ -15,10 +15,11 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
-  Bell, LogOut, Menu, Check, ChevronRight, User, Settings as SettingsIcon,
+  Bell, LogOut, Menu, Check, ChevronRight, User, Settings as SettingsIcon, Search,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { formatRelativeTime } from './ui'
+import { CommandPalette } from './command-palette'
 import type { Role } from '@/types'
 
 export interface NavItem {
@@ -161,6 +162,9 @@ export function AppShell({
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      {/* Command palette (Cmd+K) */}
+      <CommandPalette navItems={navItems} />
+
       {/* Topbar */}
       <header className="sticky top-0 z-30 border-b bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/60">
         <div className="flex items-center justify-between px-4 h-14">
@@ -184,9 +188,41 @@ export function AppShell({
             </div>
           </div>
 
-          <div className="flex-1" />
+          {/* Search trigger (desktop) — opens command palette */}
+          <div className="hidden md:flex items-center gap-2 flex-1 max-w-md">
+            <button
+              onClick={() => {
+                // Simulate Cmd+K by dispatching the event
+                const ev = new KeyboardEvent('keydown', { key: 'k', metaKey: true, bubbles: true })
+                window.dispatchEvent(ev)
+              }}
+              className="w-full flex items-center gap-2 px-3 h-9 rounded-md border bg-muted/40 text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              aria-label="Open command palette"
+            >
+              <Search className="size-4" />
+              <span className="flex-1 text-left">Search or jump to…</span>
+              <kbd className="inline-flex items-center gap-0.5 rounded border bg-card px-1 py-0.5 text-[10px] font-mono">
+                ⌘K
+              </kbd>
+            </button>
+          </div>
+
+          <div className="flex-1 md:hidden" />
 
           <div className="flex items-center gap-1">
+            {/* Mobile search button — opens command palette */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden size-9"
+              aria-label="Search"
+              onClick={() => {
+                const ev = new KeyboardEvent('keydown', { key: 'k', metaKey: true, bubbles: true })
+                window.dispatchEvent(ev)
+              }}
+            >
+              <Search className="size-4" />
+            </Button>
             {/* Notifications */}
             <Popover open={notifOpen} onOpenChange={setNotifOpen}>
               <PopoverTrigger asChild>

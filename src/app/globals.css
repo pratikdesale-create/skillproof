@@ -278,4 +278,112 @@
   .dark .career-auth-bg::before {
     opacity: 0.05;
   }
+
+  /* ============================================================
+     MICRO-INTERACTIONS & ANIMATIONS
+     All respect prefers-reduced-motion (defined earlier).
+     ============================================================ */
+
+  /* Entrance: fade-in + lift. Use sparingly on cards/sections. */
+  @keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in-up {
+    animation: fade-in-up 0.4s ease-out both;
+  }
+  .animate-fade-in-up-delay-1 { animation: fade-in-up 0.4s ease-out 0.05s both; }
+  .animate-fade-in-up-delay-2 { animation: fade-in-up 0.4s ease-out 0.10s both; }
+  .animate-fade-in-up-delay-3 { animation: fade-in-up 0.4s ease-out 0.15s both; }
+  .animate-fade-in-up-delay-4 { animation: fade-in-up 0.4s ease-out 0.20s both; }
+
+  /* Skeleton shimmer — for loading states */
+  @keyframes shimmer {
+    from { background-position: -200% 0; }
+    to { background-position: 200% 0; }
+  }
+  .skeleton-shimmer {
+    background: linear-gradient(
+      90deg,
+      var(--muted) 0%,
+      var(--border) 50%,
+      var(--muted) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+
+  /* Subtle pulse for "new" / unread indicators */
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  .animate-pulse-soft {
+    animation: pulse-soft 2s ease-in-out infinite;
+  }
+
+  /* Card lift on hover — for clickable cards */
+  .card-hover-lift {
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  }
+  .card-hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px -2px oklch(0.18 0.02 260 / 0.08);
+  }
+  .dark .card-hover-lift:hover {
+    box-shadow: 0 4px 12px -2px oklch(0 0 0 / 0.4);
+  }
+
+  /* Row hover highlight for tables */
+  .row-hover-highlight {
+    transition: background-color 0.12s ease;
+  }
+  .row-hover-highlight:hover {
+    background-color: var(--muted);
+  }
+
+  /* Sticky table header */
+  .sticky-table-head th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--card);
+    backdrop-filter: blur(4px);
+  }
+
+  /* Animated gradient text — for hero accents only */
+  @keyframes gradient-pan {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  .text-gradient-animated {
+    background: linear-gradient(90deg, var(--primary), oklch(0.45 0.13 240), var(--primary));
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient-pan 6s ease-in-out infinite;
+  }
+
+  /* Smooth content transition for SPA route changes */
+  @keyframes route-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .route-fade-enter {
+    animation: route-fade 0.2s ease-out;
+  }
+
+  /* Focus ring utility — for keyboard navigation visibility */
+  .focus-ring {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  /* Subtle elevation utility */
+  .shadow-soft {
+    box-shadow: 0 1px 2px -1px oklch(0.18 0.02 260 / 0.06), 0 2px 4px -2px oklch(0.18 0.02 260 / 0.06);
+  }
+  .shadow-pop {
+    box-shadow: 0 4px 8px -2px oklch(0.18 0.02 260 / 0.10), 0 8px 16px -4px oklch(0.18 0.02 260 / 0.10);
+  }
 }

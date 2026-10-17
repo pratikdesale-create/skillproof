@@ -71,21 +71,69 @@ export function EmptyState({
   description,
   action,
   className,
+  illustration,
 }: {
   icon: LucideIcon
   title: string
   description?: string
   action?: React.ReactNode
   className?: string
+  illustration?: 'default' | 'empty-list' | 'no-results' | 'success'
 }) {
+  // Subtle SVG background patterns for visual interest without being decorative
+  const patterns: Record<string, React.ReactNode> = {
+    'default': (
+      <svg className="absolute inset-0 w-full h-full opacity-[0.04]" aria-hidden>
+        <defs>
+          <pattern id="dots-default" width="14" height="14" patternUnits="userSpaceOnUse">
+            <circle cx="2" cy="2" r="1" fill="currentColor" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#dots-default)" />
+      </svg>
+    ),
+    'empty-list': (
+      <svg className="absolute inset-0 w-full h-full opacity-[0.05]" aria-hidden>
+        <defs>
+          <pattern id="lines-empty" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M0 10 L20 10" stroke="currentColor" strokeWidth="0.5" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#lines-empty)" />
+      </svg>
+    ),
+    'no-results': (
+      <svg className="absolute inset-0 w-full h-full opacity-[0.04]" aria-hidden>
+        <defs>
+          <pattern id="grid-no-results" width="16" height="16" patternUnits="userSpaceOnUse">
+            <path d="M0 0 L16 0 L16 16" stroke="currentColor" strokeWidth="0.5" fill="none" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grid-no-results)" />
+      </svg>
+    ),
+    'success': (
+      <svg className="absolute inset-0 w-full h-full opacity-[0.05]" aria-hidden>
+        <defs>
+          <pattern id="dots-success" width="12" height="12" patternUnits="userSpaceOnUse">
+            <circle cx="2" cy="2" r="1.5" fill="currentColor" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#dots-success)" />
+      </svg>
+    ),
+  }
   return (
-    <div className={cn('flex flex-col items-center justify-center py-12 px-4 text-center', className)}>
-      <div className="size-12 rounded-full bg-muted flex items-center justify-center mb-4 ring-1 ring-border">
-        <Icon className="size-5 text-muted-foreground" />
+    <div className={cn('relative flex flex-col items-center justify-center py-12 px-4 text-center overflow-hidden', className)}>
+      {patterns[illustration ?? 'default']}
+      <div className="relative z-10 flex flex-col items-center">
+        <div className="size-12 rounded-full bg-muted flex items-center justify-center mb-4 ring-1 ring-border">
+          <Icon className="size-5 text-muted-foreground" />
+        </div>
+        <h3 className="text-base font-medium text-foreground">{title}</h3>
+        {description && <p className="text-sm text-muted-foreground mt-1.5 max-w-sm leading-relaxed">{description}</p>}
+        {action && <div className="mt-5">{action}</div>}
       </div>
-      <h3 className="text-base font-medium text-foreground">{title}</h3>
-      {description && <p className="text-sm text-muted-foreground mt-1.5 max-w-sm leading-relaxed">{description}</p>}
-      {action && <div className="mt-5">{action}</div>}
     </div>
   )
 }
@@ -119,6 +167,7 @@ export function StatCard({
   tone = 'default',
   emphasis = false,
   onClick,
+  className,
 }: {
   label: string
   value: string | number
@@ -127,6 +176,7 @@ export function StatCard({
   tone?: 'default' | 'success' | 'warning' | 'danger' | 'info' | 'brand'
   emphasis?: boolean
   onClick?: () => void
+  className?: string
 }) {
   const tones: Record<string, string> = {
     default: 'bg-card',
@@ -148,10 +198,11 @@ export function StatCard({
   return (
     <Card
       className={cn(
-        'transition-shadow hover:shadow-sm',
-        emphasis && 'ring-1 ring-primary/30 shadow-sm',
+        'transition-all',
+        onClick && 'card-hover-lift cursor-pointer',
+        emphasis && 'ring-1 ring-primary/30 shadow-soft',
         tones[tone],
-        onClick && 'cursor-pointer hover:shadow-md'
+        className
       )}
       onClick={onClick}
       role={onClick ? 'button' : undefined}

@@ -88,7 +88,7 @@ export function Dashboard() {
   // Overall empty state — no jobs and no candidates
   if (data.openJobsForCompany === 0 && data.totalCandidates === 0) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 route-fade-enter">
         <PageHeader
           title="Overview"
           description="Your company's pipeline at a glance"
@@ -117,7 +117,7 @@ export function Dashboard() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 route-fade-enter">
       <PageHeader
         title="Overview"
         description="Your company's pipeline at a glance"

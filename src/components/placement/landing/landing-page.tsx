@@ -51,7 +51,7 @@ export function LandingPage() {
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-semibold tracking-tight text-foreground leading-[1.05]">
                   Prove your skills.
                   <br />
-                  <span className="text-primary">Find your next opportunity.</span>
+                  <span className="text-gradient-animated">Find your next opportunity.</span>
                 </h1>
                 <p className="mt-5 text-base sm:text-lg text-muted-foreground leading-relaxed max-w-xl">
                   One intelligent placement platform to connect verified skills with relevant jobs, build evidence-backed resumes and track your career progress.

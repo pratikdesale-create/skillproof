@@ -80,6 +80,15 @@ interface DashboardData {
   missingSkillsForTopMatch: MissingSkillsForTopMatch | null
 }
 
+// Time-aware greeting — "Good morning/afternoon/evening"
+function greeting(): string {
+  const h = new Date().getHours()
+  if (h < 12) return 'Good morning'
+  if (h < 17) return 'Good afternoon'
+  if (h < 21) return 'Good evening'
+  return 'Working late'
+}
+
 export function Dashboard() {
   const navigate = useAppStore(s => s.navigate)
   const user = useAppStore(s => s.user)
@@ -138,15 +147,39 @@ export function Dashboard() {
   }
 
   return (
-    <div className="space-y-6">
-      <PageHeader
-        title={`Welcome back, ${user?.name?.split(' ')[0] ?? 'Student'}`}
-        description={nextAction.label}
-      >
-        <Button size="sm" onClick={() => navigate(nextAction.view)}>
-          {nextAction.cta} <ArrowRight className="size-4 ml-1" />
-        </Button>
-      </PageHeader>
+    <div className="space-y-6 route-fade-enter">
+      {/* Hero welcome card — time-aware greeting + next action CTA */}
+      <Card className="bg-gradient-to-br from-primary/[0.04] via-card to-card border-primary/20 shadow-soft animate-fade-in-up">
+        <CardContent className="p-5 md:p-6 flex flex-col md:flex-row md:items-center gap-4 md:gap-6">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2 mb-1.5">
+              <Sparkles className="size-4 text-primary" />
+              <span className="text-xs uppercase tracking-wider font-semibold text-primary">{greeting()}</span>
+            </div>
+            <h1 className="text-2xl font-semibold tracking-tight">
+              Welcome back, {user?.name?.split(' ')[0] ?? 'Student'}
+            </h1>
+            <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">
+              {nextAction.label}
+            </p>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <Button size="sm" onClick={() => navigate(nextAction.view)}>
+                {nextAction.cta} <ArrowRight className="size-4 ml-1" />
+              </Button>
+              <Button size="sm" variant="outline" onClick={() => navigate('student/jobs')}>
+                Browse jobs
+              </Button>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 md:gap-4 shrink-0 self-start md:self-center">
+            <ProgressRing value={data.profileCompletion} size={72} strokeWidth={6} label="ready" />
+            <div className="text-xs text-muted-foreground leading-tight">
+              <div className="font-medium text-foreground text-sm">Profile</div>
+              <div>{data.profileCompletion >= 80 ? 'Strong — ready to apply' : 'Add details to boost fit scores'}</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Onboarding empty state when truly new student */}
       {noActivity ? (
@@ -171,26 +204,17 @@ export function Dashboard() {
         </Card>
       ) : null}
 
-      {/* Key metrics row — Profile readiness gets visual prominence */}
+      {/* Key metrics row — 4 distinct metrics (Profile readiness is in the hero) */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Profile readiness — emphasized card with ProgressRing */}
-        <Card className="md:col-span-1 lg:col-span-1 ring-1 ring-primary/20 shadow-sm">
-          <CardContent className="p-5 flex items-center gap-4">
-            <ProgressRing value={data.profileCompletion} size={64} strokeWidth={6} label="ready" />
-            <div className="min-w-0">
-              <div className="text-xs uppercase tracking-wider font-medium text-muted-foreground">
-                Profile readiness
-              </div>
-              <div className="text-xl font-bold tabular-nums mt-0.5">
-                {data.profileCompletion}%
-              </div>
-              <div className="text-xs text-muted-foreground mt-0.5">
-                {data.profileCompletion >= 80 ? 'Strong — ready to apply' : 'Add details to boost fit scores'}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
+        <StatCard
+          label="Avg fit score"
+          value={data.avgFitScore > 0 ? `${data.avgFitScore.toFixed(1)}%` : '—'}
+          hint={data.avgFitScore > 0 ? 'Across matched jobs' : 'No matches yet'}
+          icon={TrendingUp}
+          tone={data.avgFitScore >= 50 ? 'success' : 'default'}
+          onClick={() => navigate('student/jobs')}
+          className="animate-fade-in-up-delay-1"
+        />
         <StatCard
           label="Supported skills"
           value={data.supportedSkillsCount}
@@ -198,6 +222,7 @@ export function Dashboard() {
           icon={ShieldCheck}
           tone={data.unverifiedSkillsCount > 0 ? 'warning' : 'success'}
           onClick={() => navigate('student/skills')}
+          className="animate-fade-in-up-delay-2"
         />
         <StatCard
           label="Suitable jobs"
@@ -206,14 +231,16 @@ export function Dashboard() {
           icon={Target}
           tone="info"
           onClick={() => navigate('student/jobs')}
+          className="animate-fade-in-up-delay-3"
         />
         <StatCard
-          label="Active applications"
-          value={data.activeApplicationsCount}
-          hint="Currently in pipeline"
-          icon={ListChecks}
-          tone={data.activeApplicationsCount > 0 ? 'success' : 'default'}
+          label="Upcoming interviews"
+          value={data.upcomingInterviews?.length ?? 0}
+          hint={data.upcomingInterviews?.length ? 'Scheduled soon' : 'None scheduled'}
+          icon={Calendar}
+          tone={data.upcomingInterviews?.length ? 'info' : 'default'}
           onClick={() => navigate('student/applications')}
+          className="animate-fade-in-up-delay-4"
         />
       </div>
 
