@@ -206,4 +206,76 @@
   .scroll-area-thin::-webkit-scrollbar-thumb:hover {
     background: var(--muted-foreground);
   }
+
+  /* Career-hero background — the uploaded "From Skills to Career Success" image
+     used as a hero backdrop with a navy gradient overlay for text contrast. */
+  .career-hero-bg {
+    position: relative;
+    isolation: isolate;
+  }
+  .career-hero-bg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: url("/career-bg.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.18;
+    filter: saturate(0.85);
+  }
+  /* Dark-mode: dim the image slightly more for contrast */
+  .dark .career-hero-bg::before {
+    opacity: 0.10;
+  }
+
+  /* Stronger overlay variant for the very top of the hero (where the headline sits) */
+  .career-hero-overlay {
+    position: relative;
+  }
+  .career-hero-overlay::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      105deg,
+      oklch(0.99 0.005 250 / 0.92) 0%,
+      oklch(0.99 0.005 250 / 0.75) 38%,
+      oklch(0.99 0.005 250 / 0.20) 70%,
+      oklch(0.99 0.005 250 / 0) 100%
+    );
+  }
+  .dark .career-hero-overlay::after {
+    background: linear-gradient(
+      105deg,
+      oklch(0.16 0.015 260 / 0.92) 0%,
+      oklch(0.16 0.015 260 / 0.75) 38%,
+      oklch(0.16 0.015 260 / 0.20) 70%,
+      oklch(0.16 0.015 260 / 0) 100%
+    );
+  }
+
+  /* Subtle full-page background for auth pages — very low opacity so the image
+     is recognizable but never competes with form content. */
+  .career-auth-bg {
+    position: relative;
+    isolation: isolate;
+  }
+  .career-auth-bg::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image: url("/career-bg.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.08;
+    filter: saturate(0.85);
+  }
+  .dark .career-auth-bg::before {
+    opacity: 0.05;
+  }
 }

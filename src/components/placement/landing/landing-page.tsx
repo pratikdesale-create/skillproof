@@ -37,10 +37,10 @@ export function LandingPage() {
 
       <main className="flex-1">
         {/* Hero */}
-        <section className="relative overflow-hidden">
+        <section className="relative overflow-hidden career-hero-bg">
           <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/[0.04] via-primary/[0.02] to-transparent" aria-hidden />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 -z-10 size-[700px] rounded-full bg-primary/5 blur-3xl opacity-60" aria-hidden />
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 py-16 md:py-24 lg:py-28">
+          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 py-16 md:py-24 lg:py-28 career-hero-overlay">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               {/* Copy */}
               <div className="max-w-xl">

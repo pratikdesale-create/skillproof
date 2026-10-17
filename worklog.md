@@ -541,3 +541,33 @@ Stage Summary:
 - All existing functionality preserved (PDF export, evidence review, batch ranking, application pipeline, etc.).
 - Responsive at 1440px desktop and 390px mobile.
 - Lint clean, dev server running, all critical APIs return 200.
+
+---
+Task ID: 13 (background image applied by main agent)
+Agent: main
+Task: Use uploaded image "From Skills to Career Success.png" as website background
+
+Work Log:
+- Inspected the uploaded image at /home/z/my-project/upload/From Skills to Career Success.png — 1672x941 PNG (1.9MB).
+- VLM analysis: depicts a young professional with a backpack on a futuristic pathway overlooking a city skyline at sunrise, overlaid with glowing UI cards for Skills/Projects/Certifications connected by luminous blue lines. Optimistic, aspirational, but visually complex — recommended as hero image with overlay rather than full-page subtle bg.
+- Copied image to /home/z/my-project/public/career-bg.png (served at /career-bg.png, HTTP 200, 1.9MB).
+- Added 3 utility classes in src/app/globals.css:
+  - `.career-hero-bg` — used on landing page hero section. Sets the image as a background at 18% opacity (10% in dark mode) with saturation 0.85. Uses `isolation: isolate` + `::before` z-index:-1 so it sits behind content without overlap issues.
+  - `.career-hero-overlay` — applied to the inner content container of the hero. Adds a linear gradient (105deg) from 92% opaque background color on the left (where the headline sits) fading to transparent on the right (where the product preview sits), ensuring headline text contrast while letting the image show through on the right side. Dark-mode variant uses the dark background color.
+  - `.career-auth-bg` — used on login + register page root div. Uses `position: fixed` so the image stays in place during scroll, at 8% opacity (5% in dark mode). Subtle enough that form fields remain highly readable.
+- Applied the classes:
+  - `landing-page.tsx`: hero `<section>` now has `career-hero-bg`, inner container has `career-hero-overlay`.
+  - `login-page.tsx`: root div now has `career-auth-bg` (replaced hardcoded `bg-slate-50 dark:bg-slate-950` with `bg-background` + `career-auth-bg`).
+  - `register-page.tsx`: same treatment.
+- Verified with Agent Browser at 1440x900:
+  - Landing hero: image visible as a subtle backdrop behind the headline + product preview. Text remains highly readable.
+  - Login page: image visible as a fixed full-page background at very low opacity. Form fields remain highly readable due to high-contrast white card containers.
+  - VLM confirmed: "subtle background image visible behind the content... text remains highly readable... professional, layered aesthetic" for landing; "subtle, light-colored background image featuring faint icons and a cityscape silhouette... text and form remain highly readable" for login.
+- Lint clean.
+
+Stage Summary:
+- The uploaded career-journey image is now used as the website background:
+  - Strong presence on the landing page hero (18% opacity, with a navy gradient overlay on the headline side for contrast).
+  - Subtle full-page presence on the login + register pages (8% opacity, fixed position).
+- Image served from /career-bg.png (public folder).
+- Accessibility preserved: text contrast maintained, image never competes with primary content.
