@@ -56,18 +56,20 @@ function AuthGate() {
   const route = useAppStore(s => s.route)
 
   // While we don't know if the user is logged in, show a loading skeleton
-  // — unless they're explicitly on a public view.
+  // — unless they're on a public view (landing/login/register).
+  // The landing page is now the three-portal selection page and does NOT
+  // require authentication — visitors can browse portals without logging in.
   const isPublicView = route.view === 'landing' || route.view === 'login' || route.view === 'register'
 
   if (meQuery.isLoading && !isPublicView && !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <div className="size-12 rounded-lg bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 flex items-center justify-center font-bold text-xl mx-auto mb-4">
-            PH
+          <div className="size-12 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-bold text-xl mx-auto mb-4">
+            S
           </div>
           <Skeleton className="h-4 w-32 mx-auto" />
-          <p className="text-xs text-slate-500 mt-2">Loading Skillproof…</p>
+          <p className="text-xs text-muted-foreground mt-2">Loading Skillproof…</p>
         </div>
       </div>
     )
