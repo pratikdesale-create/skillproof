@@ -48,8 +48,15 @@ function resolveSessionSecret(): string {
   }
 
   if (isProd) {
-    // FAIL CLOSED in production. Throwing here prevents the server from
-    // starting / signing tokens with a predictable secret.
+    // FAIL CLOSED in production at REQUEST TIME (not at module-load / build
+    // time). Throwing here prevents tokens from being signed with a
+    // predictable secret.
+    //
+    // NOTE: this function is called LAZILY by getSessionSecret() — see
+    // below — so that `next build` (which sets NODE_ENV=production) can
+    // succeed without SESSION_SECRET being set in the build environment.
+    // The secret is only required when an actual request tries to sign or
+    // verify a session token.
     throw new Error(
       '[security] SESSION_SECRET is missing or too short (min ' + MIN_SECRET_LENGTH +
       ' chars). Set it in your environment before running in production. ' +
@@ -57,7 +64,7 @@ function resolveSessionSecret(): string {
     )
   }
 
-  // Development only — log loud warning on every module load.
+  // Development only — log loud warning on first use.
   console.warn(
     '[security] SESSION_SECRET not set or too short. Using an INSECURE dev-only fallback. ' +
     'This MUST NOT be used in production. Set SESSION_SECRET=' +
@@ -66,11 +73,22 @@ function resolveSessionSecret(): string {
   return 'skillproof-dev-only-insecure-fallback-DO-NOT-USE-IN-PROD'
 }
 
-const SESSION_SECRET = resolveSessionSecret()
+// LAZY resolver: the secret is resolved only when first needed (at request
+// time), NOT at module-load time. This lets `next build` succeed in
+// production without SESSION_SECRET being set in the build environment —
+// the secret is only required when an actual request tries to sign or
+// verify a session token.
+let _SESSION_SECRET: string | null = null
+function getSessionSecret(): string {
+  if (_SESSION_SECRET === null) {
+    _SESSION_SECRET = resolveSessionSecret()
+  }
+  return _SESSION_SECRET
+}
 
 export function createSessionToken(userId: string): string {
   const payload = `${userId}:${Date.now()}:${crypto.randomBytes(16).toString('hex')}`
-  const sig = crypto.createHmac('sha256', SESSION_SECRET).update(payload).digest('hex')
+  const sig = crypto.createHmac('sha256', getSessionSecret()).update(payload).digest('hex')
   return Buffer.from(`${payload}:${sig}`).toString('base64')
 }
 
@@ -81,7 +99,7 @@ export function parseSessionToken(token: string): { userId: string; ts: number }
     if (parts.length !== 4) return null
     const [userId, ts, rand, sig] = parts
     const payload = `${userId}:${ts}:${rand}`
-    const expectedSig = crypto.createHmac('sha256', SESSION_SECRET).update(payload).digest('hex')
+    const expectedSig = crypto.createHmac('sha256', getSessionSecret()).update(payload).digest('hex')
     if (!crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expectedSig))) return null
     return { userId, ts: parseInt(ts, 10) }
   } catch {
